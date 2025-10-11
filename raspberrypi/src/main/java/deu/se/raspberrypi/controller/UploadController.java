@@ -29,12 +29,12 @@ public class UploadController {
     @Autowired
     private ServletContext ctx;
 
-    @GetMapping("/ch07/upload")
+    //@GetMapping("/ch07/upload")
     public String upload() {
         return "ch07/upload/index";
     }
     
-    @PostMapping("/ch07/upload.do")
+    //@PostMapping("/ch07/upload.do")
     public String uploadDo(@RequestParam String username, @RequestParam MultipartFile upfile, Model model) {
         log.debug("upload.do: username = {}, upfile = (), File.separator= {}",
                 username, upfile.getOriginalFilename(), File.separator);

@@ -1,12 +1,11 @@
 package deu.se.raspberrypi.controller;
 
-import jakarta.servlet.ServletContext;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -19,12 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RequiredArgsConstructor
 public class UploadController_ver2 {
-
-    private final ServletContext ctx;
-
-    // 설정 파일에 없으면 빈 문자열로 주입
-    @Value("${file.upload.dir:}")
-    private String configuredUploadDir;
+    
+    @Autowired
+    private FilePathResolver filePathResolver;
 
     @GetMapping("/ch07/upload")
     public String upload() {
@@ -33,8 +29,8 @@ public class UploadController_ver2 {
 
     @PostMapping("/ch07/upload.do")
     public String uploadDo(@RequestParam String username,
-                           @RequestParam("upfile") MultipartFile upfile,
-                           Model model) {
+            @RequestParam("upfile") MultipartFile upfile,
+            Model model) {
 
         log.debug("upload.do: username={}, upfile={}, size={}",
                 username, (upfile != null ? upfile.getOriginalFilename() : null),
@@ -48,7 +44,7 @@ public class UploadController_ver2 {
         }
 
         // 2) 저장 루트 결정: 설정값 > WEB-INF/upload(폴백)
-        Path baseDir = resolveBaseDir();
+        Path baseDir = filePathResolver.resolveBaseDir();
         if (baseDir == null) {
             model.addAttribute("exec_message", "서버 저장 경로를 찾을 수 없습니다.");
             return "ch07/upload/index";
@@ -76,22 +72,15 @@ public class UploadController_ver2 {
             model.addAttribute("exec_message",
                     String.format("username = %s, %s 저장 완료", username, original));
             log.debug("saved path={}", dest.toAbsolutePath());
+
+            // ✅ jsp에 다운로드 링크 전달
+            model.addAttribute("downloadFile", savedName); // ⬅ 추가
+            
         } catch (IOException e) {
             log.error("파일 저장 실패: {}", e.getMessage());
             model.addAttribute("exec_message", "파일 저장 중 오류가 발생했습니다.");
         }
 
         return "ch07/upload/index";
-    }
-
-    private Path resolveBaseDir() {
-        // 설정값이 있으면 그 경로 사용
-        if (StringUtils.hasText(configuredUploadDir)) {
-            return Paths.get(configuredUploadDir);
-        }
-        // 설정값이 없으면 WEB-INF/upload 폴백 (WAR/외부 톰캣 전개 가정)
-        String root = ctx.getRealPath("/WEB-INF");
-        if (root == null) return null; // 내장 톰캣 JAR 실행 등에서는 null일 수 있음
-        return Paths.get(root, "upload");
     }
 }
