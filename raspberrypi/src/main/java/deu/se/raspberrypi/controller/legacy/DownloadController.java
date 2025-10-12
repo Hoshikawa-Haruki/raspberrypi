@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package deu.se.raspberrypi.controller;
+package deu.se.raspberrypi.controller.legacy;
 
+import deu.se.raspberrypi.util.FilePathResolver;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +28,7 @@ public class DownloadController {
     @Autowired
     private FilePathResolver filePathResolver;
 
-    @GetMapping("/ch07/download")
+    //@GetMapping("/ch07/download")
     public void download(@RequestParam("filename") String filename,
             HttpServletResponse response) {
 

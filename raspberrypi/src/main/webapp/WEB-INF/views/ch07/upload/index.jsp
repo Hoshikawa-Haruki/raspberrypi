@@ -20,7 +20,6 @@
         <hr>
         <c:if test="${!empty exec_message}"> <!-- 컨트롤러에서 exec_message를 받아서 띄워줌 -->
             <div class="box"> 실행 결과: ${exec_message} </div>
-            <!-- ✅ 다운로드 링크 표시 -->
             <c:if test="${not empty downloadFile}">
                 <p>
                     다운로드 링크:

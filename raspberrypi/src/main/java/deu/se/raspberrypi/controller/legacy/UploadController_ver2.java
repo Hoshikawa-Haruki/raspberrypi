@@ -1,5 +1,6 @@
-package deu.se.raspberrypi.controller;
+package deu.se.raspberrypi.controller.legacy;
 
+import deu.se.raspberrypi.util.FilePathResolver;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.UUID;
@@ -9,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
+/*
+* 1차 적으로 컨트롤러에 모든 기능을 구현하여, 테스트 한 클래스
+* 사용 필요 시 @Getmapping 및 @PostMapping 주석 해제 후 사용
+* (기존 클래스의 애노테이션은 주석처리 필)
+*/
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -22,12 +25,12 @@ public class UploadController_ver2 {
     @Autowired
     private FilePathResolver filePathResolver;
 
-    @GetMapping("/ch07/upload")
+    // @GetMapping("/ch07/upload")
     public String upload() {
         return "ch07/upload/index";
     }
 
-    @PostMapping("/ch07/upload.do")
+    // @PostMapping("/ch07/upload.do")
     public String uploadDo(@RequestParam String username,
             @RequestParam("upfile") MultipartFile upfile,
             Model model) {
@@ -45,7 +48,7 @@ public class UploadController_ver2 {
 
         // 2) 저장 루트 결정: 설정값 > WEB-INF/upload(폴백)
         Path baseDir = filePathResolver.resolveBaseDir();
-        if (baseDir == null) {
+        if (baseDir == null) {  
             model.addAttribute("exec_message", "서버 저장 경로를 찾을 수 없습니다.");
             return "ch07/upload/index";
         }

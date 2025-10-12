@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package deu.se.raspberrypi.controller;
+package deu.se.raspberrypi.controller.legacy;
 
 import jakarta.servlet.ServletContext;
 import java.io.BufferedOutputStream;
@@ -13,18 +13,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
  * @author Haruki
+ * 교수님 코드
  */
 @Controller
 @Slf4j
-public class UploadController {
+public class UploadController_ver1 {
     
     @Autowired
     private ServletContext ctx;
