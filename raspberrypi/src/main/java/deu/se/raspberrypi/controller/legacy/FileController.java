@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package deu.se.raspberrypi.controller;
+package deu.se.raspberrypi.controller.legacy;
 
-import deu.se.raspberrypi.service.FileService;
+import deu.se.raspberrypi.service.legacy.FileService_legacy;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- *
+ * 업로드/다운로드를 테스트 하기 위한 레거시 컨트롤러
+ * 
  * @author Haruki
  */
 @Controller
@@ -24,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class FileController {
 
-    private final FileService fileService;
+    private final FileService_legacy fileService;
 
     @GetMapping("/ch07/upload")
     public String uploadForm() {

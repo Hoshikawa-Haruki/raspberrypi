@@ -2,9 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package deu.se.raspberrypi.service;
+package deu.se.raspberrypi.service.legacy;
 
-import deu.se.raspberrypi.dto.StoredFileDto;
 import deu.se.raspberrypi.util.FilePathResolver;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -16,60 +15,58 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 파일 업로드/다운로드 처리를 담당하는 서비스 클래스 파일 업로드 후, 파일명과 경로를 StoredFileDto에 담아서
- * PostService로 반환함
  *
  * @author Haruki
  */
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class FileService {
+public class FileService_legacy {
 
     private final FilePathResolver filePathResolver;
 
-    public StoredFileDto handleUpload(MultipartFile upfile) {
-
-        // 1. 파일이 비었으면 null 반환
-        if (upfile == null || upfile.isEmpty()) {
-            log.info("첨부파일이 없음. 업로드 생략");
-            return null;
+    public String handleUpload(String username, MultipartFile upfile, Model model) {
+        // 1. 기본 검증
+        if (!StringUtils.hasText(username) || upfile == null || upfile.isEmpty()) {
+            return String.format("username(%s)이 없거나 업로드 파일이 지정되지 않았습니다.", username);
         }
 
-        // 2. 저장 경로 지정
+        // 2. 저장 경로 설정
         Path baseDir = filePathResolver.resolveBaseDir();
+        if (baseDir == null) {
+            return "서버 저장 경로를 찾을 수 없습니다.";
+        }
         try {
             Files.createDirectories(baseDir);
         } catch (IOException e) {
             log.error("업로드 디렉터리 생성 실패: {}", e.getMessage());
-            throw new RuntimeException("업로드 디렉터리 생성 실패", e);
+            return "업로드 디렉터리 생성에 실패했습니다.";
         }
 
         // 3. 파일명 정규화 + UUID 프리픽스
-        String originalName = StringUtils.cleanPath(upfile.getOriginalFilename());
-        if (originalName.contains("..")) {
-            throw new IllegalArgumentException("유효하지 않은 파일명입니다.");
+        String original = StringUtils.cleanPath(upfile.getOriginalFilename());
+        if (original.contains("..")) {
+            return "유효하지 않은 파일명입니다.";
         }
 
-        String savedName = UUID.randomUUID() + "_" + originalName;
+        String savedName = UUID.randomUUID() + "_" + original;
         Path dest = baseDir.resolve(savedName);
 
-        // 4. 파일 저장
+        // 4. 실제 저장
         try {
             upfile.transferTo(dest);
             log.info("파일 저장 완료: {}", dest.toAbsolutePath());
-            // DTO로 결과 반환
-            StoredFileDto dto = new StoredFileDto();
-            dto.setSavedName(savedName);
-            dto.setFullPath(dest.toAbsolutePath().toString());
-            return dto;
+            // ✅ jsp에 다운로드 링크 전달
+            model.addAttribute("downloadFile", savedName);
+            return String.format("username = %s, %s 저장 완료", username, original);
         } catch (IOException e) {
             log.error("파일 저장 실패: {}", e.getMessage());
-            throw new RuntimeException("파일 저장 실패", e);
+            return "파일 저장 중 오류가 발생했습니다.";
         }
     }
 
@@ -78,7 +75,7 @@ public class FileService {
         // 업로드된 파일이 저장된 디렉토리 경로 획득
         Path baseDir = filePathResolver.resolveBaseDir();
         Path filePath = baseDir.resolve(filename);
-
+        
         log.debug("다운로드 요청: filename={}", filename);
 
         // 파일이 존재하지 않을 경우 404 응답 반환

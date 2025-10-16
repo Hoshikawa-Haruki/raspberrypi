@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- *
+ * 다운로드 기능을 구현한 레거시 코드. fileService로 이관됨
  * @author Haruki
  */
 @Controller
