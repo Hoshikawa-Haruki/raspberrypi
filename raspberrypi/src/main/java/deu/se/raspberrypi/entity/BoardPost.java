@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "board_post")
@@ -28,9 +29,9 @@ public class BoardPost {
 
     @Column(nullable = false, length = 50)
     private String ipAddress; // ip주소
-    
+
     @Column(nullable = false, length = 50)
-    private String author; // 작성자 이름
+    private String author; // 작성자
 
     @Column(nullable = false, length = 255)
     private String password; // 글 수정/삭제용 비밀번호
@@ -48,9 +49,9 @@ public class BoardPost {
             fetch = FetchType.LAZY)
     private List<Attachment> attachments = new ArrayList<>();
 
-    @Column(nullable = false, updatable = false, insertable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt; // 생성 시간
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     @Column(nullable = false, insertable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")

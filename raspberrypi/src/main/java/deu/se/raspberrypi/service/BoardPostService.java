@@ -15,10 +15,13 @@ import deu.se.raspberrypi.entity.Attachment;
 import deu.se.raspberrypi.repository.BoardPostRepository;
 import deu.se.raspberrypi.util.IpUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +39,7 @@ public class BoardPostService {
         // IP 추출 (서버 측에서 수행)
         String ip = IpUtils.getClientIp(request);
         dto.setIpAddress(ip);
-        
+
         BoardPost post = dto.toEntity();
 
         // 파일 업로드 처리
@@ -61,11 +64,42 @@ public class BoardPostService {
         }
 
         boardPostRepository.save(post);
+
+        // 첨부파일 체크 메서드
+        String attachmentsInfo;
+        if (post.getAttachments() != null && !post.getAttachments().isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (Attachment file : post.getAttachments()) {
+                sb.append(file.getOriginalName())
+                        .append("(")
+                        .append(file.getSavedName())
+                        .append("), ");
+            }
+            sb.setLength(sb.length() - 2);
+            attachmentsInfo = post.getAttachments().size() + "개 [" + sb + "]";
+        } else {
+            attachmentsInfo = "[none]";
+        }
+
+        // 작성시간(createdAt) 포맷 변경 (yyyy-MM-dd HH:mm:ss)
+        String createdTime = post.getCreatedAt() != null
+                ? post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                : "N/A";
+
+        // 통합 로그
+        log.info("[BOARD][CREATE] id={}, title='{}', author='{}', ip={}, attachments={}, createdAt={} ",
+                post.getId(),
+                post.getTitle(),
+                post.getAuthor(),
+                post.getIpAddress(),
+                attachmentsInfo,
+                createdTime);
     }
 
-    // 2. READ (전체 목록)
+// 2. READ (전체 목록 최신순 정렬)
     public List<BoardPostDto> findAll() {
-        return boardPostRepository.findAll().stream()
+        List<BoardPostDto> list = boardPostRepository.findAll(Sort.by(Sort.Direction.ASC, "id")) // 오래된 글이 먼저
+                .stream()
                 .map(post -> {
                     BoardPostDto dto = new BoardPostDto();
                     dto.setId(post.getId());
@@ -77,22 +111,19 @@ public class BoardPostService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+
+        // 최신글이 위로 오도록 리버스
+        Collections.reverse(list);
+        return list;
     }
 
     // 2.1 READ (단일 조회)
     public BoardPostDto findById(Long id) {
-        return boardPostRepository.findById(id)
-                .map(post -> {
-                    BoardPostDto dto = new BoardPostDto();
-                    dto.setId(post.getId());
-                    dto.setIpAddress(post.getIpAddress());
-                    dto.setAuthor(post.getAuthor());
-                    dto.setTitle(post.getTitle());
-                    dto.setContent(post.getContent());
-                    dto.setCreatedAt(post.getCreatedAt());
-                    return dto;
-                })
-                .orElse(null);
+        BoardPost post = boardPostRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        // Entity → DTO 변환
+        return BoardPostDto.fromEntity(post);
     }
 
     // 3. UPDATE

@@ -34,6 +34,7 @@ public class BoardPostDto {
 
     public BoardPost toEntity() { // DTO → Entity 변환, BoardPostDto → BoardPost로 변환해주는 팩토리 메서드
         BoardPost post = new BoardPost();
+        post.setId(id);
         post.setIpAddress(ipAddress);
         post.setAuthor(author);
         post.setPassword(password);

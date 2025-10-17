@@ -50,7 +50,17 @@ public class IpUtils {
         if (ip != null && ip.contains(",")) {
             ip = ip.split(",")[0].trim();
         }
-        
+
+        // 8. IPv6 루프백(::1) → IPv4 루프백(127.0.0.1) 변환
+        if ("0:0:0:0:0:0:0:1".equals(ip) || "::1".equals(ip)) {
+            ip = "127.0.0.1";
+        }
+
+        // 9. IPv6-mapped IPv4 (::ffff:192.168.0.1) → 192.168.0.1 변환
+        if (ip != null && ip.startsWith("::ffff:")) {
+            ip = ip.substring(7);
+        }
+
         return ip;
     }
 }
