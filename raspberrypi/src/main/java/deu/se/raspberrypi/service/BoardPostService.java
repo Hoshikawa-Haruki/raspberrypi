@@ -13,6 +13,8 @@ import deu.se.raspberrypi.dto.StoredFileDto;
 import deu.se.raspberrypi.entity.BoardPost;
 import deu.se.raspberrypi.entity.Attachment;
 import deu.se.raspberrypi.repository.BoardPostRepository;
+import deu.se.raspberrypi.util.IpUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,12 @@ public class BoardPostService {
     private final FileService fileService;
 
     // CREATE
-    public void save(BoardPostDto dto) {
+    public void save(BoardPostDto dto, HttpServletRequest request) {
+
+        // IP 추출 (서버 측에서 수행)
+        String ip = IpUtils.getClientIp(request);
+        dto.setIpAddress(ip);
+        
         BoardPost post = dto.toEntity();
 
         // 파일 업로드 처리
@@ -62,7 +69,8 @@ public class BoardPostService {
                 .map(post -> {
                     BoardPostDto dto = new BoardPostDto();
                     dto.setId(post.getId());
-                    dto.setWriter(post.getWriter());
+                    dto.setIpAddress(post.getIpAddress());
+                    dto.setAuthor(post.getAuthor());
                     dto.setTitle(post.getTitle());
                     dto.setContent(post.getContent());
                     dto.setCreatedAt(post.getCreatedAt());
@@ -77,7 +85,8 @@ public class BoardPostService {
                 .map(post -> {
                     BoardPostDto dto = new BoardPostDto();
                     dto.setId(post.getId());
-                    dto.setWriter(post.getWriter());
+                    dto.setIpAddress(post.getIpAddress());
+                    dto.setAuthor(post.getAuthor());
                     dto.setTitle(post.getTitle());
                     dto.setContent(post.getContent());
                     dto.setCreatedAt(post.getCreatedAt());

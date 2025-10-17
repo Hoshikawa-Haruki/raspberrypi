@@ -15,7 +15,7 @@
         <form method="post" enctype="multipart/form-data"
               action="${pageContext.request.contextPath}/board/save">
             <label>작성자:</label>
-            <input type="text" name="writer" required><br/><br/>
+            <input type="text" name="author" required><br/><br/>
 
             <label>비밀번호:</label>
             <input type="password" name="password" required><br/><br/>

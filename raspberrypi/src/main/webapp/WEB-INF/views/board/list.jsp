@@ -34,7 +34,7 @@
                             ${post.title}
                         </a>
                     </td>
-                    <td>${post.writer}</td>
+                    <td>${post.author} (${post.maskedIp})</td>
                     <td>${post.createdAt}</td>
                 </tr>
             </c:forEach>

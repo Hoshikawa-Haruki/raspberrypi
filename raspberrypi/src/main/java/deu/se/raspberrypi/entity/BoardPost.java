@@ -6,9 +6,9 @@ package deu.se.raspberrypi.entity;
 
 /**
  * 게시글 엔티티
+ *
  * @author Haruki
  */
-
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,7 +27,10 @@ public class BoardPost {
     private Long id; // 게시글 고유번호
 
     @Column(nullable = false, length = 50)
-    private String writer; // 작성자 이름
+    private String ipAddress; // ip주소
+    
+    @Column(nullable = false, length = 50)
+    private String author; // 작성자 이름
 
     @Column(nullable = false, length = 255)
     private String password; // 글 수정/삭제용 비밀번호
@@ -40,9 +43,9 @@ public class BoardPost {
 
     // 게시글 1개 → 여러 파일 (1:N)
     @OneToMany(mappedBy = "post",
-               cascade = CascadeType.ALL,
-               orphanRemoval = true,
-               fetch = FetchType.LAZY)
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
     private List<Attachment> attachments = new ArrayList<>();
 
     @Column(nullable = false, updatable = false, insertable = false,
@@ -64,5 +67,3 @@ public class BoardPost {
         file.setPost(null); // 관계 해제
     }
 }
-
-
