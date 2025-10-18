@@ -13,7 +13,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
- *
+ * application.properties로 경로 지정 후, 클래스에서 @Value 형태로 사용
+ * legacy 행. 사용 X
+ * 
+ * 2025.10.17.
  * @author Haruki
  */
 @Component

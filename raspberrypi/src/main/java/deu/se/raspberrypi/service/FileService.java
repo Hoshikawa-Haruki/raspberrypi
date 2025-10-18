@@ -5,23 +5,26 @@
 package deu.se.raspberrypi.service;
 
 import deu.se.raspberrypi.dto.StoredFileDto;
-import deu.se.raspberrypi.util.FilePathResolver;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 파일 업로드/다운로드 처리를 담당하는 서비스 클래스 파일 업로드 후, 파일명과 경로를 StoredFileDto에 담아서
+ * 파일 업로드/다운로드 처리를 담당하는 서비스 클래스 파일 업로드 후 파일명과 경로를 StoredFileDto에 담아서
  * PostService로 반환함
+ *
+ * FilePathResolver를 제거하고 application.properties 설정으로 경로 관리 2025.10.17.
  *
  * @author Haruki
  */
@@ -30,8 +33,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class FileService {
 
-    private final FilePathResolver filePathResolver;
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
+    // private final FilePathResolver filePathResolver;
     public StoredFileDto handleUpload(MultipartFile upfile) {
 
         // 1. 파일이 비었으면 null 반환
@@ -41,7 +46,7 @@ public class FileService {
         }
 
         // 2. 저장 경로 지정
-        Path baseDir = filePathResolver.resolveBaseDir();
+        Path baseDir = Paths.get(uploadDir);
         try {
             Files.createDirectories(baseDir);
         } catch (IOException e) {
@@ -63,10 +68,10 @@ public class FileService {
             upfile.transferTo(dest);
             log.info("파일 저장 완료: {}", dest.toAbsolutePath());
             // DTO로 결과 반환
-            StoredFileDto dto = new StoredFileDto();
-            dto.setSavedName(savedName);
-            dto.setFullPath(dest.toAbsolutePath().toString());
-            return dto;
+            StoredFileDto fileDto = new StoredFileDto();
+            fileDto.setSavedName(savedName);
+            fileDto.setFullPath(dest.toAbsolutePath().toString());
+            return fileDto;
         } catch (IOException e) {
             log.error("파일 저장 실패: {}", e.getMessage());
             throw new RuntimeException("파일 저장 실패", e);
@@ -76,7 +81,7 @@ public class FileService {
     public void handleDownload(String filename, HttpServletResponse response) {
 
         // 업로드된 파일이 저장된 디렉토리 경로 획득
-        Path baseDir = filePathResolver.resolveBaseDir();
+        Path baseDir = Paths.get(uploadDir);
         Path filePath = baseDir.resolve(filename);
 
         log.debug("다운로드 요청: filename={}", filename);

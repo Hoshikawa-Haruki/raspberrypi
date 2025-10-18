@@ -48,8 +48,8 @@ public class PageController {
     // 4. 게시글 단일 조회
     @GetMapping("/board/view")
     public String view(@RequestParam("id") Long id, Model model) {
-        BoardPostDto board = boardPostService.findById(id);
-        model.addAttribute("board", board);
+        BoardPostDto post = boardPostService.findById(id);
+        model.addAttribute("post", post);
         return "board/view";  // => view.jsp 로 forward
     }
 }

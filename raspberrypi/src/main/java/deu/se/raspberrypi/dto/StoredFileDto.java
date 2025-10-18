@@ -9,6 +9,14 @@ import lombok.Setter;
 
 /**
  * 파일 업로드 후 저장된 파일명과 전체 경로를 담는 DTO
+ *
+ * 사용 클래스 위치
+ * FileService: 업로드 완료 후 반환용 객체 (savedName, fullPath 저장)
+ * BoardPostService: FileService로부터 받은 정보를 Attachment 엔티티로 변환 및 DB 저장
+ * BoardPostDto: 조회 시 첨부파일 정보 전달용 필드 (List<StoredFileDto> attachments)
+ *
+ * 👉 StoredFileDto는 업로드 → DB 저장 → 게시글 조회까지 파일 정보를 주고받는 매개체 역할을 담당함.
+ *
  * @author Haruki
  */
 

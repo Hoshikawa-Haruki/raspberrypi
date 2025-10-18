@@ -46,17 +46,17 @@ public class BoardPostService {
         if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
             for (MultipartFile file : dto.getFiles()) {
                 // FileService 호출 → 실제 저장된 파일명 받기
-                StoredFileDto stored = fileService.handleUpload(file);
+                StoredFileDto fildDto = fileService.handleUpload(file);
 
-                if (stored == null) {
+                if (fildDto == null) {
                     continue;
                 }
 
                 // 업로드 결과를 엔티티로 변환
                 Attachment attachment = new Attachment();
                 attachment.setOriginalName(file.getOriginalFilename());// 원본 파일명
-                attachment.setSavedName(stored.getSavedName()); // 저장 이름 (UUID)
-                attachment.setFilePath(stored.getFullPath()); // 저장 경로
+                attachment.setSavedName(fildDto.getSavedName()); // 저장 이름 (UUID)
+                attachment.setFilePath(fildDto.getFullPath()); // 저장 경로
                 attachment.setPost(post);
 
                 post.addAttachment(attachment); // 양방향 동기화 (편의 메서드)
@@ -96,7 +96,7 @@ public class BoardPostService {
                 createdTime);
     }
 
-// 2. READ (전체 목록 최신순 정렬)
+    // 2. READ (전체 목록 최신순 정렬)
     public List<BoardPostDto> findAll() {
         List<BoardPostDto> list = boardPostRepository.findAll(Sort.by(Sort.Direction.ASC, "id")) // 오래된 글이 먼저
                 .stream()
