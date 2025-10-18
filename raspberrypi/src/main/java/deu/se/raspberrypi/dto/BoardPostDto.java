@@ -64,6 +64,7 @@ public class BoardPostDto {
                                 StoredFileDto fileDto = new StoredFileDto();
                                 fileDto.setSavedName(att.getSavedName());
                                 fileDto.setFullPath(att.getFilePath());
+                                fileDto.setOriginalName(att.getOriginalName());
                                 return fileDto;
                             })
                             .toList()
@@ -73,7 +74,7 @@ public class BoardPostDto {
         return dto;
     }
 
-    // 3. 포맷팅된 날짜 반환 메서드
+    // 3. 날짜 포맷팅 메서드
     public String getFormattedCreatedAt() {
         if (createdAt == null) {
             return "";

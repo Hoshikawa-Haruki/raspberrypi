@@ -59,9 +59,9 @@ public class FileService {
         if (originalName.contains("..")) {
             throw new IllegalArgumentException("유효하지 않은 파일명입니다.");
         }
-
-        String savedName = UUID.randomUUID() + "_" + originalName;
-        Path dest = baseDir.resolve(savedName);
+        String uuid = UUID.randomUUID().toString();
+        String savedName = uuid + "_" + originalName; // 확장자 포함 저장명
+        Path dest = baseDir.resolve(savedName); // 절대 경로
 
         // 4. 파일 저장
         try {
@@ -69,6 +69,7 @@ public class FileService {
             log.info("파일 저장 완료: {}", dest.toAbsolutePath());
             // DTO로 결과 반환
             StoredFileDto fileDto = new StoredFileDto();
+            fileDto.setOriginalName(originalName);
             fileDto.setSavedName(savedName);
             fileDto.setFullPath(dest.toAbsolutePath().toString());
             return fileDto;

@@ -25,13 +25,13 @@ public class Attachment {
     private Long id; // 파일 고유번호
 
     @Column(nullable = false)
-    private String originalName; // 업로드 당시 파일명
+    private String originalName; // 원본 파일명
 
     @Column(nullable = false)
-    private String savedName; // 서버에 저장된 파일명 (UUID 등)
+    private String savedName; // 서버에 저장된 파일명
 
     @Column(nullable = false)
-    private String filePath; // 서버 저장 경로
+    private String filePath; // 저장 경로
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -48,5 +48,3 @@ public class Attachment {
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime uploadTime;
 }
-
-

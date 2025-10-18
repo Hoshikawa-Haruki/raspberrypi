@@ -10,10 +10,10 @@
 
 <html>
     <head>
-        <title>게시글 목록</title>
+        <title>짭케 마이너 갤러리</title>
     </head>
     <body>
-        <h2> 게시글 목록</h2>
+        <h2>게시글 목록</h2>
 
         <a href="${pageContext.request.contextPath}/board/write">✏️ 새 글 작성</a>
         <br/><br/>
@@ -33,11 +33,11 @@
                         <td>${fn:length(posts) - status.index}</td> <!-- 역순 번호 -->
                         <td>
                             <a href="${pageContext.request.contextPath}/board/view?id=${post.id}">
-                                ${post.title}
+                                <c:out value="${post.title}"/>
                             </a>
                         </td>
                         <td>${post.author} (${post.maskedIp})</td>
-                        <td>${post.createdAt}</td>
+                        <td>${post.formattedCreatedAt}</td>
                     </tr>
                 </c:forEach>
 

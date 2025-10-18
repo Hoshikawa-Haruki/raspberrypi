@@ -7,7 +7,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
     <head>
-        <title>글 작성</title>
+        <title>짭케 마이너 갤러리</title>
     </head>
     <body>
         <h2>✏️ 새 글 작성</h2>

@@ -10,8 +10,7 @@ import lombok.Setter;
 /**
  * 파일 업로드 후 저장된 파일명과 전체 경로를 담는 DTO
  *
- * 사용 클래스 위치
- * FileService: 업로드 완료 후 반환용 객체 (savedName, fullPath 저장)
+ * 사용 클래스 위치 FileService: 업로드 완료 후 반환용 객체 (savedName, fullPath 저장)
  * BoardPostService: FileService로부터 받은 정보를 Attachment 엔티티로 변환 및 DB 저장
  * BoardPostDto: 조회 시 첨부파일 정보 전달용 필드 (List<StoredFileDto> attachments)
  *
@@ -19,11 +18,11 @@ import lombok.Setter;
  *
  * @author Haruki
  */
-
 @Getter
 @Setter
 public class StoredFileDto {
 
-    private String savedName;  // 서버에 저장된 파일명 (UUID 포함)
-    private String fullPath;   // 파일의 실제 저장 경로
+    private String originalName; // 원본 파일명 (사용자에게 보여줄 용도)
+    private String savedName;  // 서버에 저장된 파일명 (uuid + originalName)
+    private String fullPath;   // 파일 절대 경로
 }

@@ -26,7 +26,7 @@ public class PageController {
 
     // 1. 게시글 작성
     @GetMapping("/board/write")
-    public String writeForm() {
+    public String write() {
         return "/board/write";
     }
 

@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -52,11 +54,13 @@
                 color: #333;
                 min-height: 200px;
                 margin-bottom: 30px;
-                white-space: pre-line;
+                /*white-space: pre-line;*/
+                /*첫줄 자동개행*/
             }
 
             .attachments img {
-                max-width: 100%;
+                /*max-width: 10%;*/
+                max-width: 500px;
                 margin: 10px 0;
                 border-radius: 4px;
             }
@@ -100,9 +104,10 @@
 
             <!-- 게시글 상단 -->
             <div class="post-header">
-                <div class="post-title">${post.title}</div>
+                <div class="post-title"> <c:out value="${post.title}"/>
+                </div>
                 <div class="post-info">
-                    <span>작성자: ${post.author}</span>
+                    <span>작성자: ${post.author} (${post.maskedIp})</span>
                     <span>작성일: ${post.formattedCreatedAt}</span>
                 </div>
             </div>
@@ -116,15 +121,34 @@
             <c:if test="${not empty post.attachments}">
                 <div class="attachments">
                     <c:forEach var="file" items="${post.attachments}">
-                        <img src="/uploads/${file.savedName}" alt="첨부파일">
+                        <c:choose>
+                            <%-- 이미지 파일만 미리보기 --%>
+                            <c:when test="${fn:endsWith(file.savedName, '.png')
+                                            or fn:endsWith(file.savedName, '.jpg')
+                                            or fn:endsWith(file.savedName, '.jpeg')
+                                            or fn:endsWith(file.savedName, '.gif')}">
+                                    <img src="${pageContext.request.contextPath}/upload/${file.savedName}"
+                                         class="attachments" alt="첨부 이미지" />
+                            </c:when>
+
+                            <%--그 외 파일은 다운로드 링크로 표시--%> 
+                            <c:otherwise>
+                                <a href="${pageContext.request.contextPath}/upload/${file.savedName}" download>
+                                    ${file.originalName}
+                                </a>
+                            </c:otherwise>
+
+                        </c:choose>
                     </c:forEach>
                 </div>
             </c:if>
 
+
+
             <!-- 하단 버튼 -->
             <div class="post-footer">
                 <div>
-                    <a href="/board/list" class="btn">목록</a>
+                    <a href="${pageContext.request.contextPath}/board/list" class="btn">목록</a>
                 </div>
                 <div>
                     <a href="/board/edit/${post.id}" class="btn">수정</a>
