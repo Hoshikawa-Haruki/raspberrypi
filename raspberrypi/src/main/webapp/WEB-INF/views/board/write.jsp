@@ -23,7 +23,7 @@
                    oninput="this.value = this.value.replace(/\s/g, '');" required><br/><br/>
 
             <label>제목:</label>
-            <input type="text" name="title" required><br/><br/>
+            <input type="text" name="title" maxlength="40" required><br/><br/>
 
             <label>내용:</label><br/>
             <textarea name="content" rows="10" cols="60" 

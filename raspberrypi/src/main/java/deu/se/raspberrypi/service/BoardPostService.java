@@ -40,6 +40,7 @@ public class BoardPostService {
         String ip = IpUtils.getClientIp(request);
         dto.setIpAddress(ip);
 
+        // 엔티티화
         BoardPost post = dto.toEntity();
 
         // 파일 업로드 처리

@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- *
+ * 전체 게시글리스트 반환용 DTO
  * @author Haruki
  */
 @Getter
