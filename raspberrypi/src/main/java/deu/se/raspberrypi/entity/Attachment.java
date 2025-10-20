@@ -42,9 +42,9 @@ public class Attachment {
                     foreignKeyDefinition = "FOREIGN KEY (post_id) REFERENCES board_post(id) ON DELETE CASCADE"
             )
     )
-    private BoardPost post; // 게시글 FK 6
+    private BoardPost post; // 게시글 FK 5
 
     @Column(nullable = false, updatable = false, insertable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt; // 첨부파일 업로드 시점 7
+    private LocalDateTime createdAt; // 첨부파일 업로드 시점 6
 }
