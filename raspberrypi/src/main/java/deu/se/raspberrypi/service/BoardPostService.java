@@ -9,6 +9,7 @@ package deu.se.raspberrypi.service;
  * @author Haruki
  */
 import deu.se.raspberrypi.dto.BoardPostDto;
+import deu.se.raspberrypi.dto.BoardPostListDto;
 import deu.se.raspberrypi.dto.StoredFileDto;
 import deu.se.raspberrypi.entity.BoardPost;
 import deu.se.raspberrypi.entity.Attachment;
@@ -16,12 +17,11 @@ import deu.se.raspberrypi.repository.BoardPostRepository;
 import deu.se.raspberrypi.util.IpUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -97,24 +97,11 @@ public class BoardPostService {
     }
 
     // 2. READ (전체 목록 최신순 정렬)
-    public List<BoardPostDto> findAll() {
-        List<BoardPostDto> list = boardPostRepository.findAll(Sort.by(Sort.Direction.ASC, "id")) // 오래된 글이 먼저
+    public List<BoardPostListDto> findAll() {
+        return boardPostRepository.findAll(Sort.by(DESC, "id"))
                 .stream()
-                .map(post -> {
-                    BoardPostDto dto = new BoardPostDto();
-                    dto.setId(post.getId());
-                    dto.setIpAddress(post.getIpAddress());
-                    dto.setAuthor(post.getAuthor());
-                    dto.setTitle(post.getTitle());
-                    dto.setContent(post.getContent());
-                    dto.setCreatedAt(post.getCreatedAt());
-                    return dto;
-                })
-                .collect(Collectors.toList());
-
-        // 최신글이 위로 오도록 리버스
-        Collections.reverse(list);
-        return list;
+                .map(BoardPostListDto::fromEntity)
+                .toList();
     }
 
     // 2.1 READ (단일 조회)

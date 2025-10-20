@@ -28,9 +28,9 @@
                 </tr>
             </thead>
             <tbody>
-                <c:forEach var="post" items="${posts}" varStatus="status">
+                <c:forEach var="post" items="${postList}" varStatus="status">
                     <tr>
-                        <td>${fn:length(posts) - status.index}</td> <!-- 역순 번호 -->
+                        <td>${postList.size() - status.index}</td> <!-- 역순 번호 -->
                         <td>
                             <a href="${pageContext.request.contextPath}/board/view?id=${post.id}">
                                 <c:out value="${post.title}"/>
@@ -44,7 +44,7 @@
             </tbody>
         </table>
 
-        <c:if test="${empty posts}">
+        <c:if test="${empty postList}">
             <p>등록된 게시글이 없습니다.</p>
         </c:if>
 

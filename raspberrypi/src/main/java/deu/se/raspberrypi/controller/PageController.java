@@ -41,7 +41,7 @@ public class PageController {
     // 3. 게시글 리스트 조회
     @GetMapping("/board/list")
     public String list(Model model) {
-        model.addAttribute("posts", boardPostService.findAll());
+        model.addAttribute("postList", boardPostService.findAll());
         return "/board/list";
     }
 
