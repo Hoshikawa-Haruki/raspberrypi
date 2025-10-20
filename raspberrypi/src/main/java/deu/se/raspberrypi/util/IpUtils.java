@@ -5,8 +5,6 @@
 package deu.se.raspberrypi.util;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.net.InetAddress;
-import java.rmi.UnknownHostException;
 
 /**
  * 클라이언트의 실제 IP 주소를 추출하는 유틸리티 클래스.

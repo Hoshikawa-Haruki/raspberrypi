@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "board_post")
@@ -49,8 +48,9 @@ public class BoardPost {
             fetch = FetchType.LAZY)
     private List<Attachment> attachments = new ArrayList<>();
 
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, insertable = false,
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+    )
     private LocalDateTime createdAt;
 
     @Column(nullable = false, insertable = false,

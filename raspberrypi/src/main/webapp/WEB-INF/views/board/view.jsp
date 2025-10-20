@@ -121,27 +121,27 @@
             <c:if test="${not empty post.attachments}">
                 <div class="attachments">
                     <c:forEach var="file" items="${post.attachments}">
+                        <c:set var="physicalName" value="${file.uuid}.${file.ext}" />
+
                         <c:choose>
-                            <%-- 이미지 파일만 미리보기 --%>
-                            <c:when test="${fn:endsWith(file.savedName, '.png')
-                                            or fn:endsWith(file.savedName, '.jpg')
-                                            or fn:endsWith(file.savedName, '.jpeg')
-                                            or fn:endsWith(file.savedName, '.gif')}">
-                                    <img src="${pageContext.request.contextPath}/upload/${file.savedName}"
-                                         class="attachments" alt="첨부 이미지" />
+                            <%-- 이미지 파일 미리보기 --%>
+                            <c:when test="${file.ext == 'png' or file.ext == 'jpg' or file.ext == 'jpeg' or file.ext == 'gif'}">
+                                <img src="${pageContext.request.contextPath}/upload/${physicalName}"
+                                     class="attachments" alt="${file.originalName}" />
                             </c:when>
 
-                            <%--그 외 파일은 다운로드 링크로 표시--%> 
+                            <%-- 그 외 파일은 다운로드 링크 표시 --%>
                             <c:otherwise>
-                                <a href="${pageContext.request.contextPath}/upload/${file.savedName}" download>
+                                <a href="${pageContext.request.contextPath}/download/${file.uuid}">
                                     ${file.originalName}
                                 </a>
                             </c:otherwise>
-
                         </c:choose>
+
                     </c:forEach>
                 </div>
             </c:if>
+
 
 
 

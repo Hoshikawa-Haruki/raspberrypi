@@ -46,19 +46,17 @@ public class BoardPostService {
         if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
             for (MultipartFile file : dto.getFiles()) {
                 // FileService 호출 → 실제 저장된 파일명 받기
-                StoredFileDto fildDto = fileService.handleUpload(file);
+                StoredFileDto fileDto = fileService.handleUpload(file);
 
-                if (fildDto == null) {
+                if (fileDto == null) {
                     continue;
                 }
 
                 // 업로드 결과를 엔티티로 변환
                 Attachment attachment = new Attachment();
+                attachment.setUuid(fileDto.getUuid());
+                attachment.setExt(fileDto.getExt());
                 attachment.setOriginalName(file.getOriginalFilename());// 원본 파일명
-                attachment.setSavedName(fildDto.getSavedName()); // 저장 이름 (UUID)
-                attachment.setFilePath(fildDto.getFullPath()); // 저장 경로
-                attachment.setPost(post);
-
                 post.addAttachment(attachment); // 양방향 동기화 (편의 메서드)
             }
         }
@@ -71,18 +69,20 @@ public class BoardPostService {
             StringBuilder sb = new StringBuilder();
             for (Attachment file : post.getAttachments()) {
                 sb.append(file.getOriginalName())
-                        .append("(")
-                        .append(file.getSavedName())
+                        .append(" (")
+                        .append(file.getUuid())
+                        .append(".")
+                        .append(file.getExt())
                         .append("), ");
             }
             sb.setLength(sb.length() - 2);
-            attachmentsInfo = post.getAttachments().size() + "개 [" + sb + "]";
+            attachmentsInfo = post.getAttachments().size() + "ea [" + sb + "]";
         } else {
             attachmentsInfo = "[none]";
         }
 
         // 작성시간(createdAt) 포맷 변경 (yyyy-MM-dd HH:mm:ss)
-        String createdTime = post.getCreatedAt() != null
+        String createdAt = post.getCreatedAt() != null
                 ? post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                 : "N/A";
 
@@ -93,7 +93,7 @@ public class BoardPostService {
                 post.getAuthor(),
                 post.getIpAddress(),
                 attachmentsInfo,
-                createdTime);
+                createdAt);
     }
 
     // 2. READ (전체 목록 최신순 정렬)

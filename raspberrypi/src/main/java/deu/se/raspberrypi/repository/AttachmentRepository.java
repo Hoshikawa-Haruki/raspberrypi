@@ -5,6 +5,7 @@
 package deu.se.raspberrypi.repository;
 
 import deu.se.raspberrypi.entity.Attachment;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +15,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
+
+    Optional<Attachment> findByUuid(String uuid);
 }

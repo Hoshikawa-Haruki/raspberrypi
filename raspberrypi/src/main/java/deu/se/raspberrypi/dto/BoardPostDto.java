@@ -60,11 +60,11 @@ public class BoardPostDto {
         if (post.getAttachments() != null && !post.getAttachments().isEmpty()) {
             dto.setAttachments(
                     post.getAttachments().stream()
-                            .map(att -> {
+                            .map(attach -> {
                                 StoredFileDto fileDto = new StoredFileDto();
-                                fileDto.setSavedName(att.getSavedName());
-                                fileDto.setFullPath(att.getFilePath());
-                                fileDto.setOriginalName(att.getOriginalName());
+                                fileDto.setUuid(attach.getUuid());
+                                fileDto.setExt(attach.getExt());
+                                fileDto.setOriginalName(attach.getOriginalName());
                                 return fileDto;
                             })
                             .toList()
