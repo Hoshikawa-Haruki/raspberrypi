@@ -131,4 +131,15 @@ public class FileService {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public void deletePhysicalFile(String uuid, String ext) {
+        Path path = Paths.get(uploadDir, uuid + "." + ext);
+
+        try {
+            Files.deleteIfExists(path);
+            log.info("삭제 완료: {}", path);
+        } catch (IOException e) {
+            log.error("파일 삭제 실패: {}", path, e);
+        }
+    }
 }

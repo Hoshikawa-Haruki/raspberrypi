@@ -32,7 +32,7 @@ public class Post {
     @Column(nullable = false, length = 50)
     private String author; // 작성자
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 30)
     private String password; // 글 수정/삭제용 비밀번호
 
     @Column(nullable = false, length = 200)
@@ -53,25 +53,19 @@ public class Post {
     )
     private LocalDateTime createdAt;
 
-    @Column(nullable = false, insertable = false,
+    @Column(nullable = false, updatable = false, insertable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt; // 수정 시간
 
-    // ★ 편의 메서드 (양방향 관계 동기화)
-    // 게시글 작성 시
+    // ★ 편의 메서드 
+    // 게시글 작성 시 (양방향 관계 동기화)
     public void addAttachment(Attachment file) {
         attachments.add(file);
         file.setPost(this); // FK(post_id) 설정
     }
-
+    // 게시글 수정&삭제 시 첨부파일 관계 해제
     public void removeAttachment(Attachment file) {
         attachments.remove(file);
         file.setPost(null); // 관계 해제
     }
-    
-    // 게시글 수정 시
-    public void removeAttachmentById(Long attachmentId) {
-        attachments.removeIf(att -> att.getId().equals(attachmentId));
-    }
-
 }

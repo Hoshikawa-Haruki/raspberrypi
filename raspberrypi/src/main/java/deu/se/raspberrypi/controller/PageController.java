@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,7 +57,7 @@ public class PageController {
     }
 
     // 5. 게시글 수정 폼
-    @GetMapping("/board/update/{id}")
+    @GetMapping("/board/updateForm/{id}")
     public String updateForm(@PathVariable Long id, Model model) {
         PostDto post = postService.findById(id);
         model.addAttribute("post", post);
@@ -70,4 +71,10 @@ public class PageController {
         return "redirect:/board/view/" + id;
     }
 
+    // 7. 게시글 삭제 요청
+    @PostMapping("/board/delete/{id}")
+    public String deletePost(@PathVariable Long id) {
+        postService.deletePost(id);
+        return "redirect:/board/list";
+    }
 }

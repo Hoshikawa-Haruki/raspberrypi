@@ -28,7 +28,6 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import deu.se.raspberrypi.repository.PostRepository;
-import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -49,7 +48,7 @@ public class PostService {
         // 2) DTO → Entity 변환 (Mapper 사용)
         Post post = PostMapper.toPostEntity(dto);
 
-        // 파일 업로드 처리
+        // 3) 파일 업로드 처리
         if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
             for (MultipartFile file : dto.getFiles()) {
                 // FileService 호출 → 실제 저장된 파일명 받기
@@ -111,7 +110,7 @@ public class PostService {
                     PostListDto dto = PostMapper.toPostListDto(post);
                     // 목록에서도 표시용 데이터 가공
                     dto.setMaskedIp(PostFormatter.maskIp(post.getIpAddress()));
-                    dto.setFormattedCreatedAt(PostFormatter.dateformat(post.getCreatedAt()));
+                    dto.setFormattedCreatedAt(PostFormatter.dateFormat(post.getCreatedAt()));
                     return dto;
                 })
                 .toList();
@@ -125,7 +124,7 @@ public class PostService {
 
         // DTO에 표시용 값 주입
         dto.setMaskedIp(PostFormatter.maskIp(post.getIpAddress()));
-        dto.setFormattedCreatedAt(PostFormatter.dateformat(post.getCreatedAt()));
+        dto.setFormattedCreatedAt(PostFormatter.dateFormat(post.getCreatedAt()));
 
         return dto;
     }
@@ -140,9 +139,23 @@ public class PostService {
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
 
-        // 2) 첨부파일 삭제 (DB + orphanRemoval로 실제 삭제됨)
+        // 2) 첨부파일 삭제 (DB + 실제 파일)
         if (dto.getDeleteFileIds() != null) {
-            dto.getDeleteFileIds().forEach(post::removeAttachmentById);
+            dto.getDeleteFileIds().forEach(fileId -> {
+
+                // 삭제 대상 찾기
+                Attachment targetFile = post.getAttachments().stream()
+                        .filter(a -> a.getId().equals(fileId))
+                        .findFirst()
+                        .orElse(null);
+
+                if (targetFile != null) {
+                    // 2-1) 실제 파일 삭제
+                    fileService.deletePhysicalFile(targetFile.getUuid(), targetFile.getExt());
+                    // 2-2) 엔티티 관계 해제 (DB orphanRemoval로 삭제됨)
+                    post.removeAttachment(targetFile);
+                }
+            });
         }
 
         // 3) 새 파일 업로드 추가
@@ -151,31 +164,26 @@ public class PostService {
                 if (!file.isEmpty()) {
                     StoredFileDto saved = fileService.handleUpload(file);
                     if (saved != null) {
-                        Attachment attach = new Attachment();
-                        attach.setUuid(saved.getUuid());
-                        attach.setExt(saved.getExt());
-                        attach.setOriginalName(file.getOriginalFilename());
-                        post.addAttachment(attach);
+                        Attachment attachment = new Attachment();
+                        attachment.setUuid(saved.getUuid());
+                        attachment.setExt(saved.getExt());
+                        attachment.setOriginalName(file.getOriginalFilename());
+                        post.addAttachment(attachment);
                     }
                 }
             }
         }
-
-        // 4) 수정시간 갱신
-        post.setUpdatedAt(LocalDateTime.now());
-    }
-
-    // 3. UPDATE    
-    public void update(PostDto dto) {
-        Post post = postRepository.findById(dto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-        post.setTitle(dto.getTitle());
-        post.setContent(dto.getContent());
-        postRepository.save(post);
     }
 
     // 4. DELETE
-    public void delete(Long id) {
-        postRepository.deleteById(id);
+    public void deletePost(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
+
+        // 첨부파일 삭제
+        for (Attachment att : post.getAttachments()) {
+            fileService.deletePhysicalFile(att.getUuid(), att.getExt());
+        }
+        postRepository.delete(post);
     }
 }

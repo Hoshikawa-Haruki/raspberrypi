@@ -40,7 +40,6 @@
                         <td>${post.formattedCreatedAt}</td>
                     </tr>
                 </c:forEach>
-
             </tbody>
         </table>
 

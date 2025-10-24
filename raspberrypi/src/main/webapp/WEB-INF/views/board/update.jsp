@@ -24,6 +24,7 @@
             <input type="text" value="${post.author}" readonly><br/><br/>
 
             <!-- 기존 저장된 비밀번호 (수정불가-전달X) -->
+            <!-- TODO : 수정 화면 진입 시 비밀번호 검증 로직 추가 필요-->
             <label>비밀번호:</label>
             <input type="password" value="${post.password}" readonly><br/><br/>
 
@@ -49,6 +50,7 @@
                     <c:choose>
                         <c:when test="${file.ext == 'png' or file.ext == 'jpg' or file.ext == 'jpeg' or file.ext == 'gif'}">
                             <img src="${pageContext.request.contextPath}/upload/${physicalName}"
+                                 alt="${file.uuid}"
                                  style="max-width:200px; display:block; margin:3px 0;">
                         </c:when>
                         <c:otherwise>
@@ -66,7 +68,7 @@
             <label>새 파일 첨부:</label>
             <input type="file" name="newFiles" multiple><br/><br/>
 
-            <button type="submit">등록</button>
+            <button type="submit">수정</button>
             <button type="button"
                     onclick="location.href = '${pageContext.request.contextPath}/board/list'">취소</button>
         </form>

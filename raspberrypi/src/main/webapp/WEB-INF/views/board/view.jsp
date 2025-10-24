@@ -54,7 +54,7 @@
                 color: #333;
                 min-height: 200px;
                 margin-bottom: 30px;
-                /*white-space: pre-line;*/
+                white-space: pre-line;
                 /*첫줄 자동개행*/
             }
 
@@ -113,9 +113,8 @@
             </div>
 
             <!-- 본문 -->
-            <div class="post-content">
-                ${post.content}
-            </div>
+            <div class="post-content">${post.content}</div>
+
 
             <!-- 첨부파일 -->
             <c:if test="${not empty post.attachments}">
@@ -151,7 +150,7 @@
                     <a href="${pageContext.request.contextPath}/board/list" class="btn">목록</a>
                 </div>
                 <div>
-                    <a href="${pageContext.request.contextPath}/board/update/${post.id}" class="btn">수정</a>
+                    <a href="${pageContext.request.contextPath}/board/updateForm/${post.id}" class="btn">수정</a>
                     <form method="post" action="/board/delete/${post.id}" style="display:inline;">
                         <button type="submit" class="btn btn-danger">삭제</button>
                     </form>

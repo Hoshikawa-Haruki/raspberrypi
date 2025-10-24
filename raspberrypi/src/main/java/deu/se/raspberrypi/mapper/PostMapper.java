@@ -45,7 +45,6 @@ public class PostMapper {
                             .toList()
             );
         }
-
         return dto;
     }
 

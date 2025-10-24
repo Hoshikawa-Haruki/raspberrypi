@@ -21,7 +21,7 @@ public class PostFormatter {
         return parts.length >= 2 ? parts[0] + "." + parts[1] : ip;
     }
 
-    public static String dateformat(LocalDateTime t) {
+    public static String dateFormat(LocalDateTime t) {
         if (t == null) {
             return "";
         }
