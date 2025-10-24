@@ -14,6 +14,8 @@ import deu.se.raspberrypi.dto.PostUpdateDto;
 import deu.se.raspberrypi.dto.StoredFileDto;
 import deu.se.raspberrypi.entity.Post;
 import deu.se.raspberrypi.entity.Attachment;
+import deu.se.raspberrypi.formatter.PostFormatter;
+import deu.se.raspberrypi.mapper.PostMapper;
 import deu.se.raspberrypi.util.IpUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -34,18 +36,18 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class PostService {
 
-    private final PostRepository boardPostRepository;
+    private final PostRepository postRepository;
     private final FileService fileService;
 
     // CREATE
     public void save(PostDto dto, HttpServletRequest request) {
 
-        // IP 추출 (서버 측에서 수행)
+        // 1) IP 추출 (서버 측에서 수행)
         String ip = IpUtils.getClientIp(request);
         dto.setIpAddress(ip);
 
-        // 엔티티화
-        Post post = dto.toEntity();
+        // 2) DTO → Entity 변환 (Mapper 사용)
+        Post post = PostMapper.toPostEntity(dto);
 
         // 파일 업로드 처리
         if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
@@ -66,7 +68,7 @@ public class PostService {
             }
         }
 
-        boardPostRepository.save(post);
+        postRepository.save(post);
 
         // 첨부파일 체크 메서드
         String attachmentsInfo;
@@ -103,25 +105,35 @@ public class PostService {
 
     // 2. READ (전체 목록 최신순 정렬)
     public List<PostListDto> findAll() {
-        return boardPostRepository.findAll(Sort.by(DESC, "id"))
+        return postRepository.findAll(Sort.by(DESC, "id"))
                 .stream()
-                .map(PostListDto::fromEntity)
+                .map(post -> {
+                    PostListDto dto = PostMapper.toPostListDto(post);
+                    // 목록에서도 표시용 데이터 가공
+                    dto.setMaskedIp(PostFormatter.maskIp(post.getIpAddress()));
+                    dto.setFormattedCreatedAt(PostFormatter.dateformat(post.getCreatedAt()));
+                    return dto;
+                })
                 .toList();
     }
 
     // 2.1 READ (단일 조회)
     public PostDto findById(Long id) {
-        Post post = boardPostRepository.findById(id)
+        Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+        PostDto dto = PostMapper.toPostDto(post);
 
-        // Entity → DTO 변환
-        return PostDto.fromEntity(post);
+        // DTO에 표시용 값 주입
+        dto.setMaskedIp(PostFormatter.maskIp(post.getIpAddress()));
+        dto.setFormattedCreatedAt(PostFormatter.dateformat(post.getCreatedAt()));
+
+        return dto;
     }
 
     // 3. UPDATE
     public void updateWithFiles(Long id, PostUpdateDto dto) {
 
-        Post post = boardPostRepository.findById(id)
+        Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
         // 1) 제목/내용 수정
@@ -155,15 +167,15 @@ public class PostService {
 
     // 3. UPDATE    
     public void update(PostDto dto) {
-        Post post = boardPostRepository.findById(dto.getId())
+        Post post = postRepository.findById(dto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
-        boardPostRepository.save(post);
+        postRepository.save(post);
     }
 
     // 4. DELETE
     public void delete(Long id) {
-        boardPostRepository.deleteById(id);
+        postRepository.deleteById(id);
     }
 }

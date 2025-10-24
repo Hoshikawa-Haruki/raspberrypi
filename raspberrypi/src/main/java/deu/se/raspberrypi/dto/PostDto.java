@@ -5,15 +5,14 @@
 package deu.se.raspberrypi.dto;
 
 /**
- * JSP ↔ Controller 컨트롤러에서 @RequestParam을 따로 안 써도, BoardPostDto로 바로 form 데이터를 받을 수 있음
- * 
+ * JSP ↔ Controller 컨트롤러에서 @RequestParam을 따로 안 써도, BoardPostDto로 바로 form 데이터를 받을
+ * 수 있음
+ *
  * 게시글 저장, 조회용 DTO (Create, Read)
  *
  * @author Haruki
  */
-import deu.se.raspberrypi.entity.Post;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,87 +32,6 @@ public class PostDto {
     private LocalDateTime updatedAt;
     private List<MultipartFile> files;             // 저장용
     private List<StoredFileDto> attachments;       // 조회용 (저장된 첨부파일 정보)
-
-    // 1. 게시글 작성
-    public Post toEntity() { // DTO → Entity 변환, PostDto → BoardPost로 변환해주는 팩토리 메서드
-        Post post = new Post();
-        post.setId(id);
-        post.setIpAddress(ipAddress);
-        post.setAuthor(author);
-        post.setPassword(password);
-        post.setTitle(title);
-        post.setContent(content);
-        return post;
-    }
-
-    // 2. 게시글 단일 조회
-    public static PostDto fromEntity(Post post) {
-        PostDto dto = new PostDto();
-        dto.setId(post.getId());
-        dto.setIpAddress(post.getIpAddress());
-        dto.setAuthor(post.getAuthor());
-        dto.setTitle(post.getTitle());
-        dto.setContent(post.getContent());
-        dto.setCreatedAt(post.getCreatedAt());
-        dto.setUpdatedAt(post.getUpdatedAt());
-
-        // 첨부파일이 있으면 StoredFileDto로 매핑
-        if (post.getAttachments() != null && !post.getAttachments().isEmpty()) {
-            dto.setAttachments(
-                    post.getAttachments().stream()
-                            .map(attach -> {
-                                StoredFileDto fileDto = new StoredFileDto();
-                                fileDto.setUuid(attach.getUuid());
-                                fileDto.setExt(attach.getExt());
-                                fileDto.setOriginalName(attach.getOriginalName());
-                                return fileDto;
-                            })
-                            .toList()
-            );
-        }
-
-        return dto;
-    }
-
-    // 3. 날짜 포맷팅 메서드
-    public String getFormattedCreatedAt() {
-        if (createdAt == null) {
-            return "";
-        }
-        return createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-    }
-
-    /**
-     * 사용자의 IP 주소 중 앞부분만 남기고 나머지는 제거 예: 27.35.110.2 → 27.35
-     *
-     * @return
-     */
-    // 4. IP주소 마스킹 메서드
-    public String getMaskedIp() {
-        if (ipAddress == null) {
-            return "-";
-        }
-
-        // IPv4 형태인 경우
-        if (ipAddress.contains(".")) {
-            String[] parts = ipAddress.split("\\.");
-            if (parts.length >= 2) {
-                return parts[0] + "." + parts[1]; // 앞 2세그먼트만 반환
-            } else {
-                return ipAddress;
-            }
-        }
-
-        // IPv6 형태인 경우 (간단히 앞 2부분만 표시)
-        if (ipAddress.contains(":")) {
-            String[] parts = ipAddress.split(":");
-            if (parts.length >= 2) {
-                return parts[0] + ":" + parts[1];
-            } else {
-                return ipAddress;
-            }
-        }
-
-        return ipAddress;
-    }
+    private String maskedIp;
+    private String formattedCreatedAt;
 }
