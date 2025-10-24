@@ -151,7 +151,7 @@
                     <a href="${pageContext.request.contextPath}/board/list" class="btn">목록</a>
                 </div>
                 <div>
-                    <a href="/board/edit/${post.id}" class="btn">수정</a>
+                    <a href="${pageContext.request.contextPath}/board/update/${post.id}" class="btn">수정</a>
                     <form method="post" action="/board/delete/${post.id}" style="display:inline;">
                         <button type="submit" class="btn btn-danger">삭제</button>
                     </form>

@@ -5,12 +5,13 @@
 package deu.se.raspberrypi.dto;
 
 /**
- * 게시글 입력/조회용 DTO JSP ↔ Controller 컨트롤러에서 @RequestParam을 따로 안 써도, BoardPostDto로
- * 바로 form 데이터를 받을 수 있음
+ * JSP ↔ Controller 컨트롤러에서 @RequestParam을 따로 안 써도, BoardPostDto로 바로 form 데이터를 받을 수 있음
+ * 
+ * 게시글 저장, 조회용 DTO (Create, Read)
  *
  * @author Haruki
  */
-import deu.se.raspberrypi.entity.BoardPost;
+import deu.se.raspberrypi.entity.Post;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -20,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
-public class BoardPostDto {
+public class PostDto {
 
     private Long id;
     private String ipAddress;
@@ -30,12 +31,12 @@ public class BoardPostDto {
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<MultipartFile> files;             // 업로드용
+    private List<MultipartFile> files;             // 저장용
     private List<StoredFileDto> attachments;       // 조회용 (저장된 첨부파일 정보)
 
     // 1. 게시글 작성
-    public BoardPost toEntity() { // DTO → Entity 변환, BoardPostDto → BoardPost로 변환해주는 팩토리 메서드
-        BoardPost post = new BoardPost();
+    public Post toEntity() { // DTO → Entity 변환, PostDto → BoardPost로 변환해주는 팩토리 메서드
+        Post post = new Post();
         post.setId(id);
         post.setIpAddress(ipAddress);
         post.setAuthor(author);
@@ -46,8 +47,8 @@ public class BoardPostDto {
     }
 
     // 2. 게시글 단일 조회
-    public static BoardPostDto fromEntity(BoardPost post) {
-        BoardPostDto dto = new BoardPostDto();
+    public static PostDto fromEntity(Post post) {
+        PostDto dto = new PostDto();
         dto.setId(post.getId());
         dto.setIpAddress(post.getIpAddress());
         dto.setAuthor(post.getAuthor());

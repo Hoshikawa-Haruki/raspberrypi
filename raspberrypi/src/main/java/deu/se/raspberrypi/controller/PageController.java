@@ -4,52 +4,70 @@
  */
 package deu.se.raspberrypi.controller;
 
-import deu.se.raspberrypi.dto.BoardPostDto;
-import deu.se.raspberrypi.service.BoardPostService;
+import deu.se.raspberrypi.dto.PostDto;
+import deu.se.raspberrypi.dto.PostUpdateDto;
+import deu.se.raspberrypi.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
  * @author Haruki
  */
 @Controller
+@RequiredArgsConstructor
 public class PageController {
 
-    @Autowired
-    BoardPostService boardPostService;
+    private final PostService postService;
 
-    // 1. 게시글 작성
+    // 1. 게시글 작성 폼
     @GetMapping("/board/write")
-    public String write() {
+    public String writeForm() {
         return "/board/write";
     }
 
     // 2. 게시글 저장
     @PostMapping("/board/save")
-    public String save(BoardPostDto dto, HttpServletRequest request) { // Spring이 자동으로 dto 객체를 생성해서 넘겨줌
+    public String save(PostDto dto, HttpServletRequest request) {
+        // Spring이 자동으로 dto 객체를 생성해서 넘겨줌
         //JSP의 <form>의 name 속성과 DTO의 필드명이 동일하면, Spring이 내부적으로 setter를 호출해서 DTO에 값을 자동 주입함
-        boardPostService.save(dto, request);
+        postService.save(dto, request);
         return "redirect:/board/list";
     }
 
     // 3. 게시글 리스트 조회
     @GetMapping("/board/list")
     public String list(Model model) {
-        model.addAttribute("postList", boardPostService.findAll());
+        model.addAttribute("postList", postService.findAll());
         return "/board/list";
     }
 
     // 4. 게시글 단일 조회
-    @GetMapping("/board/view")
-    public String view(@RequestParam("id") Long id, Model model) {
-        BoardPostDto post = boardPostService.findById(id);
+    @GetMapping("/board/view/{id}")
+    public String view(@PathVariable Long id, Model model) {
+        PostDto post = postService.findById(id);
         model.addAttribute("post", post);
         return "board/view";  // => view.jsp 로 forward
     }
+
+    // 5. 게시글 수정 폼
+    @GetMapping("/board/update/{id}")
+    public String updateForm(@PathVariable Long id, Model model) {
+        PostDto post = postService.findById(id);
+        model.addAttribute("post", post);
+        return "board/update";
+    }
+
+    // 6. 게시글 수정 요청
+    @PostMapping("/board/update/{id}")
+    public String updatePost(@PathVariable Long id, PostUpdateDto dto) {
+        postService.updateWithFiles(id, dto);
+        return "redirect:/board/view/" + id;
+    }
+
 }

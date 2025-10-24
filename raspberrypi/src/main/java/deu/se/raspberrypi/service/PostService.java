@@ -8,14 +8,15 @@ package deu.se.raspberrypi.service;
  *
  * @author Haruki
  */
-import deu.se.raspberrypi.dto.BoardPostDto;
-import deu.se.raspberrypi.dto.BoardPostListDto;
+import deu.se.raspberrypi.dto.PostDto;
+import deu.se.raspberrypi.dto.PostListDto;
+import deu.se.raspberrypi.dto.PostUpdateDto;
 import deu.se.raspberrypi.dto.StoredFileDto;
-import deu.se.raspberrypi.entity.BoardPost;
+import deu.se.raspberrypi.entity.Post;
 import deu.se.raspberrypi.entity.Attachment;
-import deu.se.raspberrypi.repository.BoardPostRepository;
 import deu.se.raspberrypi.util.IpUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,24 +25,27 @@ import org.springframework.data.domain.Sort;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import deu.se.raspberrypi.repository.PostRepository;
+import java.time.LocalDateTime;
 
 @Service
+@Transactional
 @Slf4j
 @RequiredArgsConstructor
-public class BoardPostService {
+public class PostService {
 
-    private final BoardPostRepository boardPostRepository;
+    private final PostRepository boardPostRepository;
     private final FileService fileService;
 
     // CREATE
-    public void save(BoardPostDto dto, HttpServletRequest request) {
+    public void save(PostDto dto, HttpServletRequest request) {
 
         // IP 추출 (서버 측에서 수행)
         String ip = IpUtils.getClientIp(request);
         dto.setIpAddress(ip);
 
         // 엔티티화
-        BoardPost post = dto.toEntity();
+        Post post = dto.toEntity();
 
         // 파일 업로드 처리
         if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
@@ -98,25 +102,60 @@ public class BoardPostService {
     }
 
     // 2. READ (전체 목록 최신순 정렬)
-    public List<BoardPostListDto> findAll() {
+    public List<PostListDto> findAll() {
         return boardPostRepository.findAll(Sort.by(DESC, "id"))
                 .stream()
-                .map(BoardPostListDto::fromEntity)
+                .map(PostListDto::fromEntity)
                 .toList();
     }
 
     // 2.1 READ (단일 조회)
-    public BoardPostDto findById(Long id) {
-        BoardPost post = boardPostRepository.findById(id)
+    public PostDto findById(Long id) {
+        Post post = boardPostRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
         // Entity → DTO 변환
-        return BoardPostDto.fromEntity(post);
+        return PostDto.fromEntity(post);
     }
 
     // 3. UPDATE
-    public void update(BoardPostDto dto) {
-        BoardPost post = boardPostRepository.findById(dto.getId())
+    public void updateWithFiles(Long id, PostUpdateDto dto) {
+
+        Post post = boardPostRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        // 1) 제목/내용 수정
+        post.setTitle(dto.getTitle());
+        post.setContent(dto.getContent());
+
+        // 2) 첨부파일 삭제 (DB + orphanRemoval로 실제 삭제됨)
+        if (dto.getDeleteFileIds() != null) {
+            dto.getDeleteFileIds().forEach(post::removeAttachmentById);
+        }
+
+        // 3) 새 파일 업로드 추가
+        if (dto.getNewFiles() != null) {
+            for (MultipartFile file : dto.getNewFiles()) {
+                if (!file.isEmpty()) {
+                    StoredFileDto saved = fileService.handleUpload(file);
+                    if (saved != null) {
+                        Attachment attach = new Attachment();
+                        attach.setUuid(saved.getUuid());
+                        attach.setExt(saved.getExt());
+                        attach.setOriginalName(file.getOriginalFilename());
+                        post.addAttachment(attach);
+                    }
+                }
+            }
+        }
+
+        // 4) 수정시간 갱신
+        post.setUpdatedAt(LocalDateTime.now());
+    }
+
+    // 3. UPDATE    
+    public void update(PostDto dto) {
+        Post post = boardPostRepository.findById(dto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());

@@ -4,19 +4,20 @@
  */
 package deu.se.raspberrypi.dto;
 
-import deu.se.raspberrypi.entity.BoardPost;
+import deu.se.raspberrypi.entity.Post;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 전체 게시글리스트 반환용 DTO
+ * 전체 게시글 리스트 반환용 DTO
+ * 
  * @author Haruki
  */
 @Getter
 @Setter
-public class BoardPostListDto {
+public class PostListDto {
 
     private Long id;
     private String author;
@@ -25,8 +26,8 @@ public class BoardPostListDto {
     private LocalDateTime createdAt;
 
     // ★ 목록 변환용 정적 팩토리
-    public static BoardPostListDto fromEntity(BoardPost post) {
-        BoardPostListDto dto = new BoardPostListDto();
+    public static PostListDto fromEntity(Post post) {
+        PostListDto dto = new PostListDto();
         dto.setId(post.getId());
         dto.setAuthor(post.getAuthor());
         dto.setTitle(post.getTitle());

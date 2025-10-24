@@ -32,7 +32,7 @@
                     <tr>
                         <td>${postList.size() - status.index}</td> <!-- 역순 번호 -->
                         <td>
-                            <a href="${pageContext.request.contextPath}/board/view?id=${post.id}">
+                            <a href="${pageContext.request.contextPath}/board/view/${post.id}">
                                 <c:out value="${post.title}"/>
                             </a>
                         </td>

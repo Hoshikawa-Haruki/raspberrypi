@@ -20,7 +20,7 @@ import lombok.Setter;
 @Table(name = "board_post")
 @Getter
 @Setter
-public class BoardPost {
+public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,6 +58,7 @@ public class BoardPost {
     private LocalDateTime updatedAt; // 수정 시간
 
     // ★ 편의 메서드 (양방향 관계 동기화)
+    // 게시글 작성 시
     public void addAttachment(Attachment file) {
         attachments.add(file);
         file.setPost(this); // FK(post_id) 설정
@@ -67,4 +68,10 @@ public class BoardPost {
         attachments.remove(file);
         file.setPost(null); // 관계 해제
     }
+    
+    // 게시글 수정 시
+    public void removeAttachmentById(Long attachmentId) {
+        attachments.removeIf(att -> att.getId().equals(attachmentId));
+    }
+
 }

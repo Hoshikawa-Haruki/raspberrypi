@@ -4,7 +4,7 @@
  */
 package deu.se.raspberrypi.repository;
 
-import deu.se.raspberrypi.entity.BoardPost;
+import deu.se.raspberrypi.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
  * @author Haruki
  */
 @Repository
-public interface BoardPostRepository extends JpaRepository<BoardPost, Long> {
+public interface PostRepository extends JpaRepository<Post, Long> {
     // 기본 CRUD 메서드 (save, findById, findAll, deleteById) 자동 제공
 }

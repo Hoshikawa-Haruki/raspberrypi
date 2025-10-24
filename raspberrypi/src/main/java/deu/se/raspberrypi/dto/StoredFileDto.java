@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 파일 업로드 후 저장된 파일명과 전체 경로를 담는 DTO
+ * 파일 업로드 후 저장된 파일에 대한 메타데이터를 담는 DTO
  *
  * 사용 클래스 위치
  * 1. FileService: 업로드 완료 후 반환용 객체
@@ -22,7 +22,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StoredFileDto {
-
+    
+    private Long id; // 첨부파일 id
     private String originalName; // 원본 파일명 (사용자에게 보여줄 용도)
     private String uuid; // uuid
     private String ext; // 확장자

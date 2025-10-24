@@ -21,5 +21,4 @@ public class SystemController {
         log.info("index has called.. hahahaha");
         return "index";
     }
-    
 }
