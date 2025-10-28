@@ -6,46 +6,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     Created on : 2025. 10. 28., 오후 9:00:59
     Author     : Haruki
 */
-body {
-    font-family: "Noto Sans KR", sans-serif;
-    background-color: #f8f9fa;
-    margin: 0;
-}
-
-.container {
-    width: 900px;
-    margin: 40px auto;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    padding: 25px 35px;
-}
-
-h2 {
-    margin-top: 0;
-    font-size: 22px;
-    font-weight: bold;
-    color: #333;
-    border-bottom: 1px solid #e5e5e5;
-    padding-bottom: 15px;
-}
-
 .actions {
     text-align: right;
     margin-bottom: 10px;
-}
-
-.actions button {
-    padding: 7px 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: #f8f9fa;
-    cursor: pointer;
-}
-
-.actions button:hover {
-    background: #e9ecef;
 }
 
 .board-table {
@@ -58,12 +21,7 @@ h2 {
     background: #f1f3f5;
 }
 
-.board-table th {
-    padding: 10px;
-    border-bottom: 1px solid #e5e5e5;
-    text-align: center;
-}
-
+.board-table th,
 .board-table td {
     padding: 10px;
     border-bottom: 1px solid #e5e5e5;
@@ -73,7 +31,6 @@ h2 {
 .board-table td:nth-child(2) {
     text-align: left;
 }
-
 .board-table tr:hover {
     background: #f8f9fa;
     cursor: pointer;
@@ -89,4 +46,5 @@ h2 {
     color: #777;
     padding: 20px;
 }
+
 

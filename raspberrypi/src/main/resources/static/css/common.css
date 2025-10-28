@@ -1,0 +1,52 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 2025. 10. 29., 오전 1:03:59
+    Author     : Haruki
+*/
+
+/* === 공통 스타일 === */
+
+body {
+    font-family: "Noto Sans KR", sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 900px;
+    margin: 40px auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 25px 35px;
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 15px;
+}
+
+button,
+.btn {
+    padding: 7px 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover,
+.btn:hover {
+    background-color: #e9ecef;
+}
