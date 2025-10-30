@@ -9,6 +9,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 /* === 공통 스타일 === */
 
+html {
+    overflow-y: scroll;
+}
+
 body {
     font-family: "Noto Sans KR", sans-serif;
     background-color: #f8f9fa;

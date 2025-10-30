@@ -9,6 +9,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 /* member.css — 로그인 / 회원가입 전용 */
 @import url("common.css");
 
+html {
+    overflow-y: scroll;
+}
+
 .login-wrapper {
     display: flex;
     justify-content: space-between;
