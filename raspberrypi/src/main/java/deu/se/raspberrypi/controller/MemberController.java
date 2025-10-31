@@ -16,11 +16,11 @@ public class MemberController {
 
     @GetMapping("/member/login")
     public String loginForm() {
-        return "/member/login";
+        return "member/login";
     }
 
     @GetMapping("/member/signup")
     public String signupForm() {
-        return "/member/signup";
+        return "member/signup";
     }
 }

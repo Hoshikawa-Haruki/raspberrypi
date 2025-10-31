@@ -17,10 +17,10 @@
             <!-- 왼쪽 폼 -->
             <div class="login-form">
                 <h2>🔐 로그인</h2>
-                <form method="post" action="${pageContext.request.contextPath}/member/login">
+                <form method="post" action="${pageContext.request.contextPath}/login">
                     <input type="email" name="email" placeholder="이메일" required />
                     <input type="password" name="password" placeholder="비밀번호" required />
-
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                     <button type="submit">로그인</button>
 
                     <div class="options">

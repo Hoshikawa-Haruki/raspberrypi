@@ -29,7 +29,7 @@ public class PageController {
     // 1. 게시글 작성 폼
     @GetMapping("/board/write")
     public String writeForm() {
-        return "/board/write";
+        return "board/write";
     }
 
     // 2. 게시글 저장
@@ -45,7 +45,7 @@ public class PageController {
     @GetMapping("/board/list")
     public String list(Model model) {
         model.addAttribute("postList", postService.findAll());
-        return "/board/list";
+        return "board/list";
     }
 
     // 4. 게시글 단일 조회

@@ -65,6 +65,7 @@
                 <div>
                     <a href="${pageContext.request.contextPath}/board/updateForm/${post.id}" class="btn">수정</a>
                     <form method="post" action="/board/delete/${post.id}" style="display:inline;">
+                        <input type="hidden" name="_csrf" value="${_csrf.token}">
                         <button type="submit" class="btn btn-danger">삭제</button>
                     </form>
                 </div>

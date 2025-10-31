@@ -25,6 +25,6 @@ public class SystemController {
     @GetMapping("/")
     public String list(Model model) {
         model.addAttribute("postList", postService.findAll());
-        return "/board/list";
+        return "board/list";
     }
 }

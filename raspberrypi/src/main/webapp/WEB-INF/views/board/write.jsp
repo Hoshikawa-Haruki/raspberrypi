@@ -32,12 +32,13 @@
                 <label>내용:</label><br/>
                 <textarea name="content" rows="10" cols="60" 
                           placeholder="작성자와 비밀번호는 기본값으로 라붕이, 0000 으로 설정됩니다.
-(수정가능)"
+                          (수정가능)"
                           required></textarea><br/><br/>
 
                 <label>첨부파일:</label>
                 <input type="file" name="files" multiple><br/><br/>
 
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <button type="submit">등록</button>
                 <button type="button" 
                         onclick="location.href = '${pageContext.request.contextPath}/board/list'">취소</button>
