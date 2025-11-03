@@ -11,7 +11,11 @@ import deu.se.raspberrypi.entity.Attachment;
 import deu.se.raspberrypi.entity.Post;
 
 /**
- *
+ * Mapper는 순수 변환만 담당해야 함
+ * 1) SRP 위반 (단일 책임 원칙 위반)
+ * 2) Mapper는 DB를 모르고 있어야 함
+ * 
+ * 2025.11.03.
  * @author Haruki
  */
 public class PostMapper {
@@ -19,8 +23,6 @@ public class PostMapper {
     // CREATE — DTO → Entity
     public static Post toPostEntity(PostDto dto) {
         Post post = new Post();
-        post.setAuthor(dto.getAuthor());
-        post.setPassword(dto.getPassword());
         post.setIpAddress(dto.getIpAddress());
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
@@ -32,7 +34,7 @@ public class PostMapper {
         PostDto dto = new PostDto();
         dto.setId(post.getId());
         dto.setIpAddress(post.getIpAddress());
-        dto.setAuthor(post.getAuthor());
+        dto.setAuthorNameSnapshot(post.getAuthorNameSnapshot());
         dto.setTitle(post.getTitle());
         dto.setContent(post.getContent());
         dto.setCreatedAt(post.getCreatedAt());
@@ -52,7 +54,7 @@ public class PostMapper {
     public static PostListDto toPostListDto(Post post) {
         PostListDto dto = new PostListDto();
         dto.setId(post.getId());
-        dto.setAuthor(post.getAuthor());
+        dto.setAuthorNameSnapshot(post.getAuthorNameSnapshot());
         dto.setTitle(post.getTitle());
         dto.setIpAddress(post.getIpAddress());
         dto.setCreatedAt(post.getCreatedAt());

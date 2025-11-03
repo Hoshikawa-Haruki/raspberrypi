@@ -11,6 +11,7 @@ import lombok.Setter;
 /**
  * 전체 게시글 리스트 반환용 DTO
  *
+ * 2025.11.03 수정
  * @author Haruki
  */
 @Getter
@@ -18,7 +19,7 @@ import lombok.Setter;
 public class PostListDto {
 
     private Long id;
-    private String author;
+    private String authorNameSnapshot;
     private String title;
     private String ipAddress;
     private LocalDateTime createdAt;

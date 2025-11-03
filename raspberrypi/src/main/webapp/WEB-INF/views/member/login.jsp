@@ -29,7 +29,7 @@
                     </div>
 
                     <div class="links">
-                        <a href="${pageContext.request.contextPath}/member/signup">회원가입</a> |
+                        <a href="${pageContext.request.contextPath}/member/signupForm">회원가입</a> |
                         <a href="#">아이디 찾기</a>
                     </div>
                 </form>

@@ -14,6 +14,7 @@ import deu.se.raspberrypi.dto.PostUpdateDto;
 import deu.se.raspberrypi.dto.StoredFileDto;
 import deu.se.raspberrypi.entity.Post;
 import deu.se.raspberrypi.entity.Attachment;
+import deu.se.raspberrypi.entity.Member;
 import deu.se.raspberrypi.formatter.PostFormatter;
 import deu.se.raspberrypi.mapper.PostMapper;
 import deu.se.raspberrypi.util.IpUtils;
@@ -39,14 +40,18 @@ public class PostService {
     private final FileService fileService;
 
     // CREATE
-    public void save(PostDto dto, HttpServletRequest request) {
+    public void save(PostDto dto, Member member, HttpServletRequest request) {
 
         // 1) IP 추출 (서버 측에서 수행)
         String ip = IpUtils.getClientIp(request);
         dto.setIpAddress(ip);
 
-        // 2) DTO → Entity 변환 (Mapper 사용)
+        // 2) DTO → Entity 변환
         Post post = PostMapper.toPostEntity(dto);
+
+        // 로그인 회원 정보 설정
+        post.setAuthor(member);
+        post.setAuthorNameSnapshot(member.getNickname());
 
         // 3) 파일 업로드 처리
         if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
@@ -97,7 +102,7 @@ public class PostService {
                 post.getId(),
                 post.getTitle(),
                 post.getAuthor(),
-                post.getIpAddress(),
+                post.getAuthorNameSnapshot(),
                 attachmentsInfo,
                 createdAt);
     }

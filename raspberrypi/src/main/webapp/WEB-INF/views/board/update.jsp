@@ -22,17 +22,6 @@
             <form method="post" enctype="multipart/form-data"
                   action="${pageContext.request.contextPath}/board/update/${post.id}">
 
-
-                <!-- 작성자 (수정불가) -->
-                <label>작성자:</label>
-                <input type="text" value="${post.author}" readonly><br/><br/>
-
-                <!-- 기존 저장된 비밀번호 (수정불가-전달X) -->
-                <!-- TODO : 수정 화면 진입 시 비밀번호 검증 로직 추가 필요-->
-                <label>비밀번호:</label>
-                <input type="password" value="${post.password}" readonly><br/><br/>
-
-
                 <label>제목:</label>
                 <input type="text" name="title" maxlength="40"
                        value="${post.title}" required><br/><br/>

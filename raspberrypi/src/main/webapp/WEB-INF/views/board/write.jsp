@@ -18,21 +18,12 @@
 
             <form method="post" enctype="multipart/form-data"
                   action="${pageContext.request.contextPath}/board/save">
-                <label>작성자:</label>
-                <input type="text" name="author" value="라붕이" maxlength="10"
-                       oninput="this.value = this.value.replace(/\s/g, '');" required><br/><br/>
-
-                <label>비밀번호:</label>
-                <input type="password" name="password" value="0000" maxlength="8"
-                       oninput="this.value = this.value.replace(/\s/g, '');" required><br/><br/>
 
                 <label>제목:</label>
                 <input type="text" name="title" maxlength="40" required><br/><br/>
 
                 <label>내용:</label><br/>
-                <textarea name="content" rows="10" cols="60" 
-                          placeholder="작성자와 비밀번호는 기본값으로 라붕이, 0000 으로 설정됩니다.
-                          (수정가능)"
+                <textarea name="content" rows="10" cols="60"
                           required></textarea><br/><br/>
 
                 <label>첨부파일:</label>

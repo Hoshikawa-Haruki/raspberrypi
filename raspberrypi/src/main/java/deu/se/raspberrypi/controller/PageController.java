@@ -6,18 +6,20 @@ package deu.se.raspberrypi.controller;
 
 import deu.se.raspberrypi.dto.PostDto;
 import deu.se.raspberrypi.dto.PostUpdateDto;
+import deu.se.raspberrypi.security.CustomUserDetails;
 import deu.se.raspberrypi.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  *
+ * 2025.11.03 수정
  * @author Haruki
  */
 @Controller
@@ -27,17 +29,19 @@ public class PageController {
     private final PostService postService;
 
     // 1. 게시글 작성 폼
-    @GetMapping("/board/write")
+    @GetMapping("/board/writeForm")
     public String writeForm() {
         return "board/write";
     }
 
     // 2. 게시글 저장
     @PostMapping("/board/save")
-    public String save(PostDto dto, HttpServletRequest request) {
+    public String save(PostDto dto,
+            @AuthenticationPrincipal CustomUserDetails user,
+            HttpServletRequest request) {
         // Spring이 자동으로 dto 객체를 생성해서 넘겨줌
         //JSP의 <form>의 name 속성과 DTO의 필드명이 동일하면, Spring이 내부적으로 setter를 호출해서 DTO에 값을 자동 주입함
-        postService.save(dto, request);
+        postService.save(dto, user.getMember(), request); // Spring Security가 세션에 넣어둔 로그인 Member 엔티티 반환
         return "redirect:/board/list";
     }
 

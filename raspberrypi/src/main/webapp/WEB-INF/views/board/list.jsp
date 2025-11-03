@@ -23,16 +23,16 @@
 
             <div class="actions">
                 <sec:authorize access="isAnonymous()">
-                    <button onclick="location.href = '${pageContext.request.contextPath}/member/login'">로그인</button>
-                    <button onclick="location.href = '${pageContext.request.contextPath}/member/signup'">회원가입</button>
-                    <button onclick="location.href = '${pageContext.request.contextPath}/board/write'">✏️ 새 글 작성</button>
+                    <button onclick="location.href = '${pageContext.request.contextPath}/member/loginForm'">로그인</button>
+                    <button onclick="location.href = '${pageContext.request.contextPath}/member/signupForm'">회원가입</button>
+                    <button onclick="location.href = '${pageContext.request.contextPath}/board/writeForm'">✏️ 새 글 작성</button>
                 </sec:authorize>
                 <sec:authorize access="isAuthenticated()">
                     <form method="post" action="${pageContext.request.contextPath}/logout" style="display:inline;">
                         <input type="hidden" name="_csrf" value="${_csrf.token}">
                         <button type="submit">로그아웃</button>
                     </form>
-                    <button onclick="location.href = '${pageContext.request.contextPath}/board/write'">✏️ 새 글 작성</button>
+                    <button onclick="location.href = '${pageContext.request.contextPath}/board/writeForm'">✏️ 새 글 작성</button>
                 </sec:authorize>
                 
             </div>
@@ -51,7 +51,7 @@
                         <tr onclick="location.href = '${pageContext.request.contextPath}/board/view/${post.id}'">
                             <td>${postList.size() - status.index}</td>
                             <td class="title"><c:out value="${post.title}"/></td>
-                            <td>${post.author} (${post.maskedIp})</td>
+                            <td>${post.authorNameSnapshot} (${post.maskedIp})</td>
                             <td>${post.formattedCreatedAt}</td>
                         </tr>
                     </c:forEach>

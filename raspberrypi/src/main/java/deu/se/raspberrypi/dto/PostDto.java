@@ -10,6 +10,7 @@ package deu.se.raspberrypi.dto;
  *
  * 게시글 저장, 조회용 DTO (Create, Read)
  *
+ * 2025.11.03. 수정
  * @author Haruki
  */
 import java.time.LocalDateTime;
@@ -24,8 +25,7 @@ public class PostDto {
 
     private Long id;
     private String ipAddress;
-    private String author;
-    private String password;
+    private String authorNameSnapshot;
     private String title;
     private String content;
     private LocalDateTime createdAt;

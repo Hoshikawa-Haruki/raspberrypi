@@ -32,7 +32,8 @@ public class SecurityConfig {
                         "/css/**", "/js/**", "/images/**",
                         "/upload/**",
                         "/rappi_favicon.png",
-                        "/member/login", "/member/signup",
+                        "/member/loginForm", "/member/signupForm", // 로그인, 회원가입 페이지 요청
+                        "/login", "/member/signup", // 회원가입, 로그인 요청
                         "/board", "/board/", "/board/list", "/board/view/**"
                 ).permitAll()
                 // 삭제는 관리자
@@ -46,8 +47,8 @@ public class SecurityConfig {
                 )
                 // 폼 로그인
                 .formLogin(form -> form
-                .loginPage("/member/login")
-                .loginProcessingUrl("/login") // POST /login (스프링 시큐리티가 처리)
+                .loginPage("/member/loginForm") // GET/loginForm 처리
+                .loginProcessingUrl("/login") // POST/login 처리
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/board/list", true) // 로그인 성공 후 이동 페이지

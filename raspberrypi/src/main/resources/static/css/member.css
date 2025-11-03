@@ -107,3 +107,8 @@ html {
     border-radius: 4px;
 }
 
+.error-msg {
+    color: #e63946;
+    font-weight: bold;
+    margin: 10px 0;
+}

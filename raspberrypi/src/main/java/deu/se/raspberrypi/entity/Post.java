@@ -7,6 +7,7 @@ package deu.se.raspberrypi.entity;
 /**
  * 게시글 엔티티
  *
+ * 2025.11.03 수정
  * @author Haruki
  */
 import jakarta.persistence.*;
@@ -26,14 +27,18 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 게시글 고유번호
 
-    @Column(nullable = false, length = 50)
-    private String ipAddress; // ip주소
+    // 회원 FK
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "author_id")
+    private Member author;
 
-    @Column(nullable = false, length = 50)
-    private String author; // 작성자
+    // 작성자명 스냅샷 (닉네임 저장용)
+    @Column(length = 50, nullable = false)
+    private String authorNameSnapshot;
 
-    @Column(nullable = false, length = 30)
-    private String password; // 글 수정/삭제용 비밀번호
+    // ip주소
+    @Column(nullable = false, length = 50)
+    private String ipAddress;
 
     @Column(nullable = false, length = 200)
     private String title; // 게시글 제목
@@ -63,6 +68,7 @@ public class Post {
         attachments.add(file);
         file.setPost(this); // FK(post_id) 설정
     }
+
     // 게시글 수정&삭제 시 첨부파일 관계 해제
     public void removeAttachment(Attachment file) {
         attachments.remove(file);
