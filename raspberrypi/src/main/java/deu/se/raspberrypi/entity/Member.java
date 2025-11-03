@@ -57,6 +57,8 @@ public class Member {
     @Column(nullable = false, length = 20)
     private String status = "ACTIVE"; // ACTIVE / BANNED / UNVERIFIED
 
-    @CreationTimestamp
+    @Column(nullable = false, updatable = false, insertable = false,
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+    )
     private LocalDateTime createdAt;
 }

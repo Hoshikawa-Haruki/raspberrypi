@@ -21,7 +21,8 @@
                     <input type="email" name="email" placeholder="이메일" required />
                     <input type="password" name="password" placeholder="비밀번호" required />
                     <input type="text" name="nickname" placeholder="닉네임" required />
-
+                    <input type="hidden" name="_csrf" value="${_csrf.token}">
+                    
                     <button type="submit">가입하기</button>
 
                     <div class="links">

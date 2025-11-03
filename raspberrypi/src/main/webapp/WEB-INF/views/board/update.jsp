@@ -71,6 +71,8 @@
                 <!-- 새 첨부 -->
                 <label>새 파일 첨부:</label>
                 <input type="file" name="newFiles" multiple><br/><br/>
+                
+                <input type="hidden" name="_csrf" value="${_csrf.token}">
 
                 <button type="submit">수정</button>
                 <button type="button"

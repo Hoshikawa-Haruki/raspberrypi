@@ -6,6 +6,7 @@
 
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <html>
     <head>
@@ -14,16 +15,26 @@
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/list.css">
         <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/rappi_favicon.png">
-    </head>
+    </head> 
     <body>
 
         <div class="container">
             <h2>📋 게시글 목록</h2>
 
             <div class="actions">
-                <button onclick="location.href = '${pageContext.request.contextPath}/member/login'">로그인</button>
-                <button onclick="location.href = '${pageContext.request.contextPath}/member/signup'">회원가입</button>
-                <button onclick="location.href = '${pageContext.request.contextPath}/board/write'">✏️ 새 글 작성</button>
+                <sec:authorize access="isAnonymous()">
+                    <button onclick="location.href = '${pageContext.request.contextPath}/member/login'">로그인</button>
+                    <button onclick="location.href = '${pageContext.request.contextPath}/member/signup'">회원가입</button>
+                    <button onclick="location.href = '${pageContext.request.contextPath}/board/write'">✏️ 새 글 작성</button>
+                </sec:authorize>
+                <sec:authorize access="isAuthenticated()">
+                    <form method="post" action="${pageContext.request.contextPath}/logout" style="display:inline;">
+                        <input type="hidden" name="_csrf" value="${_csrf.token}">
+                        <button type="submit">로그아웃</button>
+                    </form>
+                    <button onclick="location.href = '${pageContext.request.contextPath}/board/write'">✏️ 새 글 작성</button>
+                </sec:authorize>
+                
             </div>
 
             <table class="board-table">

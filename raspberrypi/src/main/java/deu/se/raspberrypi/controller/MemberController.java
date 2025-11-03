@@ -4,16 +4,24 @@
  */
 package deu.se.raspberrypi.controller;
 
+import deu.se.raspberrypi.dto.SignupRequestDto;
+import deu.se.raspberrypi.service.MemberService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  *
  * @author Haruki
  */
 @Controller
+@RequiredArgsConstructor
 public class MemberController {
 
+    private final MemberService memberService;
+    
     @GetMapping("/member/login")
     public String loginForm() {
         return "member/login";
@@ -22,5 +30,11 @@ public class MemberController {
     @GetMapping("/member/signup")
     public String signupForm() {
         return "member/signup";
+    }
+
+    @PostMapping("/member/signup")
+    public String signup(@Valid SignupRequestDto dto) {
+        memberService.register(dto);
+        return "redirect:/member/login?signupSuccess";
     }
 }
