@@ -25,6 +25,7 @@ public class PostDto {
 
     private Long id;
     private String ipAddress;
+    private Long authorId;
     private String authorNameSnapshot;
     private String title;
     private String content;

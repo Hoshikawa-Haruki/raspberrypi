@@ -28,7 +28,7 @@ public class CustomUserDetails implements UserDetails {
     private final Member member;
 
     public CustomUserDetails(Member member) {
-        this.member = member;
+        this.member = member; // 로그인한 사용자 정보를 보관
     }
 
     // 권한 반환

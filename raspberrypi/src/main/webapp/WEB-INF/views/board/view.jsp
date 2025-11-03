@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 
 <!DOCTYPE html>
@@ -63,11 +64,18 @@
                     <a href="${pageContext.request.contextPath}/board/list" class="btn">목록</a>
                 </div>
                 <div>
-                    <a href="${pageContext.request.contextPath}/board/updateForm/${post.id}" class="btn">수정</a>
-                    <form method="post" action="/board/delete/${post.id}" style="display:inline;">
-                        <input type="hidden" name="_csrf" value="${_csrf.token}">
-                        <button type="submit" class="btn btn-danger">삭제</button>
-                    </form>
+                    <!-- 로그인 했을 때만 수정/삭제 버튼 조건 체크 -->
+                    <sec:authorize access="isAuthenticated() and ${post.authorId} == authentication.principal.member.id">
+                        <form method="get" action="${pageContext.request.contextPath}/board/updateForm/${post.id}" style="display:inline;">
+                            <button type="submit" class="btn">✏ 수정</button>
+                        </form>
+
+                        <form method="post" action="${pageContext.request.contextPath}/board/delete/${post.id}" style="display:inline;">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('삭제하시겠습니까?');">🗑 삭제</button>
+                        </form>
+                    </sec:authorize>
+
                 </div>
             </div>
         </div>

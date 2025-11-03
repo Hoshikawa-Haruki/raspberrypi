@@ -30,7 +30,7 @@ public class Post {
     // 회원 FK
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "author_id")
-    private Member author;
+    private Member authorId;
 
     // 작성자명 스냅샷 (닉네임 저장용)
     @Column(length = 50, nullable = false)

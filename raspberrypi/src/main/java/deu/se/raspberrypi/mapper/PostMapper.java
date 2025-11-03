@@ -34,6 +34,7 @@ public class PostMapper {
         PostDto dto = new PostDto();
         dto.setId(post.getId());
         dto.setIpAddress(post.getIpAddress());
+        dto.setAuthorId(post.getAuthorId().getId());
         dto.setAuthorNameSnapshot(post.getAuthorNameSnapshot());
         dto.setTitle(post.getTitle());
         dto.setContent(post.getContent());

@@ -50,7 +50,7 @@ public class PostService {
         Post post = PostMapper.toPostEntity(dto);
 
         // 로그인 회원 정보 설정
-        post.setAuthor(member);
+        post.setAuthorId(member);
         post.setAuthorNameSnapshot(member.getNickname());
 
         // 3) 파일 업로드 처리
@@ -101,7 +101,7 @@ public class PostService {
         log.info("[BOARD][CREATE] id={}, title='{}', author='{}', ip={}, attachments={}, createdAt={} ",
                 post.getId(),
                 post.getTitle(),
-                post.getAuthor(),
+                post.getAuthorId(),
                 post.getAuthorNameSnapshot(),
                 attachmentsInfo,
                 createdAt);

@@ -36,8 +36,7 @@ public class SecurityConfig {
                         "/login", "/member/signup", // 회원가입, 로그인 요청
                         "/board", "/board/", "/board/list", "/board/view/**"
                 ).permitAll()
-                // 삭제는 관리자
-                .requestMatchers("/board/delete/**").hasRole("ADMIN")
+                .requestMatchers("/board/delete/**").authenticated()
                 // 게시판 나머지 = 로그인 필요
                 .requestMatchers("/board/**").hasRole("USER")
                 // 관리자 페이지
