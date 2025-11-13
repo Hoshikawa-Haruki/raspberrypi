@@ -15,26 +15,30 @@
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/list.css">
         <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/rappi_favicon.png">
-    </head> 
+    </head>
+
     <body>
+        <div class="top-user-menu">
+            <sec:authorize access="isAnonymous()">
+                <a href="${pageContext.request.contextPath}/member/loginForm" class="top-btn">로그인</a>
+                <a href="${pageContext.request.contextPath}/member/signupForm" class="top-btn">회원가입</a>
+            </sec:authorize>
+
+            <sec:authorize access="isAuthenticated()">
+                <form method="post" action="${pageContext.request.contextPath}/logout" style="display:inline;">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                    <button type="submit" class="top-btn">로그아웃</button>
+                </form>
+            </sec:authorize>
+        </div>
 
         <div class="container">
             <h2>📋 게시글 목록</h2>
 
             <div class="actions">
-                <sec:authorize access="isAnonymous()">
-                    <button onclick="location.href = '${pageContext.request.contextPath}/member/loginForm'">로그인</button>
-                    <button onclick="location.href = '${pageContext.request.contextPath}/member/signupForm'">회원가입</button>
-                    <button onclick="location.href = '${pageContext.request.contextPath}/board/writeForm'">✏️ 새 글 작성</button>
-                </sec:authorize>
-                <sec:authorize access="isAuthenticated()">
-                    <form method="post" action="${pageContext.request.contextPath}/logout" style="display:inline;">
-                        <input type="hidden" name="_csrf" value="${_csrf.token}">
-                        <button type="submit">로그아웃</button>
-                    </form>
-                    <button onclick="location.href = '${pageContext.request.contextPath}/board/writeForm'">✏️ 새 글 작성</button>
-                </sec:authorize>
-                
+                <button onclick="location.href = '${pageContext.request.contextPath}/board/writeForm'">✏️ 새 글 작성</button>
+
+
             </div>
 
             <table class="board-table">

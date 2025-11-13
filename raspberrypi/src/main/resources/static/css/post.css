@@ -60,3 +60,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     color: #fff;
 }
 
+/* 게시글 하단 버튼 간격 */
+.post-footer > div:last-child {
+    display: flex;
+    gap: 10px;  /* 버튼 사이 간격 */
+}

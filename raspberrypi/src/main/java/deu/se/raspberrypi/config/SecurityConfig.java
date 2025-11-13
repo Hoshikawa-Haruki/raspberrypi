@@ -31,7 +31,7 @@ public class SecurityConfig {
                         "/", "/error",
                         "/css/**", "/js/**", "/images/**",
                         "/upload/**",
-                        "/rappi_favicon.png",
+                        "/rappi_favicon.png", "crown_signup.png", "crown_login.gif", // 정적이미지
                         "/member/loginForm", "/member/signupForm", // 로그인, 회원가입 페이지 요청
                         "/login", "/member/signup", // 회원가입, 로그인 요청
                         "/board", "/board/", "/board/list", "/board/view/**"
