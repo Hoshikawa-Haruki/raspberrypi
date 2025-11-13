@@ -22,6 +22,7 @@
                 <form method="post" action="${pageContext.request.contextPath}/member/signup">
                     <input type="email" name="email" placeholder="이메일" required />
                     <input type="password" name="password" placeholder="비밀번호" minlength="4" required />
+                    <input type="password" name="confirmPassword" placeholder="비밀번호 확인" minlength="4" required />
                     <input type="text" name="nickname" placeholder="닉네임" minlength="2" required />
                     <input type="hidden" name="_csrf" value="${_csrf.token}">
 
@@ -40,9 +41,8 @@
 
             <!-- 오른쪽 배너 -->
             <div class="login-banner">
-                <img src="${pageContext.request.contextPath}/images/signup_banner.png" alt="회원가입 배너" />
+                <img src="${pageContext.request.contextPath}/crown_signup.png" alt="회원가입 배너" />
             </div>
         </div>
     </body>
 </html>
-

@@ -24,7 +24,7 @@ public class MemberService {
 
     public void register(SignupRequestDto dto) {
 
-        if (memberRepository.findByEmail(dto.getEmail()).isPresent()) {
+        if (memberRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
 
