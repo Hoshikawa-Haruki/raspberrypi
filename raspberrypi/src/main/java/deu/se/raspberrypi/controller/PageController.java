@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 /**
  *
  * 2025.11.03 수정
+ *
  * @author Haruki
  */
 @Controller
@@ -31,7 +32,7 @@ public class PageController {
     // 1. 게시글 작성 폼
     @GetMapping("/board/writeForm")
     public String writeForm() {
-        return "board/write";
+        return "board/write_toastui";
     }
 
     // 2. 게시글 저장
@@ -80,5 +81,10 @@ public class PageController {
     public String deletePost(@PathVariable Long id) {
         postService.deletePost(id);
         return "redirect:/board/list";
+    }
+
+    @GetMapping("/board/wysiwig")
+    public String wysiwigForm() {
+        return "board/write_toastui";
     }
 }

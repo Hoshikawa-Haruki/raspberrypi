@@ -43,7 +43,7 @@ public class Post {
     @Column(nullable = false, length = 200)
     private String title; // 게시글 제목
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "LONGTEXT", nullable = false)
     private String content; // 게시글 내용
 
     // 게시글 1개 → 여러 파일 (1:N)

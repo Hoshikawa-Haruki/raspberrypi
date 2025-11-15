@@ -21,8 +21,8 @@
                 <div class="post-title"> <c:out value="${post.title}"/>
                 </div>
                 <div class="post-info">
-                    <span>작성자: ${post.authorNameSnapshot} (${post.maskedIp})</span>
-                    <span>작성일: ${post.formattedCreatedAt}</span>
+                    <span>${post.authorNameSnapshot} (${post.maskedIp})</span> | 
+                    <span>${post.formattedCreatedAt}</span>
                 </div>
             </div>
 

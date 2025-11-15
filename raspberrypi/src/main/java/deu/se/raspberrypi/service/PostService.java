@@ -98,6 +98,8 @@ public class PostService {
                 : "N/A";
 
         // 통합 로그
+        // TODO
+        // 로그 시스템 분리 필요
         log.info("[BOARD][CREATE] id={}, title='{}', author='{}', ip={}, attachments={}, createdAt={} ",
                 post.getId(),
                 post.getTitle(),

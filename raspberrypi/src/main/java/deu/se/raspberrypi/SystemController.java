@@ -21,10 +21,16 @@ public class SystemController {
 
     @Autowired
     PostService postService;
+
     // 홈페이지 연결
     @GetMapping("/")
     public String list(Model model) {
         model.addAttribute("postList", postService.findAll());
         return "board/list";
+    }
+
+    @GetMapping("/index")
+    public String index() {
+        return "index";
     }
 }

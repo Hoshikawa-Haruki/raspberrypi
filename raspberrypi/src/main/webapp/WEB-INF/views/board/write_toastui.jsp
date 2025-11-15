@@ -17,7 +17,7 @@
     </head>
     <body>
         <div class="container">
-            <h2>✏️ 새 글 작성</h2>
+            <h2>✏️ 위지윅 작성</h2>
 
             <form id="postForm" method="post" enctype="multipart/form-data"
                   action="${pageContext.request.contextPath}/board/save">
