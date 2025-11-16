@@ -19,19 +19,19 @@
         <div class="container">
             <h2>✏️ 새 글 작성</h2>
 
-            <form id="postForm" method="post" enctype="multipart/form-data"
+            <form method="post" enctype="multipart/form-data"
                   action="${pageContext.request.contextPath}/board/save">
 
                 <label>제목:</label>
                 <input type="text" name="title" maxlength="40" required><br/><br/>
 
+                <label>내용:</label>
+                <textarea name="content" rows="10" cols="60"
+                          required></textarea><br/><br/>
+
                 <label>첨부파일:</label>
                 <input type="file" name="files" multiple><br/><br/>
 
-                <!-- 에디터가 들어갈 자리 -->
-                <div id="editor"></div>
-                <!-- 서버로 전송될 HTML -->
-                <textarea id="content" name="content" style="display:none;"></textarea>
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <button type="submit">등록</button>
                 <button type="button"
@@ -39,19 +39,5 @@
 
             </form>
         </div>
-        <!-- Toast UI Editor 초기화 -->
-        <script>
-            const editor = new toastui.Editor({
-                el: document.querySelector('#editor'),
-                height: '600px',
-                initialEditType: 'markdown',
-                previewStyle: 'vertical'
-            });
-
-            // ✔ 제출 시 HTML을 textarea로 옮김
-            document.getElementById("postForm").addEventListener("submit", function () {
-                document.getElementById("content").value = editor.getHTML();
-            });
-        </script>
     </body>
 </html>
