@@ -21,7 +21,15 @@ form label {
 }
 
 input[type="text"],
-input[type="password"],
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 18px;
+}
+
 input[type="file"],
 textarea {
     width: 100%;
@@ -40,7 +48,3 @@ textarea {
 button {
     margin-right: 5px;
 }
-
-
-
-

@@ -46,7 +46,7 @@ html {
 .login-form input[type="text"] {
     width: 100%;
     padding: 12px;
-    margin-bottom: 12px;
+    margin: 5px 0;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 15px;
@@ -57,6 +57,7 @@ html {
     padding: 12px;
     background-color: #2b49e3;
     color: #fff;
+    margin: 5px 0;
     border: none;
     border-radius: 4px;
     font-size: 16px;
@@ -65,6 +66,14 @@ html {
 
 .login-form button:hover {
     background-color: #2137b5;
+}
+
+.login-fieldset {
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    padding: 20px 25px;
+    background: #fafafa;
+    margin-bottom: 20px;
 }
 
 .options {
@@ -77,7 +86,7 @@ html {
 }
 
 .links {
-    margin-top: 20px;
+    margin-top: 15px;
     text-align: center;
     font-size: 14px;
 }
@@ -107,6 +116,7 @@ html {
     border-radius: 4px;
 }
 
+/* 에러메시지 */
 .error-msg {
     color: #e63946;
     font-weight: bold;

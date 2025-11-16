@@ -22,16 +22,16 @@
             <form id="postForm" method="post" enctype="multipart/form-data"
                   action="${pageContext.request.contextPath}/board/save">
 
-                <label>제목:</label>
-                <input type="text" name="title" maxlength="40" required><br/><br/>
-
-                <label>첨부파일:</label>
-                <input type="file" name="files" multiple><br/><br/>
+                <input type="text" name="title" maxlength="40" 
+                       placeholder="제목을 입력해 주세요." required><br/><br/>
 
                 <!-- 에디터가 들어갈 자리 -->
-                <div id="editor"></div>
+                <div id="editor"></div><br/>
                 <!-- 서버로 전송될 HTML -->
                 <textarea id="content" name="content" style="display:none;"></textarea>
+                <!-- 첨부파일 --> 
+                <input type="file" name="files" multiple><br/><br/>
+
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <button type="submit">등록</button>
                 <button type="button"

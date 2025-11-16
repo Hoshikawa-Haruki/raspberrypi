@@ -19,26 +19,28 @@
             <!-- 왼쪽 폼 -->
             <div class="login-form">
                 <h2>🔐 로그인</h2>
-                <form method="post" action="${pageContext.request.contextPath}/login">
-                    <input type="email" name="email" placeholder="이메일" required />
-                    <input type="password" name="password" placeholder="비밀번호" required />
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                    <button type="submit">로그인</button>
+                <fieldset class="login-fieldset">
+                    <form method="post" action="${pageContext.request.contextPath}/login">
+                        <input type="email" name="email" placeholder="이메일" required />
+                        <input type="password" name="password" placeholder="비밀번호" required />
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                        <button type="submit">로그인</button>
 
-                    <div class="options">
-                        <label><input type="checkbox" name="remember"> 로그인 상태 유지</label>
+                        <div class="options">
+                            <label><input type="checkbox" name="remember"> 로그인 상태 유지</label>
 
-                    </div>
+                        </div>
 
-                    <div class="links">
-                        <a href="${pageContext.request.contextPath}/member/signupForm">회원가입</a> |
-                        <a href="#">아이디 찾기</a> |
-                        <a href="#">비밀번호 찾기</a>
-                    </div>
-                    <div class = "links"><!-- comment -->
-                        <a href="${pageContext.request.contextPath}/">메인화면으로</a>
-                    </div>
-                </form>
+                        <div class="links">
+                            <a href="${pageContext.request.contextPath}/member/signupForm">회원가입</a> |
+                            <a href="#">아이디 찾기</a> |
+                            <a href="#">비밀번호 찾기</a>
+                        </div>
+                        <div class = "links"><!-- comment -->
+                            <a href="${pageContext.request.contextPath}/">메인화면으로</a>
+                        </div>
+                    </form>
+                </fieldset>
             </div>
 
             <!-- 오른쪽 배너 -->
