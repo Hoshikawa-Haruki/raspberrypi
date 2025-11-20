@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 /**
  *
  * 2025.11.03 수정
- *
+ * TODO
+ * 클래스 명 BoardController로 수정 필
  * @author Haruki
  */
 @Controller
@@ -66,7 +67,7 @@ public class PageController {
     public String updateForm(@PathVariable Long id, Model model) {
         PostDto post = postService.findById(id);
         model.addAttribute("post", post);
-        return "board/update";
+        return "board/update_toastui";
     }
 
     // 6. 게시글 수정 요청

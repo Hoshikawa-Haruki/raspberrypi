@@ -8,6 +8,7 @@ package deu.se.raspberrypi.entity;
  * 게시글 엔티티
  *
  * 2025.11.03 수정
+ *
  * @author Haruki
  */
 import jakarta.persistence.*;
@@ -65,8 +66,8 @@ public class Post {
     // ★ 편의 메서드 
     // 게시글 작성 시 (양방향 관계 동기화)
     public void addAttachment(Attachment file) {
-        attachments.add(file);
-        file.setPost(this); // FK(post_id) 설정
+        attachments.add(file); // add (post -> attachment 리스트)
+        file.setPost(this);  // set FK(post_id) 설정
     }
 
     // 게시글 수정&삭제 시 첨부파일 관계 해제

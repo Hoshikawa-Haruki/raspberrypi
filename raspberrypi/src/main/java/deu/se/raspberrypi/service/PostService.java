@@ -17,6 +17,7 @@ import deu.se.raspberrypi.entity.Attachment;
 import deu.se.raspberrypi.entity.Member;
 import deu.se.raspberrypi.formatter.PostFormatter;
 import deu.se.raspberrypi.mapper.PostMapper;
+import deu.se.raspberrypi.repository.AttachmentRepository;
 import deu.se.raspberrypi.util.IpUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -29,6 +30,9 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import deu.se.raspberrypi.repository.PostRepository;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -38,6 +42,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final FileService fileService;
+    private final AttachmentRepository attachmentRepository;
 
     // CREATE
     public void save(PostDto dto, Member member, HttpServletRequest request) {
@@ -53,6 +58,17 @@ public class PostService {
         post.setAuthorId(member);
         post.setAuthorNameSnapshot(member.getNickname());
 
+        // 게시글 저장 (id 생성 필요)
+        postRepository.save(post);
+        // 본문에서 inline 이미지 UUID 추출
+        List<String> inlineUuids = extractImageUuids(dto.getContent());
+        // Inline 이미지 → post_id 등록
+        for (String uuid : inlineUuids) {
+            attachmentRepository.findByUuid(uuid).ifPresent(attachment -> {
+                post.addAttachment(attachment); // 양방향 동기화 (편의 메서드)
+            });
+        }
+
         // 3) 파일 업로드 처리
         if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
             for (MultipartFile file : dto.getFiles()) {
@@ -67,7 +83,7 @@ public class PostService {
                 Attachment attachment = new Attachment();
                 attachment.setUuid(fileDto.getUuid());
                 attachment.setExt(fileDto.getExt());
-                attachment.setOriginalName(file.getOriginalFilename());// 원본 파일명
+                attachment.setOriginalName(file.getOriginalFilename()); 
                 post.addAttachment(attachment); // 양방향 동기화 (편의 메서드)
             }
         }
@@ -187,10 +203,27 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
 
-        // 첨부파일 삭제
+        // 첨부파일 & 이미지 삭제
         for (Attachment att : post.getAttachments()) {
             fileService.deletePhysicalFile(att.getUuid(), att.getExt());
         }
         postRepository.delete(post);
+    }
+
+    // 5. 인라인 이미지 UUID 추출 메서드
+    private List<String> extractImageUuids(String html) {
+
+        if (html == null) {
+            return List.of();
+        }
+
+        Pattern p = Pattern.compile("/upload/([a-zA-Z0-9\\-]+)\\.(png|jpg|jpeg|gif)");
+        Matcher m = p.matcher(html);
+
+        List<String> result = new ArrayList<>();
+        while (m.find()) {
+            result.add(m.group(1)); // uuid
+        }
+        return result;
     }
 }

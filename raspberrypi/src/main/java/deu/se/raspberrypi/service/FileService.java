@@ -86,7 +86,7 @@ public class FileService {
 
     public void handleDownload(String uuid, HttpServletResponse response) {
 
-        // .) UUID 로 DB 조회
+        // 1. UUID 로 DB 조회
         Attachment att = attachmentRepository.findByUuid(uuid)
                 .orElseThrow(() -> new IllegalArgumentException("파일이 존재하지 않습니다."));
 

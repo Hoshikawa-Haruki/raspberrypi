@@ -32,31 +32,18 @@
 
             <!-- 첨부파일 -->
             <c:if test="${not empty post.attachments}">
-                <div class="attachments">
-                    <c:forEach var="file" items="${post.attachments}">
-                        <c:set var="physicalName" value="${file.uuid}.${file.ext}" />
-
-                        <c:choose>
-                            <%-- 이미지 파일 미리보기 --%>
-                            <c:when test="${file.ext == 'png' or file.ext == 'jpg' or file.ext == 'jpeg' or file.ext == 'gif'}">
-                                <img src="${pageContext.request.contextPath}/upload/${physicalName}"
-                                     class="attachments" alt="${file.originalName}" />
-                            </c:when>
-
-                            <%-- 그 외 파일은 다운로드 링크 표시 --%>
-                            <c:otherwise>
-                                <a href="${pageContext.request.contextPath}/download/${file.uuid}">
-                                    ${file.originalName}
-                                </a>
-                            </c:otherwise>
-                        </c:choose>
-
+                <fieldset class="attachments-box">
+                    <legend>첨부파일</legend>
+                    <c:forEach var="file" items="${post.attachments}" varStatus="s">
+                        <span class="file-item">
+                            <a href="${pageContext.request.contextPath}/download/${file.uuid}">${file.originalName}</a>
+                        </span><!--
+                        --><c:if test="${!s.last}">
+                            <span class="separator"> | </span>
+                        </c:if>
                     </c:forEach>
-                </div>
+                </fieldset>
             </c:if>
-
-
-
 
             <!-- 하단 버튼 -->
             <div class="post-footer">
@@ -75,7 +62,6 @@
                             <button type="submit" class="btn btn-danger" onclick="return confirm('삭제하시겠습니까?');">🗑 삭제</button>
                         </form>
                     </sec:authorize>
-
                 </div>
             </div>
         </div>

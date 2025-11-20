@@ -47,9 +47,7 @@
                                      style="max-width:200px; display:block; margin:3px 0;">
                             </c:when>
                             <c:otherwise>
-                                <a href="${pageContext.request.contextPath}/download/${file.uuid}">
                                     ${file.originalName}
-                                </a>
                             </c:otherwise>
                         </c:choose>
                         <br/>
@@ -58,9 +56,7 @@
                 </c:if>
 
                 <!-- 새 첨부 -->
-                <label>새 파일 첨부:</label>
                 <input type="file" name="newFiles" multiple><br/><br/>
-                
                 <input type="hidden" name="_csrf" value="${_csrf.token}">
 
                 <button type="submit">수정</button>
