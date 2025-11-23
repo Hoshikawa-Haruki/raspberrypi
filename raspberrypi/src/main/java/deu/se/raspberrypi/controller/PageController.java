@@ -67,7 +67,7 @@ public class PageController {
     public String updateForm(@PathVariable Long id, Model model) {
         PostDto post = postService.findById(id);
         model.addAttribute("post", post);
-        return "board/update_toastui";
+        return "board/update_toastui_ver2";
     }
 
     // 6. 게시글 수정 요청
