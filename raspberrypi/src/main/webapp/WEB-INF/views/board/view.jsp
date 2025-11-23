@@ -21,8 +21,9 @@
                 <div class="post-title"> <c:out value="${post.title}"/>
                 </div>
                 <div class="post-info">
-                    <span>${post.authorNameSnapshot} (${post.maskedIp})</span> | 
-                    <span>${post.formattedCreatedAt}</span>
+                    <span class="left-info">${post.authorNameSnapshot} (${post.maskedIp})</span>
+                    |
+                    <span class="right-info">${post.formattedCreatedAt}</span>
                 </div>
             </div>
 

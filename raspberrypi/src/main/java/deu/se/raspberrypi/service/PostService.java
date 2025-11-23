@@ -83,7 +83,7 @@ public class PostService {
                 Attachment attachment = new Attachment();
                 attachment.setUuid(fileDto.getUuid());
                 attachment.setExt(fileDto.getExt());
-                attachment.setOriginalName(file.getOriginalFilename()); 
+                attachment.setOriginalName(file.getOriginalFilename());
                 post.addAttachment(attachment); // 양방향 동기화 (편의 메서드)
             }
         }
@@ -196,6 +196,18 @@ public class PostService {
                 }
             }
         }
+
+        // 4) WYSIWYG inline 이미지 처리
+        List<String> inlineUuids = extractImageUuids(dto.getContent());
+
+        for (String uuid : inlineUuids) {
+            attachmentRepository.findByUuid(uuid).ifPresent(attachment -> {
+                if (attachment.getPost() == null) {  // 이미 업로드된 이미지와 중복 방지
+                    post.addAttachment(attachment);
+                }
+            });
+        }
+        postRepository.save(post);
     }
 
     // 4. DELETE

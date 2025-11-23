@@ -33,7 +33,7 @@ public class PageController {
     // 1. 게시글 작성 폼
     @GetMapping("/board/writeForm")
     public String writeForm() {
-        return "board/write_toastui";
+        return "board/write_toastui_ver2";
     }
 
     // 2. 게시글 저장

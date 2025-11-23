@@ -2,6 +2,8 @@
     Document   : write
     Created on : 2025. 10. 13., 오후 1:40:53
     Author     : Haruki
+
+    단순 jsp 기반 게시판용 write.jsp
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

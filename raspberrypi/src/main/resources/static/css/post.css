@@ -24,8 +24,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     color: #777;
     font-size: 16px;
 }
-.post-info span {
-    margin-right: 15px;
+
+.post-info .left-info {
+    margin-right: 10px;
+}
+
+.post-info .right-info {
+    margin-left: 10px;
 }
 
 .post-content {

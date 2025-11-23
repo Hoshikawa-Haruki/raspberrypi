@@ -1,9 +1,9 @@
 <%-- 
-    Document   : write
-    Created on : 2025. 10. 13., 오후 1:40:53
+    Document   : write_toastui_new
+    Created on : 2025. 11. 24., 오후 1:40:53
     Author     : Haruki
-    
-    ToastUI 적용 버전 write.jsp
+
+    기존 ToastUI + 다중 이미지 첨부 구현 write.jsp
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -16,8 +16,8 @@
         <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
         <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
         <script src="https://uicdn.toast.com/editor/latest/i18n/ko-kr.js"></script>
-
     </head>
+    
     <body>
         <div class="container">
             <h2>✏️ 위지윅 작성</h2>
@@ -46,15 +46,46 @@
         <script>
             const editor = new toastui.Editor({
                 el: document.querySelector('#editor'),
-                height: '600px',
-                initialEditType: 'markdown',
+                height: '800px',
+                initialEditType: 'wysiwyg',
                 previewStyle: 'vertical',
                 language: 'ko-KR',
-                hooks: {// 이미지 업로드 후 URL 삽입을 처리하는 훅
-                    addImageBlobHook: async (blob, callback) => {
 
+                /* 기본 이미지 버튼 제거 */
+                toolbarItems: [
+                    ['heading', 'bold', 'italic', 'strike'],
+                    ['hr', 'quote'],
+                    ['ul', 'ol', 'task'],
+                    ['table', 'link'],
+                    // 툴바 커스텀 이미지 버튼
+                    [{
+                            name: 'customImage',
+                            tooltip: '이미지 업로드',
+                            el: (() => {
+                                const btn = document.createElement('button');
+                                btn.type = 'button';
+                                btn.className = 'toastui-editor-toolbar-icons image';
+                                btn.style.margin = '0 6px';
+
+                                btn.addEventListener('click', openImageDialog);
+                                return btn;
+                            })()
+                        }],
+                    ['code', 'codeblock']
+                ]
+            });
+
+            /* 커스텀 이미지 업로드 처리 함수 */
+            function openImageDialog() {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = 'image/*';
+                fileInput.multiple = true;
+
+                fileInput.onchange = async (e) => {
+                    for (const file of e.target.files) {
                         const formData = new FormData();
-                        formData.append("image", blob);
+                        formData.append("image", file);
 
                         const res = await fetch("${pageContext.request.contextPath}/upload/image", {
                             method: "POST",
@@ -64,14 +95,20 @@
                         const data = await res.json();
 
                         if (data.success) {
-                            callback(data.url, "image");
+                            editor.exec('addImage', {
+                                imageUrl: data.url,
+                                altText: file.name
+                            });
                         } else {
                             alert("이미지 업로드 실패");
                         }
                     }
-                }
-            });
-            // ✔ 제출 시 HTML을 textarea로 옮김
+                };
+
+                fileInput.click();
+            }
+
+            /* 제출 시 HTML 저장 */
             document.getElementById("postForm").addEventListener("submit", function () {
                 document.getElementById("content").value = editor.getHTML();
             });
