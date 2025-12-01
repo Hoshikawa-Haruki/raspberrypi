@@ -1,0 +1,173 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 2025. 12. 1., 오후 1:13:02
+    Author     : Haruki
+*/
+
+.post-header {
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.post-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.post-info {
+    color: #777;
+    font-size: 16px;
+}
+
+.post-info .left-info {
+    margin-right: 10px;
+}
+
+.post-info .right-info {
+    margin-left: 10px;
+}
+
+/* ---------------------------- */
+/* Toast Viewer 스타일 */
+
+#viewer .ProseMirror,
+#viewer .toastui-editor-contents {
+    font-size: 16px !important;
+    line-height: 1.5;
+    color: #333 !important;
+    word-break: break-word;
+}
+
+/* 문단 간격 */
+#viewer .ProseMirror p,
+#viewer .toastui-editor-contents p {
+    margin: 0 0 2px 0 !important;
+    line-height: 1.5 !important;
+}
+
+/* 이미지 */
+#viewer .ProseMirror img,
+#viewer .toastui-editor-contents img {
+    max-width: 80% !important;
+    display: block;
+    margin: 10px 0;
+    border-radius: 6px;
+}
+
+
+/* ---------------------------- */
+/* 리스트 (ul / ol) */
+/* ---------------------------- */
+#viewer .ProseMirror ul,
+#viewer .ProseMirror ol,
+#viewer .toastui-editor-contents ul,
+#viewer .toastui-editor-contents ol {
+    margin: 0 0 8px 20px !important; /* 들여쓰기 */
+    padding: 0 !important;
+}
+
+#viewer .ProseMirror li,
+#viewer .toastui-editor-contents li {
+    margin: 1.5px 0 !important;     /* li 간 간격 */
+    line-height: 1.25 !important; /* 리스트 줄높이 */
+}
+
+/* 리스트 내부 p (ToastUI가 p로 감싸므로 조정 필요) */
+#viewer .ProseMirror li > p,
+#viewer .toastui-editor-contents li > p {
+    margin: 0t;
+    line-height: 1.25;
+}
+
+/* ---------------------------- */
+/* 인용문 blockquote */
+/* ---------------------------- */
+#viewer .ProseMirror blockquote,
+#viewer .toastui-editor-contents blockquote {
+    margin: 8px 0 !important;
+    padding: 4px 14px !important;
+    border-left: 4px solid #d0d0d0 !important;
+    background: #f9f9f9 !important;
+    color: #555 !important;
+}
+
+/* blockquote 내부 p */
+#viewer .ProseMirror blockquote p,
+#viewer .toastui-editor-contents blockquote p {
+    margin: 0 !important;
+    line-height: 1.3 !important;
+}
+/* ---------------------------- */
+
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.post-footer > div:first-child {
+    margin-top: 10px;
+}
+
+.btn-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+.btn-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* 게시글 하단 버튼 간격 */
+.post-footer > div:last-child {
+    display: flex;
+    gap: 10px;  /* 버튼 사이 간격 */
+}
+
+/* WYSIWYG 이미지 크기 제어 */
+.post-content img {
+    max-width: 80%;   /* container 넘지 않게 */
+    height: auto;      /* 비율 유지 */
+    display: block;
+    border-radius: 6px;
+}
+
+/* -- view 첨부파일 legend 태그 -- */
+.attachments-box {
+    border: 1px solid #dcdcdc;
+    padding: 12px 16px;
+    margin: 40px 0 20px 0;
+    border-radius: 1px;
+    background-color: #fafafa;
+}
+
+.attachments-box legend {
+    font-weight: bold;
+    padding: 0 8px;
+    font-size: 14px;
+}
+
+/* 첨부파일 링크 */
+.file-item a {
+    color: #2b49e3;
+    text-decoration: none;
+}
+
+.file-item a:hover {
+    text-decoration: underline;
+}
+
+/* 쉼표(,) 스타일 */
+.attachments-box .separator {
+    margin-right: 4px;
+    margin-left: 2px;
+    color: #666;
+}

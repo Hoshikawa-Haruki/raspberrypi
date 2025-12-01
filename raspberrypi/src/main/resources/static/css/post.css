@@ -147,11 +147,3 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     display: none;
 }
 
-/* View 내부 텍스트 및 기본 스타일 */
-.toastui-editor-contents{
-    font-size: 20px;
-    font-family: "Noto Sans", sans-serif;
-    line-height: 10;
-    color: #333;
-    word-break: break-word;
-}
