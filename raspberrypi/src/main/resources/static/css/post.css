@@ -33,6 +33,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     margin-left: 10px;
 }
 
+/* html 전용 본문. TOAST_UI X */
 .post-content {
     font-size: 16px;
     line-height: 1.7;
@@ -144,4 +145,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 /* 이미지 강제 줄바꿈 제거 */
 .post-content img + br {
     display: none;
+}
+
+/* View 내부 텍스트 및 기본 스타일 */
+.toastui-editor-contents{
+    font-size: 20px;
+    font-family: "Noto Sans", sans-serif;
+    line-height: 10;
+    color: #333;
+    word-break: break-word;
 }

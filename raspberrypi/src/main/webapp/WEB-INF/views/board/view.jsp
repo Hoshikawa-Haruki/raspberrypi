@@ -9,6 +9,8 @@
     <head>
         <meta charset="UTF-8">
         <title>${post.title}</title>
+        <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.min.css">
+        <script src="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.min.js"></script>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/post.css">
@@ -28,8 +30,11 @@
             </div>
 
             <!-- 본문 -->
-            <div class="post-content">${post.content}</div>
+            <div id="viewer"></div>
 
+            <!-- 숨겨진 HTML 원본 (Viewer로 전달할 값) : 이스케이프 문자 방지 -->
+            <!--viewer-content는 "JSP → HTML → JS" 브릿지 역할-->
+            <div id="viewer-content" style="display:none;"><c:out value="${post.content}" escapeXml="false"/></div>
 
             <!-- 첨부파일 -->
             <c:if test="${not empty post.attachments}">
@@ -66,5 +71,15 @@
                 </div>
             </div>
         </div>
+
+        <!-- Viewer 렌더링 -->
+        <script>
+            const viewer = new toastui.Editor({
+                el: document.querySelector('#viewer'),
+                viewer: true,
+                initialValue: document.getElementById('viewer-content').innerHTML,
+                initialValueType: 'html'
+            });
+        </script>
     </body>
 </html>
