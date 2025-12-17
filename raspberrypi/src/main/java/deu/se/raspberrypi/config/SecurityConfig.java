@@ -27,15 +27,16 @@ public class SecurityConfig {
                 // CSRF 예외 처리: 토스트 UI 이미지 업로드 전용
                 // 이미지 업로드는 프론트 에디터용 API라 CSRF 예외처리가 표준. 2025.11.16.
                 .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/upload/image")
+                .ignoringRequestMatchers("/upload/**")
                 )
                 // 인가 정책
                 .authorizeHttpRequests(auth -> auth
                 // 정적 리소스 & 공개 페이지
                 .requestMatchers(
                         "/", "/error",
-                        "/css/**", "/js/**", "/images/**",
+                        "/css/**", "/js/**",
                         "/upload/**",
+                        "/upload_temp/**",
                         "/rappi_favicon.png", "crown_signup.png", "crown_login.gif", // 정적이미지
                         "/member/loginForm", "/member/signupForm", // 로그인, 회원가입 페이지 요청
                         "/login", "/member/signup", // 회원가입, 로그인 요청

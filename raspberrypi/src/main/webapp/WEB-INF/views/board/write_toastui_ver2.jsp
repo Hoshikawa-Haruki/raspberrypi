@@ -87,7 +87,7 @@
                         const formData = new FormData();
                         formData.append("image", file);
 
-                        const res = await fetch("${pageContext.request.contextPath}/upload/image", {
+                        const res = await fetch("${pageContext.request.contextPath}/upload/temp", {
                             method: "POST",
                             body: formData
                         });

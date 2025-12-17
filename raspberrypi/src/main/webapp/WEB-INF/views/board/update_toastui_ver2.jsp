@@ -38,24 +38,22 @@
                 <c:if test="${not empty post.attachments}">
                     <p><strong>기존 첨부파일</strong></p>
                     <c:forEach var="file" items="${post.attachments}">
-                        <c:set var="physicalName" value="${file.uuid}.${file.ext}"/>
+                        <!-- 반복문 내 객체를 file 변수로 지칭 -->
+                        <!-- for (StoredFileDto file : post.getAttachments()) 와 동일 -->
+                        <c:set var="ext" value="${file.ext}" />
 
-                        <label>
-                            <input type="checkbox" name="deleteFileIds" value="${file.id}">
-                            (삭제)
-                        </label>
+                        <!-- 이미지 파일이 아닌 파일만 출력 -->
+                        <c:if test="${ext != 'png' and ext != 'jpg' and ext != 'jpeg' and ext != 'gif'}">
 
-                        <c:choose>
-                            <c:when test="${file.ext == 'png' or file.ext == 'jpg' or file.ext == 'jpeg' or file.ext == 'gif'}">
-                                <img src="${pageContext.request.contextPath}/upload/${physicalName}"
-                                     alt="${file.uuid}"
-                                     style="max-width:200px; display:block; margin:3px 0;">
-                            </c:when>
-                            <c:otherwise>
-                                ${file.originalName}
-                            </c:otherwise>
-                        </c:choose>
-                        <br/>
+                            <label>
+                                <input type="checkbox" name="deleteFileIds" value="${file.id}">
+                                (삭제)
+                            </label>
+
+                            ${file.originalName}
+                            <br/>
+
+                        </c:if>
                     </c:forEach>
                     <hr/>
                 </c:if>
@@ -117,7 +115,7 @@
                         const formData = new FormData();
                         formData.append("image", file);
 
-                        const res = await fetch("${pageContext.request.contextPath}/upload/image", {
+                        const res = await fetch("${pageContext.request.contextPath}/upload/temp", {
                             method: "POST",
                             body: formData
                         });

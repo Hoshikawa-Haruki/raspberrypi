@@ -19,9 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  *
- * 2025.11.03 수정
- * TODO
- * 클래스 명 BoardController로 수정 필
+ * 2025.11.03 수정 TODO 클래스 명 BoardController로 수정 필
+ *
  * @author Haruki
  */
 @Controller
@@ -67,13 +66,15 @@ public class PageController {
     public String updateForm(@PathVariable Long id, Model model) {
         PostDto post = postService.findById(id);
         model.addAttribute("post", post);
-        return "board/update";
+        return "board/update_toastui_ver2";
     }
 
     // 6. 게시글 수정 요청
     @PostMapping("/board/update/{id}")
-    public String updatePost(@PathVariable Long id, PostUpdateDto dto) {
-        postService.updateWithFiles(id, dto);
+    public String updatePost(@PathVariable Long id,
+            PostUpdateDto dto,
+            @AuthenticationPrincipal CustomUserDetails user) {
+        postService.updateWithFiles(id, dto, user.getMember());
         return "redirect:/board/view/" + id;
     }
 

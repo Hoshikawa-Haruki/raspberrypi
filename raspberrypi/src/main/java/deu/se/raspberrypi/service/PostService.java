@@ -15,6 +15,7 @@ import deu.se.raspberrypi.dto.StoredFileDto;
 import deu.se.raspberrypi.entity.Post;
 import deu.se.raspberrypi.entity.Attachment;
 import deu.se.raspberrypi.entity.Member;
+import deu.se.raspberrypi.entity.TempAttachment;
 import deu.se.raspberrypi.formatter.PostFormatter;
 import deu.se.raspberrypi.mapper.PostMapper;
 import deu.se.raspberrypi.repository.AttachmentRepository;
@@ -30,7 +31,10 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import deu.se.raspberrypi.repository.PostRepository;
+import deu.se.raspberrypi.repository.TempAttachmentRepository;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,7 +46,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final FileService fileService;
-    private final AttachmentRepository attachmentRepository;
+    private final TempAttachmentRepository tempAttachmentRepository;
 
     // CREATE
     public void save(PostDto dto, Member member, HttpServletRequest request) {
@@ -58,18 +62,54 @@ public class PostService {
         post.setAuthorId(member);
         post.setAuthorNameSnapshot(member.getNickname());
 
-        // 게시글 저장 (id 생성 필요)
-        postRepository.save(post);
         // 본문에서 inline 이미지 UUID 추출
         List<String> inlineUuids = extractImageUuids(dto.getContent());
-        // Inline 이미지 → post_id 등록
-        for (String uuid : inlineUuids) {
-            attachmentRepository.findByUuid(uuid).ifPresent(attachment -> {
-                post.addAttachment(attachment); // 양방향 동기화 (편의 메서드)
-            });
+
+        // Set으로 만들어 검색 : O(1) 복잡도
+        Set<String> inlineUuidSet = new HashSet<>(inlineUuids);
+
+        // uploaderId 기준 temp 이미지 조회
+        List<TempAttachment> tempList = tempAttachmentRepository.findByUploaderId(member.getId());
+
+        // 승격 & 삭제 목록 분리
+        List<TempAttachment> promoteList = new ArrayList<>();
+        List<TempAttachment> deleteList = new ArrayList<>();
+
+        for (TempAttachment temp : tempList) {
+            if (inlineUuidSet.contains(temp.getUuid())) {
+                promoteList.add(temp); // 승격 목록
+            } else {
+                deleteList.add(temp); // 삭제 목록
+            }
         }
 
-        // 3) 파일 업로드 처리
+        // 승격 처리
+        for (TempAttachment temp : promoteList) {
+            Attachment att = new Attachment();
+            att.setUuid(temp.getUuid());
+            att.setExt(temp.getExt());
+            att.setOriginalName(temp.getOriginalName());
+            // FK 설정 + 양방향 동기화
+            post.addAttachment(att);
+            // DB 저장
+            // attachmentRepository.save(att); (cascade 설정 때문에 없어도 됨)
+            // 실제 파일 temp → upload 이동
+            fileService.moveTempToUpload(temp.getUuid(), temp.getExt());
+        }
+
+        // 이미지 승격 후, content 경로 교체
+        String converted = dto.getContent().replace("/upload_temp/", "/upload/");
+        post.setContent(converted);
+
+        // temp 폴더 삭제 처리 (temp 파일 제거)
+        for (TempAttachment temp : deleteList) {
+            fileService.deleteTempFile(temp.getUuid(), temp.getExt());
+        }
+
+        // temp DB 전체 일괄 삭제 → 쿼리 1번으로 최적화
+        tempAttachmentRepository.deleteAll(tempList);
+
+        // 파일 업로드 처리
         if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
             for (MultipartFile file : dto.getFiles()) {
                 // FileService 호출 → 실제 저장된 파일명 받기
@@ -84,7 +124,7 @@ public class PostService {
                 attachment.setUuid(fileDto.getUuid());
                 attachment.setExt(fileDto.getExt());
                 attachment.setOriginalName(file.getOriginalFilename());
-                post.addAttachment(attachment); // 양방향 동기화 (편의 메서드)
+                post.addAttachment(attachment); // 양방향 동기화 (cascade로 attachment 테이블에 자동 저장됨)
             }
         }
 
@@ -153,14 +193,13 @@ public class PostService {
     }
 
     // 3. UPDATE
-    public void updateWithFiles(Long id, PostUpdateDto dto) {
+    public void updateWithFiles(Long id, PostUpdateDto dto, Member member) {
 
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-        // 1) 제목/내용 수정
+        // 1) 제목 수정
         post.setTitle(dto.getTitle());
-        post.setContent(dto.getContent());
 
         // 2) 첨부파일 삭제 (DB + 실제 파일)
         if (dto.getDeleteFileIds() != null) {
@@ -181,7 +220,7 @@ public class PostService {
             });
         }
 
-        // 3) 새 파일 업로드 추가
+        // 3) 새 첨부파일 추가
         if (dto.getNewFiles() != null) {
             for (MultipartFile file : dto.getNewFiles()) {
                 if (!file.isEmpty()) {
@@ -197,16 +236,63 @@ public class PostService {
             }
         }
 
-        // 4) WYSIWYG inline 이미지 처리
+        // 본문에서 inline 이미지 UUID 추출
         List<String> inlineUuids = extractImageUuids(dto.getContent());
 
-        for (String uuid : inlineUuids) {
-            attachmentRepository.findByUuid(uuid).ifPresent(attachment -> {
-                if (attachment.getPost() == null) {  // 이미 업로드된 이미지와 중복 방지
-                    post.addAttachment(attachment);
-                }
-            });
+        // Set으로 만들어 검색 : O(1) 복잡도
+        Set<String> inlineUuidSet = new HashSet<>(inlineUuids);
+
+        // 기존 이미지중 본문에서 삭제된 이미지 리스트에 추가
+        List<Attachment> removeList = new ArrayList<>();
+        for (Attachment att : post.getAttachments()) {
+            if (!inlineUuidSet.contains(att.getUuid())) {
+                removeList.add(att);
+            }
         }
+        // 이미지 삭제
+        for (Attachment att : removeList) {
+            fileService.deletePhysicalFile(att.getUuid(), att.getExt());
+            post.removeAttachment(att); // 연관 관계 삭제 (DB 삭제)
+        }
+
+        // uploaderId 기준 temp 이미지 조회
+        List<TempAttachment> tempList = tempAttachmentRepository.findByUploaderId(member.getId());
+
+        // 승격 & 삭제 목록 분리
+        List<TempAttachment> promoteList = new ArrayList<>();
+        List<TempAttachment> deleteList = new ArrayList<>();
+
+        for (TempAttachment temp : tempList) {
+            if (inlineUuidSet.contains(temp.getUuid())) {
+                promoteList.add(temp); // 승격 목록
+            } else {
+                deleteList.add(temp); // 삭제 목록
+            }
+        }
+
+        // 승격처리
+        for (TempAttachment temp : promoteList) {
+            Attachment att = new Attachment();
+            att.setUuid(temp.getUuid());
+            att.setExt(temp.getExt());
+            att.setOriginalName(temp.getOriginalName());
+            post.addAttachment(att); // FK 설정 (cascade면 save 불필요)
+
+            fileService.moveTempToUpload(temp.getUuid(), temp.getExt());
+        }
+
+        // 인라인 이미지 temp 경로 → upload 경로로 변환
+        String convertedUrl = dto.getContent().replace("/upload_temp/", "/upload/");
+        post.setContent(convertedUrl);
+
+        // temp 폴더 삭제 처리 (temp 파일 제거)
+        for (TempAttachment temp : deleteList) {
+            fileService.deleteTempFile(temp.getUuid(), temp.getExt());
+        }
+
+        // temp DB 전체 일괄 삭제 → 쿼리 1번으로 최적화
+        tempAttachmentRepository.deleteAll(tempList);
+
         postRepository.save(post);
     }
 
@@ -228,8 +314,9 @@ public class PostService {
         if (html == null) {
             return List.of();
         }
-
-        Pattern p = Pattern.compile("/upload/([a-zA-Z0-9\\-]+)\\.(png|jpg|jpeg|gif)");
+        // /upload/uuid.png
+        // /upload_temp/uuid.jpg
+        Pattern p = Pattern.compile("/upload(?:_temp)?/([a-zA-Z0-9\\-]+)\\.(png|jpg|jpeg|gif)");
         Matcher m = p.matcher(html);
 
         List<String> result = new ArrayList<>();

@@ -33,7 +33,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     margin-left: 10px;
 }
 
-/* html 전용 본문. TOAST_UI X */
 .post-content {
     font-size: 16px;
     line-height: 1.7;
@@ -83,7 +82,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 /* WYSIWYG 이미지 크기 제어 */
 .post-content img {
-    max-width: 80%;   /* container 넘지 않게 */
+    max-width: 70%;   /* container 넘지 않게 */
     height: auto;      /* 비율 유지 */
     display: block;
     border-radius: 6px;
