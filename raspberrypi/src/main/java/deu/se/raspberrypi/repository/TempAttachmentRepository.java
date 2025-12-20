@@ -6,8 +6,9 @@ package deu.se.raspberrypi.repository;
 
 import deu.se.raspberrypi.entity.TempAttachment;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -15,7 +16,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface TempAttachmentRepository extends JpaRepository<TempAttachment, Long> {
 
-    Optional<TempAttachment> findByUuid(String uuid);
-
+    // 게시글 수정/삭제 시 tempUpload 관련 메서드
     List<TempAttachment> findByUploaderId(Long uploaderId);
+
+    // 삭제대상 임시첨부파일 조회
+    @Query(
+            value = """
+        SELECT * FROM attachment_temp
+        WHERE created_at < (NOW() - INTERVAL :ttl MINUTE)
+        """,
+            nativeQuery = true
+    )
+    List<TempAttachment> findExpiredFiles(@Param("ttl") int ttlMinutes);
 }

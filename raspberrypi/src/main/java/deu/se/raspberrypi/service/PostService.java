@@ -18,7 +18,6 @@ import deu.se.raspberrypi.entity.Member;
 import deu.se.raspberrypi.entity.TempAttachment;
 import deu.se.raspberrypi.formatter.PostFormatter;
 import deu.se.raspberrypi.mapper.PostMapper;
-import deu.se.raspberrypi.repository.AttachmentRepository;
 import deu.se.raspberrypi.util.IpUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
