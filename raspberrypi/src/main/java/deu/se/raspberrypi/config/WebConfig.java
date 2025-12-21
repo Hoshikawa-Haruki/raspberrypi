@@ -28,11 +28,13 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 에디터 이미지 첨부 업로드 핸들러
+        // 2025.12.20. 현재 사용 X
         registry.addResourceHandler("/upload/**") // upload로 시작하는 모든 url 요청 처리
                 .addResourceLocations("file:" + uploadDir + "/"); // 해당 요청을 어떤 실제 경로에서 찾을지 지정
         // upload 요청에 대한 응답은 Spring이 파일을 바로 스트리밍하여 응답
         
-        // 임시 업로드 파일 (write 과정에서 보여질 이미지)
+        // 임시 업로드 파일
         registry.addResourceHandler("/upload_temp/**")
                 .addResourceLocations("file:" + uploadDir + "_temp/");
     }

@@ -69,9 +69,10 @@ public class UploadController {
         return ResponseEntity.ok(result);
     }
 
+    // 에디터 이미지 임시파일 업로드
     @PostMapping("/temp")
     @ResponseBody
-    public ResponseEntity<?> uploadTemp(@RequestParam("image") MultipartFile file, @AuthenticationPrincipal CustomUserDetails user) {
+    public ResponseEntity<?> uploadTempImage(@RequestParam("image") MultipartFile file, @AuthenticationPrincipal CustomUserDetails user) {
 
         log.info("[WYSIWYG] 임시 이미지 업로드 요청: {}", file.getOriginalFilename());
 
@@ -82,7 +83,7 @@ public class UploadController {
             return ResponseEntity.badRequest().body("upload failed");
         }
 
-        // 임시 Attachment 엔티티 생성
+        // TempAttachment 엔티티 생성
         TempAttachment temp = new TempAttachment();
         temp.setUuid(dto.getUuid());
         temp.setExt(dto.getExt());

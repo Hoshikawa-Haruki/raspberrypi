@@ -205,16 +205,16 @@ public class PostService {
             dto.getDeleteFileIds().forEach(fileId -> {
 
                 // 삭제 대상 찾기
-                Attachment targetFile = post.getAttachments().stream()
+                Attachment att = post.getAttachments().stream()
                         .filter(a -> a.getId().equals(fileId))
                         .findFirst()
                         .orElse(null);
 
-                if (targetFile != null) {
+                if (att != null) {
                     // 2-1) 실제 파일 삭제
-                    fileService.deletePhysicalFile(targetFile.getUuid(), targetFile.getExt());
+                    fileService.deletePhysicalFile(att.getUuid(), att.getExt());
                     // 2-2) 엔티티 관계 해제 (DB orphanRemoval로 삭제됨)
-                    post.removeAttachment(targetFile);
+                    post.removeAttachment(att);
                 }
             });
         }
@@ -235,20 +235,17 @@ public class PostService {
             }
         }
 
-        // 본문에서 inline 이미지 UUID 추출
         List<String> inlineUuids = extractImageUuids(dto.getContent());
-
-        // Set으로 만들어 검색 : O(1) 복잡도
         Set<String> inlineUuidSet = new HashSet<>(inlineUuids);
 
-        // 기존 이미지중 본문에서 삭제된 이미지 리스트에 추가
+        // 기존 이미지중 본문에서 삭제된 이미지를 리스트로 분리
         List<Attachment> removeList = new ArrayList<>();
         for (Attachment att : post.getAttachments()) {
             if (!inlineUuidSet.contains(att.getUuid())) {
                 removeList.add(att);
             }
         }
-        // 이미지 삭제
+        // 리스트 이미지 삭제
         for (Attachment att : removeList) {
             fileService.deletePhysicalFile(att.getUuid(), att.getExt());
             post.removeAttachment(att); // 연관 관계 삭제 (DB 삭제)

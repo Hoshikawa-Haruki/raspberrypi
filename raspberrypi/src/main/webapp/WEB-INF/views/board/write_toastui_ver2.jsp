@@ -17,7 +17,7 @@
         <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
         <script src="https://uicdn.toast.com/editor/latest/i18n/ko-kr.js"></script>
     </head>
-    
+
     <body>
         <div class="container">
             <h2>✏️ 위지윅 작성</h2>
@@ -77,19 +77,27 @@
 
             /* 커스텀 이미지 업로드 처리 함수 */
             function openImageDialog() {
+                const MAX_SIZE = 10 * 1024 * 1024; // 5MB
+
                 const fileInput = document.createElement('input');
                 fileInput.type = 'file';
-                fileInput.accept = 'image/*';
+                fileInput.accept = 'image/*'; // 이미지 타입만 허용
                 fileInput.multiple = true;
 
                 fileInput.onchange = async (e) => {
                     for (const file of e.target.files) {
+
+                        if (file.size > MAX_SIZE) {
+                            alert("이미지 크기는 10MB 이하만 업로드 가능합니다.");
+                            continue;
+                        }
+
                         const formData = new FormData();
                         formData.append("image", file);
 
                         const res = await fetch("${pageContext.request.contextPath}/upload/temp", {
                             method: "POST",
-                            body: formData
+                            body: formData // multipart 요청
                         });
 
                         const data = await res.json();
