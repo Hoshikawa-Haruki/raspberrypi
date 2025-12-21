@@ -8,7 +8,6 @@ import deu.se.raspberrypi.entity.TempAttachment;
 import deu.se.raspberrypi.repository.TempAttachmentRepository;
 import deu.se.raspberrypi.service.FileService;
 import jakarta.transaction.Transactional;
-import static java.lang.StrictMath.log;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

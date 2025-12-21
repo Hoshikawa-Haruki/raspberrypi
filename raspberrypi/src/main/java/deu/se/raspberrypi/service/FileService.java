@@ -143,9 +143,9 @@ public class FileService {
 
         try {
             Files.deleteIfExists(path);
-            log.info("삭제 완료: {}", path);
+            log.info("정규파일 삭제 완료: {}", path);
         } catch (IOException e) {
-            log.error("파일 삭제 실패: {}", path, e);
+            log.error("정규파일 삭제 실패: {}", path, e);
         }
     }
 
@@ -157,9 +157,9 @@ public class FileService {
         Path path = Paths.get("C:/Users/Haruki/Desktop/raspberrypi/upload_temp", uuid + "." + ext);
         try {
             Files.deleteIfExists(path);
-            log.info("삭제 완료: {}", path);
+            log.info("임시파일 삭제 완료: {}", path);
         } catch (IOException e) {
-            log.error("파일 삭제 실패: {}", path, e);
+            log.error("임시파일 삭제 실패: {}", path, e);
         }
     }
 

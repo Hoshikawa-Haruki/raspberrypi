@@ -47,4 +47,8 @@ public class Attachment {
     @Column(nullable = false, updatable = false, insertable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt; // 첨부파일 업로드 시점 6
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AttachmentType type = AttachmentType.INLINE; // 첨부파일 타입
 }

@@ -14,6 +14,7 @@ import deu.se.raspberrypi.dto.PostUpdateDto;
 import deu.se.raspberrypi.dto.StoredFileDto;
 import deu.se.raspberrypi.entity.Post;
 import deu.se.raspberrypi.entity.Attachment;
+import deu.se.raspberrypi.entity.AttachmentType;
 import deu.se.raspberrypi.entity.Member;
 import deu.se.raspberrypi.entity.TempAttachment;
 import deu.se.raspberrypi.formatter.PostFormatter;
@@ -123,6 +124,7 @@ public class PostService {
                 attachment.setUuid(fileDto.getUuid());
                 attachment.setExt(fileDto.getExt());
                 attachment.setOriginalName(file.getOriginalFilename());
+                attachment.setType(AttachmentType.FILE); // 첨부파일 enum 타입 설정
                 post.addAttachment(attachment); // 양방향 동기화 (cascade로 attachment 테이블에 자동 저장됨)
             }
         }
@@ -229,6 +231,7 @@ public class PostService {
                         attachment.setUuid(saved.getUuid());
                         attachment.setExt(saved.getExt());
                         attachment.setOriginalName(file.getOriginalFilename());
+                        attachment.setType(AttachmentType.FILE); // 첨부파일 enum 타입 설정
                         post.addAttachment(attachment);
                     }
                 }
@@ -241,11 +244,13 @@ public class PostService {
         // 기존 이미지중 본문에서 삭제된 이미지를 리스트로 분리
         List<Attachment> removeList = new ArrayList<>();
         for (Attachment att : post.getAttachments()) {
-            if (!inlineUuidSet.contains(att.getUuid())) {
+            // INLINE 타입만 본문 기준으로 삭제 판단
+            if (att.getType() == AttachmentType.INLINE
+                    && !inlineUuidSet.contains(att.getUuid())) {
                 removeList.add(att);
             }
         }
-        // 리스트 이미지 삭제
+        
         for (Attachment att : removeList) {
             fileService.deletePhysicalFile(att.getUuid(), att.getExt());
             post.removeAttachment(att); // 연관 관계 삭제 (DB 삭제)
