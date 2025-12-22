@@ -62,72 +62,11 @@ public class PostService {
         post.setAuthorId(member);
         post.setAuthorNameSnapshot(member.getNickname());
 
-        // 본문에서 inline 이미지 UUID 추출
-        List<String> inlineUuids = extractImageUuids(dto.getContent());
+        // 인라인 이미지 처리 (temp → attachment)
+        handleInlineImages(post, dto.getContent(), member.getId());
 
-        // Set으로 만들어 검색 : O(1) 복잡도
-        Set<String> inlineUuidSet = new HashSet<>(inlineUuids);
-
-        // uploaderId 기준 temp 이미지 조회
-        List<TempAttachment> tempList = tempAttachmentRepository.findByUploaderId(member.getId());
-
-        // 승격 & 삭제 목록 분리
-        List<TempAttachment> promoteList = new ArrayList<>();
-        List<TempAttachment> deleteList = new ArrayList<>();
-
-        for (TempAttachment temp : tempList) {
-            if (inlineUuidSet.contains(temp.getUuid())) {
-                promoteList.add(temp); // 승격 목록
-            } else {
-                deleteList.add(temp); // 삭제 목록
-            }
-        }
-
-        // 승격 처리
-        for (TempAttachment temp : promoteList) {
-            Attachment att = new Attachment();
-            att.setUuid(temp.getUuid());
-            att.setExt(temp.getExt());
-            att.setOriginalName(temp.getOriginalName());
-            // FK 설정 + 양방향 동기화
-            post.addAttachment(att);
-            // DB 저장
-            // attachmentRepository.save(att); (cascade 설정 때문에 없어도 됨)
-            // 실제 파일 temp → upload 이동
-            fileService.moveTempToUpload(temp.getUuid(), temp.getExt());
-        }
-
-        // 이미지 승격 후, content 경로 교체
-        String converted = dto.getContent().replace("/upload_temp/", "/upload/");
-        post.setContent(converted);
-
-        // temp 폴더 삭제 처리 (temp 파일 제거)
-        for (TempAttachment temp : deleteList) {
-            fileService.deleteTempFile(temp.getUuid(), temp.getExt());
-        }
-
-        // temp DB 전체 일괄 삭제 → 쿼리 1번으로 최적화
-        tempAttachmentRepository.deleteAll(tempList);
-
-        // 파일 업로드 처리
-        if (dto.getFiles() != null && !dto.getFiles().isEmpty()) {
-            for (MultipartFile file : dto.getFiles()) {
-                // FileService 호출 → 실제 저장된 파일명 받기
-                StoredFileDto fileDto = fileService.handleUpload(file);
-
-                if (fileDto == null) {
-                    continue;
-                }
-
-                // 업로드 결과를 엔티티로 변환
-                Attachment attachment = new Attachment();
-                attachment.setUuid(fileDto.getUuid());
-                attachment.setExt(fileDto.getExt());
-                attachment.setOriginalName(file.getOriginalFilename());
-                attachment.setType(AttachmentType.FILE); // 첨부파일 enum 타입 설정
-                post.addAttachment(attachment); // 양방향 동기화 (cascade로 attachment 테이블에 자동 저장됨)
-            }
-        }
+        // 첨부파일(FILE) 업로드 처리
+        addFileAttachments(post, dto.getFiles());
 
         postRepository.save(post);
 
@@ -203,101 +142,23 @@ public class PostService {
         post.setTitle(dto.getTitle());
 
         // 2) 첨부파일 삭제 (DB + 실제 파일)
-        if (dto.getDeleteFileIds() != null) {
-            dto.getDeleteFileIds().forEach(fileId -> {
+        removeAttachmentsById(post, dto.getDeleteFileIds());
 
-                // 삭제 대상 찾기
-                Attachment att = post.getAttachments().stream()
-                        .filter(a -> a.getId().equals(fileId))
-                        .findFirst()
-                        .orElse(null);
+        // 3) 신규 첨부파일(FILE) 업로드 처리
+        addFileAttachments(post, dto.getNewFiles());
 
-                if (att != null) {
-                    // 2-1) 실제 파일 삭제
-                    fileService.deletePhysicalFile(att.getUuid(), att.getExt());
-                    // 2-2) 엔티티 관계 해제 (DB orphanRemoval로 삭제됨)
-                    post.removeAttachment(att);
-                }
-            });
-        }
-
-        // 3) 새 첨부파일 추가
-        if (dto.getNewFiles() != null) {
-            for (MultipartFile file : dto.getNewFiles()) {
-                if (!file.isEmpty()) {
-                    StoredFileDto saved = fileService.handleUpload(file);
-                    if (saved != null) {
-                        Attachment attachment = new Attachment();
-                        attachment.setUuid(saved.getUuid());
-                        attachment.setExt(saved.getExt());
-                        attachment.setOriginalName(file.getOriginalFilename());
-                        attachment.setType(AttachmentType.FILE); // 첨부파일 enum 타입 설정
-                        post.addAttachment(attachment);
-                    }
-                }
-            }
-        }
-
-        List<String> inlineUuids = extractImageUuids(dto.getContent());
-        Set<String> inlineUuidSet = new HashSet<>(inlineUuids);
-
-        // 기존 이미지중 본문에서 삭제된 이미지를 리스트로 분리
-        List<Attachment> removeList = new ArrayList<>();
-        for (Attachment att : post.getAttachments()) {
-            // INLINE 타입만 본문 기준으로 삭제 판단
-            if (att.getType() == AttachmentType.INLINE
-                    && !inlineUuidSet.contains(att.getUuid())) {
-                removeList.add(att);
-            }
-        }
-        
-        for (Attachment att : removeList) {
-            fileService.deletePhysicalFile(att.getUuid(), att.getExt());
-            post.removeAttachment(att); // 연관 관계 삭제 (DB 삭제)
-        }
-
-        // uploaderId 기준 temp 이미지 조회
-        List<TempAttachment> tempList = tempAttachmentRepository.findByUploaderId(member.getId());
-
-        // 승격 & 삭제 목록 분리
-        List<TempAttachment> promoteList = new ArrayList<>();
-        List<TempAttachment> deleteList = new ArrayList<>();
-
-        for (TempAttachment temp : tempList) {
-            if (inlineUuidSet.contains(temp.getUuid())) {
-                promoteList.add(temp); // 승격 목록
-            } else {
-                deleteList.add(temp); // 삭제 목록
-            }
-        }
-
-        // 승격처리
-        for (TempAttachment temp : promoteList) {
-            Attachment att = new Attachment();
-            att.setUuid(temp.getUuid());
-            att.setExt(temp.getExt());
-            att.setOriginalName(temp.getOriginalName());
-            post.addAttachment(att); // FK 설정 (cascade면 save 불필요)
-
-            fileService.moveTempToUpload(temp.getUuid(), temp.getExt());
-        }
-
-        // 인라인 이미지 temp 경로 → upload 경로로 변환
-        String convertedUrl = dto.getContent().replace("/upload_temp/", "/upload/");
-        post.setContent(convertedUrl);
-
-        // temp 폴더 삭제 처리 (temp 파일 제거)
-        for (TempAttachment temp : deleteList) {
-            fileService.deleteTempFile(temp.getUuid(), temp.getExt());
-        }
-
-        // temp DB 전체 일괄 삭제 → 쿼리 1번으로 최적화
-        tempAttachmentRepository.deleteAll(tempList);
+        // 본문 기준 인라인 이미지 셋 생성
+        Set<String> inlineUuidSet
+                = new HashSet<>(extractImageUuids(dto.getContent()));
+        // 삭제된 기존 인라인 이미지 처리 (attachment)
+        cleanupInlineImages(post, inlineUuidSet);
+        // 신규 인라인 이미지 처리 (temp → attachment)
+        handleInlineImages(post, dto.getContent(), member.getId());
 
         postRepository.save(post);
     }
-
     // 4. DELETE
+
     public void deletePost(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
@@ -325,5 +186,102 @@ public class PostService {
             result.add(m.group(1)); // uuid
         }
         return result;
+    }
+
+    // 6. 인라인 이미지 승격/삭제 메서드
+    private void handleInlineImages(Post post, String content, Long uploaderId) {
+
+        // 본문에서 인라인 이미지 UUID 추출
+        List<String> inlineUuids = extractImageUuids(content);
+        // Set으로 만들어 검색 : O(1) 복잡도
+        Set<String> inlineUuidSet = new HashSet<>(inlineUuids);
+
+        // uploaderId 기준 temp 이미지 조회
+        List<TempAttachment> tempImageList
+                = tempAttachmentRepository.findByUploaderId(uploaderId);
+
+        for (TempAttachment temp : tempImageList) {
+            if (inlineUuidSet.contains(temp.getUuid())) { // tempImage가 본문에 있으면
+                // 승격 처리
+                Attachment att = new Attachment();
+                att.setUuid(temp.getUuid());
+                att.setExt(temp.getExt());
+                att.setOriginalName(temp.getOriginalName());
+                // type 기본값 = INLINE
+                post.addAttachment(att); // FK 설정 + 양방향 동기화
+                // 실제 파일 temp → upload 이동 (승격)
+                fileService.moveTempToUpload(temp.getUuid(), temp.getExt());
+            } else { // 본문에 없으면
+                // 미사용 tempImage 삭제
+                fileService.deleteTempFile(temp.getUuid(), temp.getExt());
+            }
+        }
+
+        // 이미지 승격 후, content 경로 치환
+        post.setContent(
+                content.replace("/upload_temp/", "/upload/")
+        );
+
+        // temp DB 정리 → 쿼리 1번으로 최적화
+        tempAttachmentRepository.deleteAll(tempImageList);
+    }
+
+    // 7. 게시글 수정 : 본문(content) 기준 제거된 인라인 이미지(AttachmentType.INLINE) 정리
+    private void cleanupInlineImages(Post post, Set<String> inlineUuidSet) {
+
+        post.getAttachments().stream() // List<Attachment>를 stream으로 변환
+                .filter(att -> att.getType() == AttachmentType.INLINE) // 조건1 : 인라인만
+                .filter(att -> !inlineUuidSet.contains(att.getUuid())) // 조건2 : 본문에 없는 uuid만 남김 (삭제대상)
+                .toList() // 결과를 새로운 List로 생성 (ConcurrentModification 방지)
+                .forEach(att -> { // 해당 리스트를 대상으로 for each 수행
+                    fileService.deletePhysicalFile(att.getUuid(), att.getExt()); // 실제 파일 삭제
+                    post.removeAttachment(att);                                  // DB row 삭제(orphanRemoval)
+                });
+    }
+
+    // 8. 첨부파일 추가 메서드
+    private void addFileAttachments(Post post, List<MultipartFile> files) {
+
+        if (files == null || files.isEmpty()) {
+            return;
+        }
+
+        for (MultipartFile file : files) {
+            if (file.isEmpty()) {
+                continue;
+            }
+            // FileService 호출 → 실제 저장된 파일명 받기// FileService 호출 → 실제 저장된 파일명 받기
+            StoredFileDto fileDto = fileService.handleUpload(file);
+
+            if (fileDto == null) {
+                continue;
+            }
+
+            // 업로드 결과를 엔티티로 변환
+            Attachment attachment = new Attachment();
+            attachment.setUuid(fileDto.getUuid());
+            attachment.setExt(fileDto.getExt());
+            attachment.setOriginalName(file.getOriginalFilename());
+            attachment.setType(AttachmentType.FILE); // 첨부파일 enum 타입 설정
+            post.addAttachment(attachment); // 양방향 동기화 (cascade로 attachment 테이블에 자동 저장됨)
+        }
+    }
+
+    // 9. 게시글 수정 : 첨부파일 삭제 메서드
+    private void removeAttachmentsById(Post post, List<Long> deleteIds) {
+
+        if (deleteIds == null || deleteIds.isEmpty()) {
+            return;
+        }
+
+        Set<Long> deleteIdSet = new HashSet<>(deleteIds);
+
+        post.getAttachments().stream() // 첨부파일에 대해서
+                .filter(att -> deleteIdSet.contains(att.getId())) // id가 일치하는 파일에 대해서
+                .toList() // list로 생성
+                .forEach(att -> { // 삭제 수행
+                    fileService.deletePhysicalFile(att.getUuid(), att.getExt());
+                    post.removeAttachment(att); // 엔티티 관계 해제
+                });
     }
 }
