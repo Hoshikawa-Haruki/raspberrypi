@@ -36,27 +36,38 @@
 
                 <!-- 기존 첨부파일 목록 -->
                 <c:if test="${not empty post.attachments}">
-                    <p><strong>기존 첨부파일</strong></p>
+
+                    <!-- FILE 첨부파일 개수 계산 -->
+                    <c:set var="fileCount" value="0" />
                     <c:forEach var="file" items="${post.attachments}">
-                        <!-- 반복문 내 객체를 file 변수로 지칭 -->
-                        <!-- for (StoredFileDto file : post.getAttachments()) 와 동일 -->
-                        <c:set var="ext" value="${file.ext}" />
-
-                        <!-- 이미지 파일이 아닌 파일만 출력 -->
-                        <c:if test="${ext != 'png' and ext != 'jpg' and ext != 'jpeg' and ext != 'gif'}">
-
-                            <label>
-                                <input type="checkbox" name="deleteFileIds" value="${file.id}">
-                                (삭제)
-                            </label>
-
-                            ${file.originalName}
-                            <br/>
-
+                        <c:if test="${file.type.name() eq 'FILE'}">
+                            <c:set var="fileCount" value="${fileCount + 1}" />
                         </c:if>
                     </c:forEach>
-                    <hr/>
+
+                    <!-- FILE 첨부파일이 있을 때 -->
+                    <c:if test="${fileCount > 0}">
+                        <p><strong>기존 첨부파일</strong></p>
+                        <c:forEach var="file" items="${post.attachments}">
+                            <c:if test="${file.type.name() eq 'FILE'}">
+                                <label>
+                                    <input type="checkbox" name="deleteFileIds" value="${file.id}"> (삭제)
+                                    ${file.originalName}
+                                </label>
+                            </c:if>
+                        </c:forEach>
+
+                        <hr/>
+                    </c:if>
+
+                    <!-- FILE 첨부파일이 없을 때 -->
+                    <c:if test="${fileCount == 0}">
+                        <p style="color:#777;">첨부파일 없음</p>
+                    </c:if>
+
                 </c:if>
+
+
 
                 <!-- 새 첨부 -->
                 <input type="file" name="newFiles" multiple><br/><br/>

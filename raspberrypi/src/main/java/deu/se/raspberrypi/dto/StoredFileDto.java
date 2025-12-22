@@ -4,6 +4,7 @@
  */
 package deu.se.raspberrypi.dto;
 
+import deu.se.raspberrypi.entity.AttachmentType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,6 +29,7 @@ public class StoredFileDto {
     private String originalName; // 원본 파일명 (사용자에게 보여줄 용도)
     private String uuid; // uuid
     private String ext; // 확장자
+    private AttachmentType type; // 첨부파일 타입
 
     public StoredFileDto(String uuid, String ext, String originalName) {
         this.uuid = uuid;

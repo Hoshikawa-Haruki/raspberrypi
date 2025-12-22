@@ -15,7 +15,9 @@ import deu.se.raspberrypi.entity.Post;
  * 1) SRP 위반 (단일 책임 원칙 위반)
  * 2) Mapper는 DB를 모르고 있어야 함
  * 
- * 2025.11.03.
+ * 엔티티(게시글) -> DTO 변환 클래스
+ * 
+ * 2025.12.22.
  * @author Haruki
  */
 public class PostMapper {
@@ -64,11 +66,12 @@ public class PostMapper {
 
     // [공용] Attachment → StoredFileDto
     private static StoredFileDto toStoredFileDto(Attachment attachment) {
-        StoredFileDto f = new StoredFileDto();
-        f.setId(attachment.getId());
-        f.setUuid(attachment.getUuid());
-        f.setExt(attachment.getExt());
-        f.setOriginalName(attachment.getOriginalName());
-        return f;
+        StoredFileDto file = new StoredFileDto();
+        file.setId(attachment.getId());
+        file.setUuid(attachment.getUuid());
+        file.setExt(attachment.getExt());
+        file.setOriginalName(attachment.getOriginalName());
+        file.setType(attachment.getType());
+        return file;
     }
 }
