@@ -18,6 +18,7 @@
         <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     </head>
     <body>
+        <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
         <div class="container">
             <h2>✏️ 위지윅 수정</h2>
 
@@ -62,7 +63,7 @@
 
                     <!-- FILE 첨부파일이 없을 때 -->
                     <c:if test="${fileCount == 0}">
-                        <p style="color:#777;">첨부파일 없음</p>
+                        <p style="color: #d32f2f;">첨부파일 없음</p>
                     </c:if>
 
                 </c:if>

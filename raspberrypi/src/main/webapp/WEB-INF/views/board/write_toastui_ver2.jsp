@@ -19,6 +19,8 @@
     </head>
 
     <body>
+        <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
+
         <div class="container">
             <h2>✏️ 위지윅 작성</h2>
 
@@ -37,7 +39,7 @@
                 <input type="file" name="files" multiple><br/><br/>
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <button type="submit">등록</button>
-                <button type="button"
+                <button type="button" class="btn btn-cancel"
                         onclick="location.href = '${pageContext.request.contextPath}/board/list'">취소</button>
 
             </form>

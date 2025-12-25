@@ -1,0 +1,115 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 2025. 12. 25., 오후 3:57:31
+    Author     : Haruki
+*/
+/* 로그인, 로그아웃, 네비게이션 바 css */
+
+/*=================================*/
+/* ---- 상단 로그인/회원가입 메뉴 ---- */
+/*=================================*/
+
+.top-user-menu {
+    width: 900px; /* container와 동일 */
+    margin: 20px auto 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;   /* 세로 중앙 정렬 */
+    gap: 12px; /* 버튼 간격 */
+}
+.top-user-menu form {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+}
+
+/* 버튼 스타일 */
+.top-btn, .top-user-menu button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;          /* 버튼 넓이 통일 */
+    height: 38px;          /* 높이 */
+    font-size: 15px;
+    font-weight: 500;
+    color: #555;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s ease-in-out;
+}
+
+.top-btn:hover,
+.top-user-menu button:hover {
+    background: #f4f4f4;
+    border-color: #bbb;
+}
+
+/* 로그인 유저 */
+.user-greeting {
+    font-size: 15px;
+    color: #666;
+    white-space: nowrap; /* 줄바꿈 방지 */
+    margin-right: 4px;
+}
+.user-greeting strong {
+    font-weight: 600;
+    color: #222;
+}
+
+/*=================*/
+/* 네비게이션 바 설정 */
+/*=================*/
+.top-nav {
+    background-color: #fff;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* container */
+.top-inner {
+    width: 900px;
+    margin: 0 auto;
+}
+
+/* 네비 */
+.nav-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 12px 0;
+}
+
+/* 각 탭 고정 폭 */
+.nav-list li {
+    width: 100px;        /* ← 여기만 바꾸면 됨 */
+    text-align: center;
+}
+
+/* 버튼 형태 */
+.nav-list li a {
+    font-size: 18px;     /* 크기 */
+    font-weight: 500;   /* 굵기 */
+    letter-spacing: -0.2px; /* 자간 */
+    display: block;
+    padding: 8px 0;
+    text-decoration: none;
+    color: #333;
+    white-space: nowrap;
+}
+
+.nav-list li a:hover {
+    color: #007bff;
+}
+
+.nav-list li a.active {
+    color: #007bff;
+    font-weight: 600;
+    border-bottom: 2px solid #007bff;
+}
+
+

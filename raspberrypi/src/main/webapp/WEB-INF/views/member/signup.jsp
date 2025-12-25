@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/member.css">
     </head>
     <body>
-
+        <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
         <div class="login-wrapper">
 
             <!-- 왼쪽 폼 -->
