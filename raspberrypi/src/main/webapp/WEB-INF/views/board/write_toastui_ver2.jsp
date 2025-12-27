@@ -11,8 +11,7 @@
     <head>
         <title>짭케 마이너 갤러리</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
-        <link rel="stylesheet" type="text/css"
-              href="${pageContext.request.contextPath}/css/write.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/write.css">
         <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
         <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
         <script src="https://uicdn.toast.com/editor/latest/i18n/ko-kr.js"></script>

@@ -8,6 +8,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <head>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/top_menu.css">
+    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/rappi_favicon.png">
 </head>
 
 <div class="top-user-menu">
@@ -45,6 +46,7 @@
             <li><a href="/profile">프로필</a></li>
             <li><a href="/board/list">게시판</a></li>
             <li><a href="/portfolio">포트폴리오</a></li>
+            <li><a href="/journey">여행기</a></li>
         </ul>
     </div>
 </nav>      

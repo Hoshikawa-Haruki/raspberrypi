@@ -14,7 +14,7 @@
               href="${pageContext.request.contextPath}/css/post.css">
     </head>
     <body>
-                <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
+        <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
 
         <div class="container">
 

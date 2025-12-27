@@ -14,7 +14,6 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/list.css">
-        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/rappi_favicon.png">
     </head>
 
     <body>

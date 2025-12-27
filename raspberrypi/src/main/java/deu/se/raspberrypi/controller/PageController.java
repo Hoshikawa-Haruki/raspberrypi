@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  *
- * 2025.11.03 수정 TODO 클래스 명 BoardController로 수정 필
+ * 2025.12.25. PostController 로 수정 고려
  *
  * @author Haruki
  */
@@ -85,8 +85,9 @@ public class PageController {
         return "redirect:/board/list";
     }
 
-    @GetMapping("/board/wysiwig")
-    public String wysiwigForm() {
-        return "board/write_toastui";
+    // 프로필 페이지 요청
+    @GetMapping("/profile")
+    public String profileForm(){
+        return "profile/profile";
     }
 }

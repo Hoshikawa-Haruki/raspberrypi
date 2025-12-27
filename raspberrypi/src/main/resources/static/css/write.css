@@ -48,3 +48,11 @@ textarea {
 .btn-cancel {
     margin-right: 5px;
 }
+
+/* Toast UI 에디터 내부 이미지 줄바꿈 처리 */
+.toastui-editor-contents img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 8px 0;
+}
