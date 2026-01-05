@@ -178,7 +178,8 @@ public class PostService {
         }
         // /upload/uuid.png
         // /upload_temp/uuid.jpg
-        Pattern p = Pattern.compile("/upload(?:_temp)?/([a-zA-Z0-9\\-]+)\\.(png|jpg|jpeg|gif)");
+        Pattern p = Pattern.compile("/upload(?:_temp)?/([a-zA-Z0-9\\-]+)\\.(png|jpg|jpeg|gif|webp)",
+                Pattern.CASE_INSENSITIVE); // 대소문자 대응
         Matcher m = p.matcher(html);
 
         List<String> result = new ArrayList<>();
