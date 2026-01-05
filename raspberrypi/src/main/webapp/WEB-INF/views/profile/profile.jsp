@@ -27,17 +27,34 @@
                     <p class="intro">
                         <!--                        Java / Spring 기반 백엔드 개발자<br>
                                                 웹 서비스 설계·구현 중심-->
-<!--                        백엔드 및 시스템 개발자 <br>
-                        서비스 설계·구현과 운영까지 고려한 개발을 지향합니다-->
+                        <!--                        백엔드 및 시스템 개발자 <br>
+                                                서비스 설계·구현과 운영까지 고려한 개발을 지향합니다-->
                         난 브레이크가 고장난 에잇톤 트럭
                     </p>
                 </section>
 
                 <section class="block">
                     <h3>개인 정보 1</h3>
-                    <div class="carrer-row"><strong>이름 </strong> 김갈치 </div>
-                    <div class="carrer-row"><strong>이메일</strong> hairtai0524@gmail.com </div>
-                    <div class="carrer-row"><strong>전화번호</strong> 010-5882-8152 </div>
+                    <div class="profile-row">
+                        <span class="profile-title">이름</span>
+                        <span class="profile-content">
+                            김갈치
+                        </span>
+                    </div>
+
+                    <div class="profile-row">
+                        <span class="profile-title">이메일</span>
+                        <span class="profile-content">
+                            hairtai0524@gmail.com
+                        </span>
+                    </div>
+
+                    <div class="profile-row">
+                        <span class="profile-title">연락처</span>
+                        <span class="profile-content">
+                            010-1234-5678
+                        </span>
+                    </div>
                 </section>
 
                 <section class="block">
@@ -70,10 +87,27 @@
 
                 <section class="section">
                     <h2>Skills</h2>
-                    <div class="row"><strong>Backend</strong> Java, Spring Boot, Spring MVC (REST API), Spring Security, JPA</div>
-                    <div class="row"><strong>DB</strong> Oracle SQL, MySQL, MariaDB</div>
-                    <div class="row"><strong>Infra</strong> Linux, Nginx, Docker</div>
-                    <div class="row"><strong>Foundation</strong> CS, Data Structure, OS, Network    </div>
+                    <div class="skill-row">
+                        <span class="skill-title">Backend</span>
+                        <span class="skill-content">
+                            Java, Spring Boot, Spring MVC (REST API), Spring Security, JPA
+                        </span>
+                    </div>
+
+                    <div class="skill-row">
+                        <span class="skill-title">DB</span>
+                        <span class="skill-content">Oracle SQL, MySQL, MariaDB</span>
+                    </div>
+
+                    <div class="skill-row">
+                        <span class="skill-title">Infra</span>
+                        <span class="skill-content">Linux, Nginx, Docker</span>
+                    </div>
+
+                    <div class="skill-row">
+                        <span class="skill-title">Foundation</span>
+                        <span class="skill-content">CS, Data Structure, OS, Network</span>
+                    </div>
 
                 </section>
 
@@ -89,6 +123,7 @@
 
                     </div>
                 </section>
+
                 <section class="section section-split">
                     <div class="half">
                         <h2>자격증</h2>
@@ -101,13 +136,33 @@
 
                     <div class="half">
                         <h2>Languages</h2>
-                        <div class="row"><strong>Korean</strong> Native</div>
-                        <div class="row"><strong>Japanese</strong> Fluent</div>
-                        <div class="row"><strong>English</strong> Conversational</div>
+
+                        <div class="split-row">
+                            <span class="split-title">Korean</span>
+                            <span class="split-content">
+                                Native
+                            </span>
+                        </div>
+
+                        <div class="split-row">
+                            <span class="split-title">Japanese</span>
+                            <span class="split-content">
+                                Fluent
+                            </span>
+                        </div>
+
+                        <div class="split-row">
+                            <span class="split-title">English</span>
+                            <span class="split-content">
+                                Conversational
+                            </span>
+                        </div>
                     </div>
                 </section>
             </main>
         </div>
+
+        <jsp:include page="/WEB-INF/views/board/footer.jsp"/>
 
     </body>
 </html>

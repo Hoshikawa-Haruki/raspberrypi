@@ -14,7 +14,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 .board-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .board-table thead {

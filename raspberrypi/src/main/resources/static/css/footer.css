@@ -1,0 +1,60 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 2026. 1. 5., 오후 6:36:38
+    Author     : Haruki
+*/
+
+.site-footer {
+    margin-top: 80px;
+    background: #f8f9fa;
+    border-top: 1px solid #e5e5e5;
+    color: #666;
+    font-size: 13px;
+}
+
+.footer-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-title {
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.footer-desc {
+    line-height: 1.5;
+}
+
+.footer-right a {
+    color: #666;
+    text-decoration: none;
+    margin: 0 6px;
+}
+
+.footer-right a:hover {
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding: 12px 0;
+    border-top: 1px solid #e5e5e5;
+    background: #f1f3f5;
+    font-size: 12px;
+    color: #888;
+}
+
+.divider {
+    color: #bbb;
+}
+
+

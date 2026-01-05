@@ -33,7 +33,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     justify-content: center;
     width: 100px;          /* 버튼 넓이 통일 */
     height: 38px;          /* 높이 */
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
     color: #555;
     border: 1px solid #ccc;
@@ -52,7 +52,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 /* 로그인 유저 */
 .user-greeting {
-    font-size: 15px;
+    font-size: 14px;
     color: #666;
     white-space: nowrap; /* 줄바꿈 방지 */
     margin-right: 4px;
