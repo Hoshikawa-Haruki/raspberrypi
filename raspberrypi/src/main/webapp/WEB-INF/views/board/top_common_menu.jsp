@@ -8,7 +8,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <head>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/top_menu.css">
-    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/rappi_favicon.png">
 </head>
 
 <div class="top-user-menu">

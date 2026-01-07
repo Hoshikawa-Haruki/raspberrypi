@@ -11,6 +11,7 @@
 <html>
     <head>
         <title>짭케 마이너 갤러리</title>
+        <jsp:include page="/WEB-INF/views/board/head.jsp" />
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/list.css">

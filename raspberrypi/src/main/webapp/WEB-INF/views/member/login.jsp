@@ -10,6 +10,7 @@
 <html>
     <head>
         <title>로그인</title>
+        <jsp:include page="/WEB-INF/views/board/head.jsp" />
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/member.css">
     </head>
     <body>

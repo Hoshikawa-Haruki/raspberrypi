@@ -10,6 +10,7 @@
 <html>
     <head>
         <title>짭케 마이너 갤러리</title>
+        <jsp:include page="/WEB-INF/views/board/head.jsp" />
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/write.css">
         <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
@@ -51,6 +52,38 @@
                 initialEditType: 'wysiwyg',
                 previewStyle: 'vertical',
                 language: 'ko-KR',
+                /* 붙여넣기 / 드래그 요청 가로채기 */
+                hooks: {
+                    addImageBlobHook: async (blob, callback) => {
+                        alert("IMAGE HOOK CALLED");
+                        const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+
+                        if (blob.size > MAX_SIZE) {
+                            alert("이미지 크기는 10MB 이하만 업로드 가능합니다.");
+                            return;
+                        }
+
+                        const formData = new FormData();
+                        formData.append("image", blob);
+
+                        const res = await fetch(
+                                "${pageContext.request.contextPath}/upload/temp",
+                                {
+                                    method: "POST",
+                                    body: formData
+                                }
+                        );
+
+                        const data = await res.json();
+
+                        if (data.success) {
+                            // Toast UI 내부에 이미지 삽입
+                            callback(data.url, blob.name);
+                        } else {
+                            alert("이미지 업로드 실패");
+                        }
+                    }
+                },
 
                 /* 기본 이미지 버튼 제거 */
                 toolbarItems: [

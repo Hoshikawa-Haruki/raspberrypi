@@ -11,6 +11,7 @@
 <html>
     <head>
         <title>짭케 마이너 갤러리</title>
+        <jsp:include page="/WEB-INF/views/board/head.jsp" />
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/write.css">
         <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">

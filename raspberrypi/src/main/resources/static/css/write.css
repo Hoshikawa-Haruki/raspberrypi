@@ -14,14 +14,14 @@ form {
     color: #333;
 }
 
-form label {
+form label { /* legacy */
     display: block;
     margin: 10px 0 5px;
     font-weight: bold;
 }
 
 input[type="text"],
-textarea {
+textarea { /* legacy */
     width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
@@ -31,7 +31,7 @@ textarea {
 }
 
 input[type="file"],
-textarea {
+textarea { /* legacy */
     width: 100%;
     padding: 7px;
     border: 1px solid #ccc;
@@ -40,7 +40,7 @@ textarea {
     font-size: 14px;
 }
 
-textarea {
+textarea { /* legacy */
     resize: vertical;
     line-height: 1.6;
 }
@@ -49,10 +49,11 @@ textarea {
     margin-right: 5px;
 }
 
-/* Toast UI 에디터 내부 이미지 줄바꿈 처리 */
-.toastui-editor-contents img {
+/* Toast UI 에디터 내부 이미지 */
+.toastui-editor-contents p img {
     display: block;
-    max-width: 100%;
+    max-width: 70%;
+    max-height: 600px;
     height: auto;
     margin: 8px 0;
 }

@@ -9,6 +9,7 @@
     <head>
         <meta charset="UTF-8">
         <title>${post.title}</title>
+        <jsp:include page="/WEB-INF/views/board/head.jsp" />
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/post.css">
