@@ -52,38 +52,6 @@
                 initialEditType: 'wysiwyg',
                 previewStyle: 'vertical',
                 language: 'ko-KR',
-                /* 붙여넣기 / 드래그 요청 가로채기 */
-                hooks: {
-                    addImageBlobHook: async (blob, callback) => {
-                        alert("IMAGE HOOK CALLED");
-                        const MAX_SIZE = 10 * 1024 * 1024; // 10MB
-
-                        if (blob.size > MAX_SIZE) {
-                            alert("이미지 크기는 10MB 이하만 업로드 가능합니다.");
-                            return;
-                        }
-
-                        const formData = new FormData();
-                        formData.append("image", blob);
-
-                        const res = await fetch(
-                                "${pageContext.request.contextPath}/upload/temp",
-                                {
-                                    method: "POST",
-                                    body: formData
-                                }
-                        );
-
-                        const data = await res.json();
-
-                        if (data.success) {
-                            // Toast UI 내부에 이미지 삽입
-                            callback(data.url, blob.name);
-                        } else {
-                            alert("이미지 업로드 실패");
-                        }
-                    }
-                },
 
                 /* 기본 이미지 버튼 제거 */
                 toolbarItems: [
@@ -109,9 +77,65 @@
                 ]
             });
 
+            // Ctrl+V 이미지 붙여넣기 처리
+            const editorRoot = document.querySelector('#editor');
+
+            // Toast UI 내부 handler보다 먼저 실행, base64 삽입 전에 가로챔
+            editorRoot.addEventListener('paste', async (e) => {
+
+                const clipboard = e.clipboardData;
+                if (!clipboard)
+                    return;
+
+                const items = clipboard.items || [];
+                for (const item of items) {
+                    if (item.type.startsWith('image/')) { // 이미지만
+                        // Toast UI 기본 paste 차단 (base64 차단)
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+
+                        const blob = item.getAsFile();
+                        if (!blob)
+                            return;
+
+                        const MAX_SIZE = 10 * 1024 * 1024;
+                        if (blob.size > MAX_SIZE) {
+                            alert("이미지 크기는 10MB 이하만 업로드 가능합니다.");
+                            return;
+                        }
+
+                        const formData = new FormData(); // 멀티파트 요청 컨테이너
+                        const ext = blob.type.split('/')[1];   // image/png → png 확장자 추출
+                        const fakeName = 'gov-' + Date.now() + '.' + ext; // 임시파일명 (기본은 image로 나옴)
+                        formData.append("image", blob, fakeName);
+                        // image : 업로드 요청의 request parameter명 (@image)
+
+
+                        const res = await fetch(// 서버 이미지 업로드
+                                "${pageContext.request.contextPath}/upload/temp",
+                                {method: "POST", body: formData}
+                        );
+
+                        const data = await res.json();
+
+                        if (data.success) {
+                            editor.exec('addImage', {
+                                imageUrl: data.url,
+                                altText: 'pasted-image'
+                            });
+                        } else {
+                            alert("이미지 업로드 실패");
+                        }
+
+                        return;
+                    }
+                }
+            }, true);
+
             /* 커스텀 이미지 업로드 처리 함수 */
             function openImageDialog() {
-                const MAX_SIZE = 10 * 1024 * 1024; // 5MB
+                const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
                 const fileInput = document.createElement('input');
                 fileInput.type = 'file';
@@ -134,12 +158,13 @@
                             body: formData // multipart 요청
                         });
 
+                        // 서버 응답 받기
                         const data = await res.json();
 
                         if (data.success) {
                             editor.exec('addImage', {
-                                imageUrl: data.url,
-                                altText: file.name
+                                imageUrl: data.url, // 파일경로
+                                altText: file.name // 파일명
                             });
                         } else {
                             alert("이미지 업로드 실패");

@@ -28,7 +28,8 @@
     </div>
 
     <div class="footer-bottom">
-        © 2026 KimGalchi. All rights reserved.
+        © 2026 KimGalchi Corp.<br><!-- comment -->
+        All rights reserved.
     </div>
 </footer>
 
