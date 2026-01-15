@@ -24,13 +24,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostDto {
 
     private Long id;
-    private String ipAddress;
+    private String ipAddress; // ip주소. 페이지에서 직접 보여주지 않으므로 삭제 OK
     private Long authorId;
     private String authorNameSnapshot;
     private String title;
     private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt; // 원본시간. 페이지에서 직접 보여주지 않으므로 삭제 OK
+    private LocalDateTime updatedAt; // 수정시간. 페이지에서 직접 보여주지 않으므로 삭제 OK
     private List<MultipartFile> files;             // 저장용
     private List<StoredFileDto> attachments;       // 조회용 (저장된 첨부파일 정보)
     private String maskedIp;

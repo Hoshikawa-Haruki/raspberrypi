@@ -22,9 +22,11 @@
 
     <sec:authorize access="isAuthenticated()">
         <span class="user-greeting">
-            <strong>
-                <sec:authentication property="principal.member.nickname"/>
-            </strong> 님
+            <a href="${pageContext.request.contextPath}/member/mypage">
+                <strong>
+                    <sec:authentication property="principal.member.nickname"/>
+                </strong>
+            </a> 님
         </span>
         <form method="post"
               action="${pageContext.request.contextPath}/logout"
@@ -45,7 +47,7 @@
             <li><a href="/profile">프로필</a></li>
             <li><a href="/board/list">게시판</a></li>
             <li><a href="/portfolio">포트폴리오</a></li>
-            <li><a href="/journey">여행기</a></li>
+            <li><a href="/member/mypage">마이페이지</a></li>
         </ul>
     </div>
 </nav>      

@@ -61,7 +61,7 @@ public class Post {
 
     @Column(nullable = false, updatable = false, insertable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private LocalDateTime updatedAt; // 수정 시간
+    private LocalDateTime updatedAt; // 수정시간 : DB에서 수정시간 관리
 
     // ★ 편의 메서드 
     // 게시글 작성 시 (양방향 관계 동기화)

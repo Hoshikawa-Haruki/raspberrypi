@@ -4,15 +4,23 @@
  */
 package deu.se.raspberrypi.controller;
 
+import deu.se.raspberrypi.dto.MyPostDto;
 import deu.se.raspberrypi.dto.SignupRequestDto;
+import deu.se.raspberrypi.entity.Member;
+import deu.se.raspberrypi.security.CustomUserDetails;
 import deu.se.raspberrypi.service.MemberService;
+import deu.se.raspberrypi.service.PostService;
 import jakarta.validation.Valid;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -23,6 +31,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class MemberController {
 
     private final MemberService memberService;
+    private final PostService postService;
 
     @GetMapping("/member/loginForm")
     public String loginForm() {
@@ -49,12 +58,31 @@ public class MemberController {
             model.addAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
             return "member/signup";
         }
-        try {
+        try { // 3) 회원가입처리
             memberService.register(dto);
             return "redirect:/member/loginForm?signupSuccess";
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "member/signup"; // 다시 회원가입 페이지로 돌아감
         }
+    }
+
+    @GetMapping("/member/mypage")
+    public String myPage(
+            @AuthenticationPrincipal CustomUserDetails principal,
+            @RequestParam(defaultValue = "0") int page,
+            Model model
+    ) {
+        Member member = principal.getMember();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String createdDate = member.getCreatedAt().format(formatter);
+        model.addAttribute("user", member);
+        model.addAttribute("createdDate", createdDate);
+        
+        model.addAttribute("postPage",
+                postService.findMyPosts(member.getId(), page));
+
+        return "member/myPage";
     }
 }

@@ -51,15 +51,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 }
 
 /* 로그인 유저 */
-.user-greeting {
+.user-greeting a{
     font-size: 14px;
     color: #666;
     white-space: nowrap; /* 줄바꿈 방지 */
     margin-right: 4px;
+    text-decoration: none; /* 밑줄 제거 */
 }
 .user-greeting strong {
     font-weight: 600;
     color: #222;
+}
+.user-greeting a:hover {
+    text-decoration: underline;
 }
 
 /*=================*/

@@ -5,6 +5,8 @@
 package deu.se.raspberrypi.repository;
 
 import deu.se.raspberrypi.entity.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +17,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     // 기본 CRUD 메서드 (save, findById, findAll, deleteById) 자동 제공
+    
+    // 1. 마이페이지 내 작성글
+    Page<Post> findByAuthorId_Id(Long authorId, Pageable pageable);
+
 }

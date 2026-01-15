@@ -41,7 +41,7 @@ public class SecurityConfig {
                         "/member/loginForm", "/member/signupForm", // 로그인, 회원가입 페이지 요청
                         "/login", "/member/signup", // 회원가입, 로그인 요청
                         "/board", "/board/", "/board/list", "/board/view/**",
-                        "/profile"
+                        "/profile" // 프로필 페이지,
                 ).permitAll()
                 .requestMatchers("/board/delete/**").authenticated()
                 // 게시판 나머지 = 로그인 필요

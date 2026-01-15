@@ -8,6 +8,7 @@ package deu.se.raspberrypi.service;
  *
  * @author Haruki
  */
+import deu.se.raspberrypi.dto.MyPostDto;
 import deu.se.raspberrypi.dto.PostDto;
 import deu.se.raspberrypi.dto.PostListDto;
 import deu.se.raspberrypi.dto.PostUpdateDto;
@@ -37,6 +38,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @Transactional
@@ -285,4 +289,28 @@ public class PostService {
                     post.removeAttachment(att); // 엔티티 관계 해제
                 });
     }
+
+    // 10. 마이페이지 개인 작성글 조회
+    public Page<MyPostDto> findMyPosts(Long authorId, int page) {
+
+        Pageable pageable = PageRequest.of(
+                page,
+                5, // 마이페이지는 5개씩
+                Sort.by(Sort.Direction.DESC, "createdAt")
+        );
+
+        Page<Post> postPage
+                = postRepository.findByAuthorId_Id(authorId, pageable);
+
+        return postPage.map(post -> {
+            MyPostDto dto = new MyPostDto();
+            dto.setId(post.getId());
+            dto.setTitle(post.getTitle());
+            dto.setFormattedCreatedAt(
+                    PostFormatter.dateFormat(post.getCreatedAt())
+            );
+            return dto;
+        });
+    }
+
 }

@@ -7,7 +7,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     Author     : Haruki
 */
 
-/* === 공통 스타일 === */
+/* === 게시글 공통 스타일 === */
 
 html {
     overflow-y: scroll;
@@ -22,7 +22,7 @@ body {
 
 .container {
     width: 900px;
-    margin: 20px auto;
+    margin: 40px auto;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 6px;
