@@ -75,12 +75,13 @@ public class MemberController {
     ) {
         Member member = principal.getMember();
 
+        // todo : 사용자 정보 메서드 모듈화 필요
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String createdDate = member.getCreatedAt().format(formatter);
         model.addAttribute("user", member);
         model.addAttribute("createdDate", createdDate);
         
-        model.addAttribute("postPage",
+        model.addAttribute("myPostPage",
                 postService.findMyPosts(member.getId(), page));
 
         return "member/myPage";

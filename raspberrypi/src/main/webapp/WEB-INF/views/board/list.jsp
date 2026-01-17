@@ -41,12 +41,14 @@
                         <tr onclick="location.href = '${pageContext.request.contextPath}/board/view/${post.id}'">
                             <td>${postList.size() - status.index}</td>
                             <td class="title"><c:out value="${post.title}"/></td>
+                            <td class="title">${post.title}</td>
                             <td>${post.authorNameSnapshot} (${post.maskedIp})</td>
                             <td>${post.formattedCreatedAt}</td>
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>
+
 
             <c:if test="${empty postList}">
                 <p class="empty">등록된 게시글이 없습니다.</p>

@@ -5,9 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<header>
+<head>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
-</header>
+</head>
 <footer class="site-footer">
     <div class="footer-inner">
         <div class="footer-left">

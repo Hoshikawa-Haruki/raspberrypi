@@ -63,15 +63,16 @@
                     </div>
 
                     <div class="card">
-                        <div class="card-header">내 작성글</div>
+                        <div class="card-header">
+                            내 작성글 [${myPostPage.totalElements}]</div>
                         <div class="card-body">
                             <c:choose>
-                                <c:when test="${empty postPage.content}">
+                                <c:when test="${empty myPostPage.content}">
                                     <p>작성한 글이 없습니다.</p>
                                 </c:when>
                                 <c:otherwise>
                                     <ul class="my-post-list">
-                                        <c:forEach var="post" items="${postPage.content}">
+                                        <c:forEach var="post" items="${myPostPage.content}">
                                             <li>
                                                 <a href="${pageContext.request.contextPath}/board/view/${post.id}" class="post-title">
                                                     ${post.title}
@@ -84,16 +85,16 @@
                             </c:choose>
 
                             <!-- 페이지네이션 -->
-                            <c:if test="${postPage.totalPages > 1}">
+                            <c:if test="${myPostPage.totalPages > 1}">
                                 <div class="pagination">
-                                    <c:if test="${!postPage.first}">
-                                        <a href="?page=${postPage.number - 1}">이전</a>
+                                    <c:if test="${!myPostPage.first}">
+                                        <a href="?page=${myPostPage.number - 1}">이전</a>
                                     </c:if>
 
-                                    <span>${postPage.number + 1} / ${postPage.totalPages}</span>
+                                    <span>${myPostPage.number + 1} / ${myPostPage.totalPages}</span>
 
-                                    <c:if test="${!postPage.last}">
-                                        <a href="?page=${postPage.number + 1}">다음</a>
+                                    <c:if test="${!myPostPage.last}">
+                                        <a href="?page=${myPostPage.number + 1}">다음</a>
                                     </c:if>
                                 </div>
                             </c:if>

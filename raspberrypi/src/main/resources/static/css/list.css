@@ -15,6 +15,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
+    table-layout: fixed; /* 컬럼 폭 고정 */
 }
 
 .board-table thead {
@@ -28,17 +29,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     text-align: center;
 }
 
-.board-table td:nth-child(2) {
-    text-align: left;
-}
 .board-table tr:hover {
     background: #f8f9fa;
     cursor: pointer;
 }
 
-.title {
+.board-table td.title {
+    text-align: left;
     color: #007bff;
-    font-weight: bold;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .empty {
@@ -47,4 +49,66 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     padding: 20px;
 }
 
+/* 게시글 번호 */
+.board-table th:nth-child(1),
+.board-table td:nth-child(1) {
+    width: 60px;
+}
 
+/* 제목 (가변 영역) */
+.board-table th:nth-child(2),
+.board-table td:nth-child(2) {
+    width: auto;   /* 남은 영역 전부 할당 */
+}
+
+/* 작성자 */
+.board-table th:nth-child(3),
+.board-table td:nth-child(3) {
+    width: 180px;
+}
+
+/* 작성일 */
+.board-table th:nth-child(4),
+.board-table td:nth-child(4) {
+    width: 150px;
+}
+
+/* 제목 말줄임 */
+.board-table td.title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* ===== 페이지네이션 ===== */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
+    font-size: 13px;
+}
+
+.pagination a,
+.pagination span {
+    padding: 4px 6px;
+    text-decoration: none;
+    color: var(--text-sub);
+    border-radius: 4px;
+}
+
+.pagination a:hover {
+    color: var(--main-color);
+}
+
+.pagination .active {
+    color: #ff3b30;   /* 현재 페이지 빨간색 */
+    font-weight: bold;
+}
+
+.pagination .nav {
+    margin: 0 5px;
+    color: var(--text-sub);
+}

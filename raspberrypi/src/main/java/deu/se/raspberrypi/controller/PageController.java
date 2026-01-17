@@ -5,11 +5,16 @@
 package deu.se.raspberrypi.controller;
 
 import deu.se.raspberrypi.dto.PostDto;
+import deu.se.raspberrypi.dto.PostListDto;
 import deu.se.raspberrypi.dto.PostUpdateDto;
 import deu.se.raspberrypi.security.CustomUserDetails;
 import deu.se.raspberrypi.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,9 +52,32 @@ public class PageController {
     }
 
     // 3. 게시글 리스트 조회
+    //    @GetMapping("/board/list")
+    //    public String list(Model model) {
+    //        model.addAttribute("postList", postService.findAll());
+    //        return "board/list";
+    //    }
+    // 3.1. 게시글 리스트 페이징 조회
     @GetMapping("/board/list")
-    public String list(Model model) {
-        model.addAttribute("postList", postService.findAll());
+    public String list(
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model
+    ) {
+        Page<PostListDto> postPage = postService.findAllPage(pageable);
+
+        int currentPage = postPage.getNumber();
+        int totalPages = postPage.getTotalPages();
+
+        int startPage = (currentPage / 10) * 10;
+        int endPage = Math.min(startPage + 9, totalPages - 1);
+
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("postPage", postPage); // 페이지 메타정보
+        model.addAttribute("postList", postPage.getContent()); // 화면 출력용
+
         return "board/list";
     }
 
@@ -83,11 +111,5 @@ public class PageController {
     public String deletePost(@PathVariable Long id) {
         postService.deletePost(id);
         return "redirect:/board/list";
-    }
-
-    // 프로필 페이지 요청
-    @GetMapping("/profile")
-    public String profileForm(){
-        return "profile/profile";
     }
 }

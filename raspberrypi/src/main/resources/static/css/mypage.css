@@ -101,6 +101,11 @@ body {
     border-radius: 16px;
     overflow: hidden;
 }
+.card-body p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-sub);
+}
 
 .card-header {
     background: var(--main-color);

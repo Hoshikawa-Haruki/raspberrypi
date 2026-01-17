@@ -110,6 +110,7 @@ public class PostService {
     }
 
     // 2. READ (전체 목록 최신순 정렬)
+    // LEGACY
     public List<PostListDto> findAll() {
         return postRepository.findAll(Sort.by(DESC, "id"))
                 .stream()
@@ -134,6 +135,20 @@ public class PostService {
         dto.setFormattedCreatedAt(PostFormatter.dateFormat(post.getCreatedAt()));
 
         return dto;
+    }
+
+    // 2.2. Read (전체 목록 페이징 조회)
+    public Page<PostListDto> findAllPage(Pageable pageable) {
+        Page<Post> page = postRepository.findAll(pageable);
+
+        return page.map(post -> {
+            PostListDto dto = PostMapper.toPostListDto(post);
+            dto.setMaskedIp(PostFormatter.maskIp(post.getIpAddress()));
+            dto.setFormattedCreatedAt(
+                    PostFormatter.dateFormat(post.getCreatedAt())
+            );
+            return dto;
+        });
     }
 
     // 3. UPDATE
