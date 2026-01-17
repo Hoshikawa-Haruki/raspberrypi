@@ -39,8 +39,11 @@
                 <tbody>
                     <c:forEach var="post" items="${postList}" varStatus="status">
                         <tr onclick="location.href = '${pageContext.request.contextPath}/board/view/${post.id}'">
-                            <td>${postList.size() - status.index}</td>
-                            <td class="title"><c:out value="${post.title}"/></td>
+                            <td>
+                                ${postPage.totalElements
+                                  - (postPage.number * postPage.size)
+                                  - status.index}
+                            </td>
                             <td class="title">${post.title}</td>
                             <td>${post.authorNameSnapshot} (${post.maskedIp})</td>
                             <td>${post.formattedCreatedAt}</td>
@@ -49,11 +52,60 @@
                 </tbody>
             </table>
 
+            <div class="pagination">
+                
+                <!-- 맨 처음으로 -->
+                <c:if test="${currentPage > 0}">
+                    <a class="nav" href="?page=0">
+                        ◀
+                    </a>
+                </c:if>
+
+                <!-- 이전 블록 -->
+                <c:if test="${currentPage > 0}">
+                    <a class="nav"
+                       href="?page=${currentPage - 1}">
+                        이전
+                    </a>
+                </c:if>
+
+                <!-- 페이지 번호 -->
+                <c:forEach var="i" begin="${startPage}" end="${endPage}">
+                    <c:choose>
+                        <c:when test="${i == currentPage}">
+                            <span class="page active">${i + 1}</span>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="page"
+                               href="?page=${i}">
+                                ${i + 1}
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+
+                <!-- 다음 블록 -->
+                <c:if test="${currentPage < totalPages - 1}">
+                    <a class="nav"
+                       href="?page=${currentPage + 1}">
+                        다음
+                    </a>
+                </c:if>
+
+                <!-- 맨 끝으로 -->
+                <c:if test="${currentPage < totalPages - 1}">
+                    <a class="nav"
+                       href="?page=${totalPages - 1}">
+                        ▶
+                    </a>
+                </c:if>
+
+            </div>
 
             <c:if test="${empty postList}">
                 <p class="empty">등록된 게시글이 없습니다.</p>
             </c:if>
-
+                
         </div>
 
     </body>
