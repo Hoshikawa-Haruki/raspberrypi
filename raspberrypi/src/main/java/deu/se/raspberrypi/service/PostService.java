@@ -33,7 +33,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import deu.se.raspberrypi.repository.PostRepository;
 import deu.se.raspberrypi.repository.TempAttachmentRepository;
-import deu.se.raspberrypi.viewModel.PostListViewModel;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -204,40 +203,6 @@ public class PostService {
             );
             return dto;
         });
-    }
-    
-    // 2.6 검색결과 반환용 viewModel 데이터 조립
-    // (사용 X. 효율 및 장점을 아직 잘 모르겠음)
-    @Deprecated
-    public PostListViewModel getBoardListViewModel(
-            String searchType,
-            String keyword,
-            Pageable pageable
-    ) {
-        Page<PostListDto> postPage
-                = searchPost(searchType, keyword, pageable);
-
-        int currentPage = postPage.getNumber();
-        int totalPages = postPage.getTotalPages();
-
-        int startPage = 0;
-        int endPage = -1;
-
-        if (totalPages > 0) {
-            startPage = (currentPage / 10) * 10;
-            endPage = Math.min(startPage + 9, totalPages - 1);
-        }
-
-        PostListViewModel viewModel = new PostListViewModel();
-        viewModel.setPostList(postPage.getContent());
-        viewModel.setCurrentPage(currentPage);
-        viewModel.setTotalPages(totalPages);
-        viewModel.setStartPage(startPage);
-        viewModel.setEndPage(endPage);
-        viewModel.setSearchType(searchType);
-        viewModel.setKeyword(keyword);
-
-        return viewModel;
     }
 
     // 3. UPDATE
