@@ -49,6 +49,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     padding: 20px;
 }
 
+/* 현재 게시글 active 설정 */
+.board-table tr.active {
+    background-color: #f0f6ff;
+}
+
+.board-table tr.active td,
+.board-table tr.active td.title
+{
+    font-weight: 500;
+}
+
 /* 게시글 번호 */
 .board-table th:nth-child(1),
 .board-table td:nth-child(1) {

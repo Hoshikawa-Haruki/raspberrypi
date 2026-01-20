@@ -20,7 +20,6 @@
         <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
 
         <div class="container">
-
             <!-- 게시글 상단 -->
             <div class="post-header">
                 <div class="post-title"> <c:out value="${post.title}"/>

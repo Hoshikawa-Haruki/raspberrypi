@@ -159,9 +159,9 @@ public class PageController {
 
         int currentPage = postPage.getNumber();
         int totalPages = postPage.getTotalPages();
-
         int startPage = 0;
         int endPage = -1;
+        
         if (totalPages > 0) {
             startPage = (currentPage / 10) * 10;
             endPage = Math.min(startPage + 9, totalPages - 1);
@@ -177,6 +177,7 @@ public class PageController {
 
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("currentPostId", id);
 
         return "board/view";
     }

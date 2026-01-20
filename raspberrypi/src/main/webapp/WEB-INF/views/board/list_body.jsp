@@ -36,8 +36,8 @@
                            value="${pageContext.request.contextPath}/board/view/${post.id}?page=${postPage.number}" />
                 </c:otherwise>
             </c:choose>
-
-            <tr onclick="location.href = '${rowUrl}'">
+            <tr class="${post.id eq currentPostId ? 'active' : ''}"
+                onclick="location.href = '${rowUrl}'">  <!-- 현재글이면 active 표시 -->
 
                 <td>
                     ${postPage.totalElements
@@ -61,19 +61,28 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // JSP → JS 안전하게 값 전달
+        // JSP → JS 키워드 전달
         var keyword = '<c:out value="${keyword}" />'.trim();
-        if (!keyword)
+        var searchType = '<c:out value="${searchType}" />'.trim();
+        if (!keyword || !searchType)
             return;
 
-        // 정규식 특수문자 escape (JSP EL 충돌 없음)
+        // 정규식 특수문자 escape
         function escapeRegExp(str) {
             return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
         }
+        
+        // 검색기준 분기 (하이라이트 처리용)
+        var selector = '';
+        if (searchType === 'author') {
+            selector = '.author';
+        } else {
+            selector = '.title';
+        }
+        var regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi'); // 전부, 대소문자 구분 X
 
-        var regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
-
-        document.querySelectorAll('.title, .author').forEach(function (el) {
+        // 하이라이트
+        document.querySelectorAll(selector).forEach(function (el) {
             el.innerHTML = el.textContent.replace(
                     regex,
                     '<span class="highlight">$1</span>'
