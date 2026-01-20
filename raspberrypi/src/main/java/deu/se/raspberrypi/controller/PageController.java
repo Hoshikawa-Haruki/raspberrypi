@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -57,10 +58,11 @@ public class PageController {
     //        model.addAttribute("postList", postService.findAll());
     //        return "board/list";
     //    }
-    // 3.1. 게시글 리스트 페이징 조회
-    @GetMapping("/board/list")
+    // 3.1. 게시글 리스트 페이지 자료형 조회 (LEGACY)
+    //@GetMapping("/board/list")
+    @Deprecated
     public String list(
-            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
             Model model
     ) {
         Page<PostListDto> postPage = postService.findAllPage(pageable);
@@ -81,12 +83,102 @@ public class PageController {
         return "board/list";
     }
 
+    // 3.2 게시글 리스트 페이지 자료형 조회 + 검색
+    @GetMapping("/board/list")
+    public String list(
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model
+    ) {
+
+        // 입력값 정규화 (컨트롤러 책임)
+        if (searchType == null || searchType.isBlank()) {
+            searchType = "title_content";
+        }
+
+        if (keyword != null) {
+            keyword = keyword.trim();
+            if (keyword.isEmpty()) {
+                keyword = null;
+            }
+        }
+
+        Page<PostListDto> postPage
+                = postService.searchPost(searchType, keyword, pageable);
+
+        int currentPage = postPage.getNumber();
+        int totalPages = postPage.getTotalPages();
+        int startPage = 0;
+        int endPage = -1; // 기본값 (페이지 없음)
+
+        if (totalPages > 0) {
+            startPage = (currentPage / 10) * 10;
+            endPage = Math.min(startPage + 9, totalPages - 1);
+        }
+
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("postPage", postPage);
+        model.addAttribute("postList", postPage.getContent());
+
+        // 검색 상태 유지용 (중요)
+        model.addAttribute("searchType", searchType);
+        model.addAttribute("keyword", keyword);
+
+        return "board/list";
+    }
+
     // 4. 게시글 단일 조회
-    @GetMapping("/board/view/{id}")
+    @Deprecated
+    // @GetMapping("/board/view/{id}")
     public String view(@PathVariable Long id, Model model) {
         PostDto post = postService.findById(id);
         model.addAttribute("post", post);
         return "board/view";  // => view.jsp 로 forward
+    }
+
+    // 4. 게시글 단일 조회 + 검색 페이지 유지 
+    @GetMapping("/board/view/{id}")
+    public String view(
+            @PathVariable Long id,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            Model model
+    ) {
+        // 1. 단일 게시글
+        PostDto post = postService.findById(id);
+        model.addAttribute("post", post);
+
+        // 2. 검색 + 페이지 상태 유지
+        Page<PostListDto> postPage
+                = postService.searchPost(searchType, keyword, pageable);
+
+        int currentPage = postPage.getNumber();
+        int totalPages = postPage.getTotalPages();
+
+        int startPage = 0;
+        int endPage = -1;
+        if (totalPages > 0) {
+            startPage = (currentPage / 10) * 10;
+            endPage = Math.min(startPage + 9, totalPages - 1);
+        }
+
+        // 3. pagination.jsp가 요구하는 값들 전부 전달
+        model.addAttribute("postPage", postPage);
+        model.addAttribute("postList", postPage.getContent());
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", totalPages);
+
+        model.addAttribute("searchType", searchType);
+        model.addAttribute("keyword", keyword);
+
+        return "board/view";
     }
 
     // 5. 게시글 수정 폼

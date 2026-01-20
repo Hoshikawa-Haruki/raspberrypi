@@ -11,8 +11,10 @@
         <title>${post.title}</title>
         <jsp:include page="/WEB-INF/views/board/head.jsp" />
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/list.css">
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/post.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search.css">
     </head>
     <body>
         <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
@@ -68,7 +70,13 @@
                 </div>
             </div>
         </div>
-        <jsp:include page="/WEB-INF/views/board/footer.jsp"/>
 
+        <div class="container">
+            <jsp:include page="/WEB-INF/views/board/list_body.jsp" />
+            <jsp:include page="/WEB-INF/views/board/pagination.jsp" />
+            <jsp:include page="/WEB-INF/views/board/search.jsp" />
+        </div>
+
+        <jsp:include page="/WEB-INF/views/board/footer.jsp"/>
     </body>
 </html>

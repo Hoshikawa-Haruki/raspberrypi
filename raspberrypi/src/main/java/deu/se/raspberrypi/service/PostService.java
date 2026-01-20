@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import deu.se.raspberrypi.repository.PostRepository;
 import deu.se.raspberrypi.repository.TempAttachmentRepository;
+import deu.se.raspberrypi.viewModel.PostListViewModel;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -111,6 +112,7 @@ public class PostService {
 
     // 2. READ (전체 목록 최신순 정렬)
     // LEGACY
+    @Deprecated
     public List<PostListDto> findAll() {
         return postRepository.findAll(Sort.by(DESC, "id"))
                 .stream()
@@ -137,10 +139,40 @@ public class PostService {
         return dto;
     }
 
-    // 2.2. Read (전체 목록 페이징 조회)
+    // 2.2 Read (전체 목록 페이징 조회)
     public Page<PostListDto> findAllPage(Pageable pageable) {
         Page<Post> page = postRepository.findAll(pageable);
 
+        return toPostListDtoPage(page);
+    }
+
+    // 2.3 Read (검색)
+    public Page<PostListDto> searchPost(
+            String searchType,
+            String keyword,
+            Pageable pageable
+    ) {
+        if (keyword == null || keyword.isBlank()) {
+            // 검색어 없으면 기존 전체 조회
+            return findAllPage(pageable);
+        }
+
+        Page<Post> page = switch (searchType) {
+            case "title" ->
+                postRepository.searchByTitle(keyword, pageable);
+            case "content" ->
+                postRepository.searchByContent(keyword, pageable);
+            case "writer" ->
+                postRepository.searchByWriter(keyword, pageable);
+            default ->
+                postRepository.searchByTitleOrContent(keyword, pageable);
+        };
+
+        return toPostListDtoPage(page);
+    }
+
+    // 2.4 게시글 리스트 Dto 변환 메서드
+    private Page<PostListDto> toPostListDtoPage(Page<Post> page) {
         return page.map(post -> {
             PostListDto dto = PostMapper.toPostListDto(post);
             dto.setMaskedIp(PostFormatter.maskIp(post.getIpAddress()));
@@ -149,6 +181,63 @@ public class PostService {
             );
             return dto;
         });
+    }
+
+    // 2.5 마이페이지 개인 작성글 조회
+    public Page<MyPostDto> findMyPosts(Long authorId, int page) {
+
+        Pageable pageable = PageRequest.of(
+                page,
+                5, // 마이페이지는 5개씩
+                Sort.by(Sort.Direction.DESC, "createdAt")
+        );
+
+        Page<Post> myPostPage
+                = postRepository.findByAuthorId_Id(authorId, pageable);
+
+        return myPostPage.map(post -> {
+            MyPostDto dto = new MyPostDto();
+            dto.setId(post.getId());
+            dto.setTitle(post.getTitle());
+            dto.setFormattedCreatedAt(
+                    PostFormatter.dateFormat(post.getCreatedAt())
+            );
+            return dto;
+        });
+    }
+    
+    // 2.6 검색결과 반환용 viewModel 데이터 조립
+    // (사용 X. 효율 및 장점을 아직 잘 모르겠음)
+    @Deprecated
+    public PostListViewModel getBoardListViewModel(
+            String searchType,
+            String keyword,
+            Pageable pageable
+    ) {
+        Page<PostListDto> postPage
+                = searchPost(searchType, keyword, pageable);
+
+        int currentPage = postPage.getNumber();
+        int totalPages = postPage.getTotalPages();
+
+        int startPage = 0;
+        int endPage = -1;
+
+        if (totalPages > 0) {
+            startPage = (currentPage / 10) * 10;
+            endPage = Math.min(startPage + 9, totalPages - 1);
+        }
+
+        PostListViewModel viewModel = new PostListViewModel();
+        viewModel.setPostList(postPage.getContent());
+        viewModel.setCurrentPage(currentPage);
+        viewModel.setTotalPages(totalPages);
+        viewModel.setStartPage(startPage);
+        viewModel.setEndPage(endPage);
+        viewModel.setSearchType(searchType);
+        viewModel.setKeyword(keyword);
+
+        return viewModel;
     }
 
     // 3. UPDATE
@@ -176,8 +265,54 @@ public class PostService {
 
         postRepository.save(post);
     }
-    // 4. DELETE
 
+    // 3.1 게시글 수정 : 첨부파일 추가 메서드
+    private void addFileAttachments(Post post, List<MultipartFile> files) {
+
+        if (files == null || files.isEmpty()) {
+            return;
+        }
+
+        for (MultipartFile file : files) {
+            if (file.isEmpty()) {
+                continue;
+            }
+            // FileService 호출 → 실제 저장된 파일명 받기// FileService 호출 → 실제 저장된 파일명 받기
+            StoredFileDto fileDto = fileService.handleUpload(file);
+
+            if (fileDto == null) {
+                continue;
+            }
+
+            // 업로드 결과를 엔티티로 변환
+            Attachment attachment = new Attachment();
+            attachment.setUuid(fileDto.getUuid());
+            attachment.setExt(fileDto.getExt());
+            attachment.setOriginalName(file.getOriginalFilename());
+            attachment.setType(AttachmentType.FILE); // 첨부파일 enum 타입 설정
+            post.addAttachment(attachment); // 양방향 동기화 (cascade로 attachment 테이블에 자동 저장됨)
+        }
+    }
+
+    // 3.2 게시글 수정 : 첨부파일 삭제 메서드
+    private void removeAttachmentsById(Post post, List<Long> deleteIds) {
+
+        if (deleteIds == null || deleteIds.isEmpty()) {
+            return;
+        }
+
+        Set<Long> deleteIdSet = new HashSet<>(deleteIds);
+
+        post.getAttachments().stream() // 첨부파일에 대해서
+                .filter(att -> deleteIdSet.contains(att.getId())) // id가 일치하는 파일에 대해서
+                .toList() // list로 생성
+                .forEach(att -> { // 삭제 수행
+                    fileService.deletePhysicalFile(att.getUuid(), att.getExt());
+                    post.removeAttachment(att); // 엔티티 관계 해제
+                });
+    }
+
+    // 4. DELETE
     public void deletePost(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
@@ -208,7 +343,7 @@ public class PostService {
         return result;
     }
 
-    // 6. 인라인 이미지 승격/삭제 메서드
+    // 5.1 인라인 이미지 승격/삭제 메서드
     private void handleInlineImages(Post post, String content, Long uploaderId) {
 
         // 본문에서 인라인 이미지 UUID 추출
@@ -246,7 +381,7 @@ public class PostService {
         tempAttachmentRepository.deleteAll(tempImageList);
     }
 
-    // 7. 게시글 수정 : 본문(content) 기준 제거된 인라인 이미지(AttachmentType.INLINE) 정리
+    // 5.2 게시글 수정 : 본문(content) 기준 제거된 인라인 이미지(AttachmentType.INLINE) 정리
     private void cleanupInlineImages(Post post, Set<String> inlineUuidSet) {
 
         post.getAttachments().stream() // List<Attachment>를 stream으로 변환
@@ -258,74 +393,4 @@ public class PostService {
                     post.removeAttachment(att);                                  // DB row 삭제(orphanRemoval)
                 });
     }
-
-    // 8. 첨부파일 추가 메서드
-    private void addFileAttachments(Post post, List<MultipartFile> files) {
-
-        if (files == null || files.isEmpty()) {
-            return;
-        }
-
-        for (MultipartFile file : files) {
-            if (file.isEmpty()) {
-                continue;
-            }
-            // FileService 호출 → 실제 저장된 파일명 받기// FileService 호출 → 실제 저장된 파일명 받기
-            StoredFileDto fileDto = fileService.handleUpload(file);
-
-            if (fileDto == null) {
-                continue;
-            }
-
-            // 업로드 결과를 엔티티로 변환
-            Attachment attachment = new Attachment();
-            attachment.setUuid(fileDto.getUuid());
-            attachment.setExt(fileDto.getExt());
-            attachment.setOriginalName(file.getOriginalFilename());
-            attachment.setType(AttachmentType.FILE); // 첨부파일 enum 타입 설정
-            post.addAttachment(attachment); // 양방향 동기화 (cascade로 attachment 테이블에 자동 저장됨)
-        }
-    }
-
-    // 9. 게시글 수정 : 첨부파일 삭제 메서드
-    private void removeAttachmentsById(Post post, List<Long> deleteIds) {
-
-        if (deleteIds == null || deleteIds.isEmpty()) {
-            return;
-        }
-
-        Set<Long> deleteIdSet = new HashSet<>(deleteIds);
-
-        post.getAttachments().stream() // 첨부파일에 대해서
-                .filter(att -> deleteIdSet.contains(att.getId())) // id가 일치하는 파일에 대해서
-                .toList() // list로 생성
-                .forEach(att -> { // 삭제 수행
-                    fileService.deletePhysicalFile(att.getUuid(), att.getExt());
-                    post.removeAttachment(att); // 엔티티 관계 해제
-                });
-    }
-
-    // 10. 마이페이지 개인 작성글 조회
-    public Page<MyPostDto> findMyPosts(Long authorId, int page) {
-
-        Pageable pageable = PageRequest.of(
-                page,
-                5, // 마이페이지는 5개씩
-                Sort.by(Sort.Direction.DESC, "createdAt")
-        );
-
-        Page<Post> postPage
-                = postRepository.findByAuthorId_Id(authorId, pageable);
-
-        return postPage.map(post -> {
-            MyPostDto dto = new MyPostDto();
-            dto.setId(post.getId());
-            dto.setTitle(post.getTitle());
-            dto.setFormattedCreatedAt(
-                    PostFormatter.dateFormat(post.getCreatedAt())
-            );
-            return dto;
-        });
-    }
-
 }

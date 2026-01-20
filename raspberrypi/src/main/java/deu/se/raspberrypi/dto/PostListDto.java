@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 전체 게시글 리스트 반환용 DTO
+ * 전체/ 검색 게시글 리스트 반환용 DTO
  *
  * 2025.11.03 수정
  * @author Haruki

@@ -1,0 +1,90 @@
+:root {
+    --search-height: 35px;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    margin-bottom: 12px;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.search-form,
+.search-form * {
+    box-sizing: border-box;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-btn {
+    width: 120px;
+    height: var(--search-height);
+    padding: 6px 10px;
+    border: 2px solid #3b4a9f;
+    border-radius: 0;
+    background: #fff;
+    color: #3b4a9f;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 120px;
+    border: 2px solid #3b4a9f;
+    border-radius: 0;
+    background: #fff;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+    z-index: 100;
+}
+
+.dropdown-menu li {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+    background: #eef1ff;
+}
+
+.search-group {
+    display: flex;
+}
+
+/* 입력창 */
+.search-input {
+    width: 400px;
+    padding: 0 10px;
+    border: 2px solid #3b4a9f;
+    height: var(--search-height);
+    box-sizing: border-box;
+    outline: none;
+}
+
+
+/* 검색 버튼 */
+.search-btn {
+    padding: 0;
+    width: 35px;
+    border: 2px solid #3b4a9f;
+    border-radius: 0px;
+    background: #3b4a9f;
+    color: #fff;
+    cursor: pointer;
+    height: var(--search-height);
+    box-sizing: border-box;
+}

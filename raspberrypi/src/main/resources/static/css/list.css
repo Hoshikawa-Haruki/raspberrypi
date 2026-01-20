@@ -80,6 +80,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     text-overflow: ellipsis;
 }
 
+/* 검색어 하이라이트 */
+.highlight {
+    background-color: #fff3b0;
+    font-weight: 600;
+}
 
 /* ===== 페이지네이션 ===== */
 .pagination {
@@ -109,6 +114,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 }
 
 .pagination .nav {
-    margin: 0 5px;
+    margin: 0;
     color: var(--text-sub);
 }
