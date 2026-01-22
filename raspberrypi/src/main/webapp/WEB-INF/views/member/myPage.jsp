@@ -57,7 +57,7 @@
                                 </tr>
                                 <tr>
                                     <th>가입일</th>
-                                    <td>${createdDate}</td>
+                                    <td>${user.createdAt.toLocalDate()}</td>
                                 </tr>
                             </table>
                         </div>

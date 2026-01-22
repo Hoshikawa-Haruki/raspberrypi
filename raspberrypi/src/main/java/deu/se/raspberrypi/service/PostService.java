@@ -119,7 +119,7 @@ public class PostService {
                     PostListDto dto = PostMapper.toPostListDto(post);
                     // 목록에서도 표시용 데이터 가공
                     dto.setMaskedIp(PostFormatter.maskIp(post.getIpAddress()));
-                    dto.setFormattedCreatedAt(PostFormatter.dateFormat(post.getCreatedAt()));
+                    // dto.setFormattedCreatedAt(PostFormatter.dateFormat(post.getCreatedAt()));
                     return dto;
                 })
                 .toList();
@@ -142,7 +142,7 @@ public class PostService {
     public Page<PostListDto> findAllPage(Pageable pageable) {
         Page<Post> page = postRepository.findAll(pageable);
 
-        return toPostListDtoPage(page);
+        return toPostListDtoPageForView(page);
     }
 
     // 2.3 Read (검색)
@@ -167,16 +167,16 @@ public class PostService {
                 postRepository.searchByTitleOrContent(keyword, pageable);
         };
 
-        return toPostListDtoPage(page);
+        return toPostListDtoPageForView(page);
     }
 
-    // 2.4 게시글 리스트 Dto 변환 메서드
-    private Page<PostListDto> toPostListDtoPage(Page<Post> page) {
+    // 2.4 게시글 목록 View DTO 매핑 (Page 유지)
+    private Page<PostListDto> toPostListDtoPageForView(Page<Post> page) {
         return page.map(post -> {
             PostListDto dto = PostMapper.toPostListDto(post);
             dto.setMaskedIp(PostFormatter.maskIp(post.getIpAddress()));
             dto.setFormattedCreatedAt(
-                    PostFormatter.dateFormat(post.getCreatedAt())
+                    PostFormatter.postListDateFormat(post.getCreatedAt())
             );
             return dto;
         });

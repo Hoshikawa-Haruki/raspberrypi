@@ -10,13 +10,14 @@ import deu.se.raspberrypi.security.CustomUserDetails;
 import deu.se.raspberrypi.service.MemberService;
 import deu.se.raspberrypi.service.PostService;
 import jakarta.validation.Valid;
-import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,6 +31,15 @@ public class MemberController {
 
     private final MemberService memberService;
     private final PostService postService;
+
+    // member 영역 전용 공통 데이터
+    // 적용 범위 = MemberController 안의 모든 핸들러 메서드
+    @ModelAttribute("user")
+    public Member currentUser(
+            @AuthenticationPrincipal CustomUserDetails principal
+    ) {
+        return principal != null ? principal.getMember() : null;
+    }
 
     @GetMapping("/member/loginForm")
     public String loginForm() {
@@ -65,6 +75,7 @@ public class MemberController {
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/member/mypage")
     public String myPage(
             @AuthenticationPrincipal CustomUserDetails principal,
@@ -73,15 +84,15 @@ public class MemberController {
     ) {
         Member member = principal.getMember();
 
-        // todo : 사용자 정보 메서드 모듈화 필요
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String createdDate = member.getCreatedAt().format(formatter);
-        model.addAttribute("user", member);
-        model.addAttribute("createdDate", createdDate);
-        
         model.addAttribute("myPostPage",
                 postService.findMyPosts(member.getId(), page));
 
         return "member/myPage";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/member/withdraw")
+    public String withdrawForm() {
+        return "/member/withdraw";
     }
 }

@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .loginProcessingUrl("/login") // POST/login 처리
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/", false) // 로그인 성공 후 직전 링크로 이동
+                .defaultSuccessUrl("/board/list", true) // 로그인 성공 후 이동 페이지
                 .permitAll()
                 )
                 // 로그아웃

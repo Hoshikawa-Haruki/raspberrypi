@@ -85,8 +85,9 @@ body {
     font-weight: bold;
 }
 
-.mypage-menu li.danger {
+.mypage-menu li.danger a {
     color: #c0392b;
+    text-decoration: none;
 }
 
 /* ===== 우측 영역 ===== */
