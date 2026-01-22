@@ -13,7 +13,6 @@
         <title>마이페이지</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/mypage.css">
-
     </head>
 
     <body>
@@ -35,7 +34,9 @@
                         <li class="active">프로필 관리</li>
                         <li>보안 설정</li>
                         <li>이력 관리</li>
-                        <li class="danger">회원 탈퇴</li>
+                        <li class="danger">
+                            <a href="/member/withdraw">회원탈퇴</a></li>
+
                     </ul>
                 </aside>
 
@@ -64,7 +65,10 @@
 
                     <div class="card">
                         <div class="card-header">
-                            내 작성글 [${myPostPage.totalElements}]</div>
+                            내 작성글 <a href="${pageContext.request.contextPath}/board/list?searchType=writer&keyword=${user.nickname}" class="mypost-link">
+                                [${myPostPage.totalElements}]
+                            </a>
+                        </div>
                         <div class="card-body">
                             <c:choose>
                                 <c:when test="${empty myPostPage.content}">

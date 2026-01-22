@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
@@ -153,7 +154,7 @@ public class PageController {
         PostDto post = postService.findById(id);
         model.addAttribute("post", post);
 
-        // 2. 검색 + 페이지 상태 유지
+        // 2. 검색 + 페이지 상태 유지 (하단 리스트용. 사용하지 않을 시, 삭제 OK)
         Page<PostListDto> postPage
                 = postService.searchPost(searchType, keyword, pageable);
 
@@ -161,7 +162,7 @@ public class PageController {
         int totalPages = postPage.getTotalPages();
         int startPage = 0;
         int endPage = -1;
-        
+
         if (totalPages > 0) {
             startPage = (currentPage / 10) * 10;
             endPage = Math.min(startPage + 9, totalPages - 1);
@@ -201,8 +202,26 @@ public class PageController {
 
     // 7. 게시글 삭제 요청
     @PostMapping("/board/delete/{id}")
-    public String deletePost(@PathVariable Long id) {
+    public String deletePost(
+            @PathVariable Long id,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            RedirectAttributes ra
+    ) {
         postService.deletePost(id);
+
+        if (searchType != null && !searchType.isBlank()) {
+            ra.addAttribute("searchType", searchType);
+        }
+        if (keyword != null && !keyword.isBlank()) {
+            ra.addAttribute("keyword", keyword);
+        }
+        if (page > 0) {
+            ra.addAttribute("page", page);
+        }
+
         return "redirect:/board/list";
     }
+
 }

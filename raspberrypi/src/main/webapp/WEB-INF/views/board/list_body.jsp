@@ -36,8 +36,8 @@
                            value="${pageContext.request.contextPath}/board/view/${post.id}?page=${postPage.number}" />
                 </c:otherwise>
             </c:choose>
-            <tr class="${post.id eq currentPostId ? 'active' : ''}"
-                onclick="location.href = '${rowUrl}'">  <!-- 현재글이면 active 표시 -->
+            <tr class="${post.id eq currentPostId ? 'active' : ''}">
+                <!--onclick="location.href = '${rowUrl}'">   현재글이면 active 표시 -->
 
                 <td>
                     ${postPage.totalElements
@@ -45,7 +45,11 @@
                       - status.index}
                 </td>
 
-                <td class="title">${post.title}</td>
+                <td class="title">
+                    <a href="${rowUrl}" class="row-link">
+                        ${post.title}
+                    </a>
+                </td>
                 <td class="author">${post.authorNameSnapshot} (${post.maskedIp})</td>
                 <td>${post.formattedCreatedAt}</td>
 
@@ -71,13 +75,13 @@
         function escapeRegExp(str) {
             return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
         }
-        
+
         // 검색기준 분기 (하이라이트 처리용)
         var selector = '';
         if (searchType === 'author') {
             selector = '.author';
         } else {
-            selector = '.title';
+            selector = '.row-link';
         }
         var regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi'); // 전부, 대소문자 구분 X
 

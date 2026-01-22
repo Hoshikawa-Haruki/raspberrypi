@@ -31,16 +31,37 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 .board-table tr:hover {
     background: #f8f9fa;
-    cursor: pointer;
+    /*cursor: pointer;*/
 }
 
+/* 현재 방문중인 링크 */
+.board-table tr.active .row-link {
+    color: #007bff; /* 구글 블루 */
+    font-weight: 600;
+}
+
+/* 제목 */
 .board-table td.title {
     text-align: left;
     color: #007bff;
-
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/* 링크 */
+/* 링크 블록 영역 클릭 시, 링크로 이동 */
+.row-link {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    cursor: pointer;
+    color: #007bff
+}
+
+/* 방문한 링크 */
+.row-link:visited {
+    color: #551A8B;          /* 브라우저 기본 보라색 계열 */
 }
 
 .empty {
@@ -50,12 +71,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 }
 
 /* 현재 게시글 active 설정 */
-.board-table tr.active {
+.board-table tr.active,
+.board-table tr.active:hover {
     background-color: #f0f6ff;
 }
 
-.board-table tr.active td,
-.board-table tr.active td.title
+.board-table tr.active td
 {
     font-weight: 500;
 }
@@ -82,13 +103,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 .board-table th:nth-child(4),
 .board-table td:nth-child(4) {
     width: 150px;
-}
-
-/* 제목 말줄임 */
-.board-table td.title {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 /* 검색어 하이라이트 */

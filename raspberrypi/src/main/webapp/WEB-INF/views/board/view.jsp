@@ -63,6 +63,12 @@
 
                         <form method="post" action="${pageContext.request.contextPath}/board/delete/${post.id}" style="display:inline;">
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+
+                            <!-- 검색 상태 전달 -->
+                            <input type="hidden" name="searchType" value="${searchType}">
+                            <input type="hidden" name="keyword" value="${keyword}">
+                            <input type="hidden" name="page" value="${param.page}">
+                            
                             <button type="submit" class="btn btn-danger" onclick="return confirm('삭제하시겠습니까?');">🗑 삭제</button>
                         </form>
                     </sec:authorize>

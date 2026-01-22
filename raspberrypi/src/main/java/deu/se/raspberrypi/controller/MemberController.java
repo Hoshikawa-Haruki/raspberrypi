@@ -4,7 +4,6 @@
  */
 package deu.se.raspberrypi.controller;
 
-import deu.se.raspberrypi.dto.MyPostDto;
 import deu.se.raspberrypi.dto.SignupRequestDto;
 import deu.se.raspberrypi.entity.Member;
 import deu.se.raspberrypi.security.CustomUserDetails;
@@ -13,7 +12,6 @@ import deu.se.raspberrypi.service.PostService;
 import jakarta.validation.Valid;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

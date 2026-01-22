@@ -112,13 +112,16 @@ body {
     color: #fff;
     padding: 14px 18px;
     font-weight: bold;
-
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 }
 
+.mypost-link {
+    color: #fff;
+    text-decoration: none;
+}
 .card-body {
     padding: 20px;
 }

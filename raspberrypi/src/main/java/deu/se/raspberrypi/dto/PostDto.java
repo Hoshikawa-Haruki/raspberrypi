@@ -8,7 +8,7 @@ package deu.se.raspberrypi.dto;
  * JSP ↔ Controller 컨트롤러에서 @RequestParam을 따로 안 써도, BoardPostDto로 바로 form 데이터를 받을
  * 수 있음
  *
- * 게시글 저장, 조회용 DTO (Create, Read)
+ * 게시글 저장, 단일 게시글 조회용 DTO (Create, Read)
  *
  * 2025.11.03. 수정
  * @author Haruki
