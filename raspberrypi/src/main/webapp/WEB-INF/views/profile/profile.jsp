@@ -80,7 +80,11 @@
 
                 <section class="section">
                     <h2>전공 & 학력</h2>
-                    <div class="row">
+                    <div class="carrer-row">
+                        <span class="period">2020.03 – 2026.02</span>
+                        <span>동의대학교 컴퓨터소프트웨어공학과 졸업</span>
+                    </div>
+                    <div class="carrer-row">
                         <span class="period">2020.03 – 2026.02</span>
                         <span>동의대학교 컴퓨터소프트웨어공학과 졸업</span>
                     </div>
@@ -128,11 +132,17 @@
                 <section class="section section-split">
                     <div class="half">
                         <h2>자격증</h2>
-                        <ul>
-                            <li>정보처리기사</li>
-                            <li>SQLD</li>
-                            <li>일본어능력시험 2급 (JLPT N2)</li>
-                        </ul>
+                        <div class="split-row">
+                            <span class="split-content">정보처리기사</span>
+                        </div>
+
+                        <div class="split-row">
+                            <span class="split-content">SQLD</span>
+                        </div>
+
+                        <div class="split-row">
+                            <span class="split-content">일본어능력시험 2급 (JLPT N2)</span>
+                        </div>
                     </div>
 
                     <div class="half">

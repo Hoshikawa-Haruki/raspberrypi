@@ -34,20 +34,18 @@ public class SecurityConfig {
                 // 정적 리소스 & 공개 페이지
                 .requestMatchers(
                         "/", "/error",
-                        "/css/**", "/js/**",
+                        "/css/**", "/js/**", // static
+                        "/images/**", // 정적이미지
                         "/upload/**",
                         "/upload_temp/**",
-                        "/rappi_favicon.png", "crown_signup.png", "crown_login.gif", // 정적이미지
                         "/member/loginForm", "/member/signupForm", // 로그인, 회원가입 페이지 요청
                         "/login", "/member/signup", // 회원가입, 로그인 요청
                         "/board", "/board/", "/board/list", "/board/view/**",
                         "/profile" // 프로필 페이지,
                 ).permitAll()
-                .requestMatchers("/board/delete/**").authenticated()
-                // 게시판 나머지 = 로그인 필요
-                .requestMatchers("/board/**").hasRole("USER")
-                // 관리자 페이지
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                //.requestMatchers("/board/delete/**").authenticated()
+                .requestMatchers("/board/**").hasRole("USER") 
+                .requestMatchers("/admin/**").hasRole("ADMIN") // TODO : 관리자 페이지
                 // 기타 요청은 인증 필요
                 .anyRequest().authenticated()
                 )

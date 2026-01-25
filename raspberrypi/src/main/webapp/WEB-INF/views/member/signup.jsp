@@ -42,7 +42,7 @@
 
             <!-- 오른쪽 배너 -->
             <div class="login-banner">
-                <img src="${pageContext.request.contextPath}/crown_signup.png" alt="회원가입 배너" />
+                <img src="${pageContext.request.contextPath}/images/crown_signup.png" alt="회원가입 배너" />
             </div>
         </div>
     </body>

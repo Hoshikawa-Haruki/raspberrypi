@@ -57,3 +57,10 @@ textarea { /* legacy */
     height: auto;
     margin: 8px 0;
 }
+
+/* Toast UI 위지윅 작성 화면 폰트 */
+.toastui-editor-contents {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+}

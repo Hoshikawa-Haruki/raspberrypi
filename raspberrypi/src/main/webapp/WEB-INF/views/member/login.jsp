@@ -46,7 +46,7 @@
 
             <!-- 오른쪽 배너 -->
             <div class="login-banner">
-                <img src="${pageContext.request.contextPath}/crown_login.gif" alt="로그인 배너" />
+                <img src="${pageContext.request.contextPath}/images/crown_login.gif" alt="로그인 배너" />
             </div>
         </div>
         <c:if test="${param.signupSuccess ne null}">

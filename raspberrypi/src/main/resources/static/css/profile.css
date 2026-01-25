@@ -75,6 +75,50 @@ body {
     color: #333;
 }
 
+/* 공통 리스트 리셋 */
+.info-list,
+.link-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 정보 / 링크 리스트 공통 */
+.info-list li,
+.link-list li {
+    position: relative;
+    padding: 0;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.5;
+}
+
+/* 정보 리스트: 왼쪽 포인트 */
+.info-list li {
+    padding-left: 14px;
+}
+
+/* 과하지 않은 포인트 */
+.info-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #777;
+}
+
+/* 링크 리스트 */
+.link-list a {
+    color: #444;
+    text-decoration: none;
+}
+
+/* 링크에만 은은한 피드백 */
+.link-list a:hover {
+    text-decoration: underline;
+}
+
 /* 우측 프로필 */
 .section {
     background: #fff;
@@ -88,6 +132,13 @@ body {
     margin-top: 0;
     border-bottom: 2px solid #eee;
     padding-bottom: 8px;
+}
+
+.carrer-row {
+    display: flex;
+    gap: 14px;
+    margin-top: 10px;
+    line-height: 1.4;
 }
 
 .skill-row {
@@ -109,7 +160,7 @@ body {
 
 .period {
     min-width: 120px;
-    color: #888;
+    color: #333;
 }
 
 .project {

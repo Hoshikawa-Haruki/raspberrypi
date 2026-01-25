@@ -14,7 +14,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 .board-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
+    font-size: 15px;
     table-layout: fixed; /* 컬럼 폭 고정 */
 }
 
@@ -34,16 +34,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     /*cursor: pointer;*/
 }
 
-/* 현재 방문중인 링크 */
-.board-table tr.active .row-link {
-    color: #007bff; /* 구글 블루 */
-    font-weight: 600;
-}
-
 /* 제목 */
 .board-table td.title {
     text-align: left;
-    color: #007bff;
+    color: #007bff; /* 구글 블루 */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -74,6 +68,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 .board-table tr.active,
 .board-table tr.active:hover {
     background-color: #f0f6ff;
+}
+
+/* 현재 게시글 링크 폰트, 굵기 */
+.board-table tr.active .row-link {
+    color: #333;
+    font-weight: 600;
 }
 
 .board-table tr.active td
@@ -118,7 +118,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     align-items: center;
     gap: 6px;
     margin-top: 20px;
-    font-size: 13px;
+    font-size: 15px;
 }
 
 .pagination a,
