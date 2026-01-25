@@ -16,6 +16,7 @@
               href="${pageContext.request.contextPath}/css/post.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search.css">
     </head>
+
     <body>
         <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
 
@@ -68,7 +69,7 @@
                             <input type="hidden" name="searchType" value="${searchType}">
                             <input type="hidden" name="keyword" value="${keyword}">
                             <input type="hidden" name="page" value="${param.page}">
-                            
+
                             <button type="submit" class="btn btn-danger" onclick="return confirm('삭제하시겠습니까?');">🗑 삭제</button>
                         </form>
                     </sec:authorize>
@@ -83,5 +84,9 @@
         </div>
 
         <jsp:include page="/WEB-INF/views/board/footer.jsp"/>
+
+        <script type="module"
+        src="${pageContext.request.contextPath}/js/pages/board-view.js"></script>
+
     </body>
 </html>
