@@ -31,9 +31,7 @@
                 <!-- 에디터 -->
                 <div id="editor"></div>
                 <!-- 기존 본문 HTML -->
-                <textarea id="originContent" style="display:none;">
-                    ${post.content}
-                </textarea>
+                <textarea id="originContent" style="display:none;">${post.content}</textarea>
                 <!-- 최종 전송용 -->
                 <textarea id="content" name="content" style="display:none;"></textarea>
 

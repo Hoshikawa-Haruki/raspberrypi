@@ -75,6 +75,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     margin-top: 10px;
 }
 
+.post-footer .btn{
+    border-radius: 2px;
+}
+
 .btn-danger {
     border-color: #dc3545;
     color: #dc3545;
