@@ -19,6 +19,7 @@ import deu.se.raspberrypi.entity.AttachmentType;
 import deu.se.raspberrypi.entity.Member;
 import deu.se.raspberrypi.entity.TempAttachment;
 import deu.se.raspberrypi.formatter.PostFormatter;
+import deu.se.raspberrypi.idempotency.IdempotencyStore;
 import deu.se.raspberrypi.mapper.PostMapper;
 import deu.se.raspberrypi.util.IpUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +37,7 @@ import deu.se.raspberrypi.repository.TempAttachmentRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.data.domain.Page;
@@ -51,9 +53,16 @@ public class PostService {
     private final PostRepository postRepository;
     private final FileService fileService;
     private final TempAttachmentRepository tempAttachmentRepository;
+    private final IdempotencyStore idempotencyStore;
 
     // CREATE
     public void save(PostDto dto, Member member, HttpServletRequest request) {
+
+        // 0) idem 키 생성
+        String idemKey = "post:create:" + dto.getIdempotencyKey();
+        if (!idempotencyStore.tryAcquire(idemKey)) {
+            return; // 중복 요청 → 종료
+        }
 
         // 1) IP 추출 (서버 측에서 수행)
         String ip = IpUtils.getClientIp(request);
@@ -207,6 +216,12 @@ public class PostService {
 
     // 3. UPDATE
     public void updateWithFiles(Long id, PostUpdateDto dto, Member member) {
+
+        // 0) idem 키 생성
+        String idemKey = "post:update:" + id + ":" + dto.getIdempotencyKey();
+        if (!idempotencyStore.tryAcquire(idemKey)) {
+            return; // 중복 요청 → 종료
+        }
 
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));

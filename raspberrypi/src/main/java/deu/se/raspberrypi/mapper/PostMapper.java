@@ -40,8 +40,6 @@ public class PostMapper {
         dto.setAuthorNameSnapshot(post.getAuthorNameSnapshot());
         dto.setTitle(post.getTitle());
         dto.setContent(post.getContent());
-        dto.setCreatedAt(post.getCreatedAt());
-        dto.setUpdatedAt(post.getUpdatedAt());
 
         if (post.getAttachments() != null && !post.getAttachments().isEmpty()) {
             dto.setAttachments(

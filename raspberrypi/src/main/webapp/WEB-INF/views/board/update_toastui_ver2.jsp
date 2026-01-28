@@ -26,12 +26,14 @@
                   action="${pageContext.request.contextPath}/board/update/${post.id}">
 
                 <input type="text" name="title" maxlength="40" value="${post.title}"
-                       placeholder="제목을 입력해 주세요." required><br/><br/>
+                       placeholder="제목을 입력해 주세요." required>
 
                 <!-- 에디터 -->
-                <div id="editor"></div><br/>
-                <!-- 서버에서 가져온 본문 HTML -->
-                <textarea id="originContent" style="display:none;">${post.content}</textarea>
+                <div id="editor"></div>
+                <!-- 기존 본문 HTML -->
+                <textarea id="originContent" style="display:none;">
+                    ${post.content}
+                </textarea>
                 <!-- 최종 전송용 -->
                 <textarea id="content" name="content" style="display:none;"></textarea>
 
@@ -68,22 +70,23 @@
 
                 </c:if>
 
-
-
                 <!-- 새 첨부 -->
-                <input type="file" name="newFiles" multiple><br/><br/>
+                <input type="file" name="newFiles" multiple>
+                <!-- csrf 토큰 전송 -->
                 <input type="hidden" name="_csrf" value="${_csrf.token}">
 
-                <button type="submit">수정</button>
-                <button type="button"
-                        onclick="location.href = '${pageContext.request.contextPath}/board/list'">취소</button>
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">등록</button>
+                    <button type="button" class="btn-cancel"
+                            onclick="location.href = '${pageContext.request.contextPath}/board/list'">
+                        취소
+                    </button>
+                </div>
+
+                <!-- idem 키 전송 -->
+                <input type="hidden" name="idempotencyKey" id="idempotencyKey">
             </form>
         </div>
-
-        <!-- 기존 글 HTML 전달 -->
-        <textarea id="originContent" style="display:none;">
-            ${post.content}
-        </textarea>
 
         <!-- JS로 경로 전달 -->
         <div id="editor-config"

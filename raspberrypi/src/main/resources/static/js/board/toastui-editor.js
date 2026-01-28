@@ -2,6 +2,10 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    // 페이지 로드 시 idemKey 1회 생성
+    const idemKey = crypto.randomUUID();
+    document.getElementById("idempotencyKey").value = idemKey;
+
     const configEl = document.getElementById("editor-config");
     const uploadUrl = configEl.dataset.uploadUrl;
 

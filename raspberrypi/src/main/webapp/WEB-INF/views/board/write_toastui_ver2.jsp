@@ -29,19 +29,27 @@
 
                 <input type="text" name="title" maxlength="40" 
                        value="${post.title}"
-                       placeholder="제목을 입력해 주세요." required><br/><br/>
+                       placeholder="제목을 입력해 주세요." required>
 
                 <!-- 에디터 -->
-                <div id="editor"></div><br/>
+                <div id="editor"></div>
                 <!-- 서버로 전송될 HTML -->
                 <textarea id="content" name="content" style="display:none;"></textarea>
                 <!-- 첨부파일 --> 
-                <input type="file" name="files" multiple><br/><br/>
+                <input type="file" name="files" multiple>
+                <!-- csrf 토큰 전송 -->
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                <button type="submit">등록</button>
-                <button type="button" class="btn btn-cancel"
-                        onclick="location.href = '${pageContext.request.contextPath}/board/list'">취소</button>
 
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">등록</button>
+                    <button type="button" class="btn-cancel"
+                            onclick="location.href = '${pageContext.request.contextPath}/board/list'">
+                        취소
+                    </button>
+                </div>
+
+                <!-- idem 키 전송 -->
+                <input type="hidden" name="idempotencyKey" id="idempotencyKey">
             </form>
         </div>
 
