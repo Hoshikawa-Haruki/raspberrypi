@@ -9,8 +9,11 @@
 
 <h2>📋 게시글 목록</h2>
 
-<div class="actions">
-    <button onclick="location.href = '${pageContext.request.contextPath}/board/writeForm'">✏️ 새 글 작성</button>
+<div class="write-actions">
+    <a class="btn-write"
+       href="${pageContext.request.contextPath}/board/writeForm">
+        ✏️ 새 글 작성
+    </a>
 </div>
 
 <table class="board-table">

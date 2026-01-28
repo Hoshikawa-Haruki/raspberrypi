@@ -6,9 +6,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     Created on : 2025. 10. 28., 오후 9:00:59
     Author     : Haruki
 */
-.actions {
+.write-actions {
     text-align: right;
     margin-bottom: 15px;
+}
+
+.btn-write {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background: white;
+    color: #333;
+    text-decoration: none; /* 밑줄 제거 */
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-write:hover {
+    background: #f4f4f4;
 }
 
 .board-table {

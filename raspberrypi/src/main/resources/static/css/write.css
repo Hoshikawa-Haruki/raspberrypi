@@ -9,7 +9,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 /* write.css - 새 글 작성 페이지 스타일 */
 
-form {
+#postForm {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;   /* ← 전체 요소 간 세로 간격 */
     font-size: 14px;
     color: #333;
 }
@@ -45,8 +48,15 @@ textarea { /* legacy */
     line-height: 1.6;
 }
 
-.btn-cancel {
-    margin-right: 5px;
+.form-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.form-actions button { /* 버튼 */
+    width: auto;
+    padding: 8px 16px;
+    border-radius: 2px;
 }
 
 /* Toast UI 에디터 내부 이미지 */
