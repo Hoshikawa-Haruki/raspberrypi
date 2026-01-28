@@ -17,5 +17,8 @@ import org.springframework.data.repository.query.Param;
  */
 public interface IdempotencyKeyRepository extends JpaRepository<IdempotencyKey, Long> {
 
+    @Modifying // 데이터 변경 쿼리
+    @Query("delete from IdempotencyKey k where k.createdAt < :cutoff")
+    int deleteExpiredIdemKeys(@Param("cutoff") LocalDateTime cutoff);
 
 }
