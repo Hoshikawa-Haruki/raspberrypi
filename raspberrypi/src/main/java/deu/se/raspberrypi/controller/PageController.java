@@ -63,7 +63,7 @@ public class PageController {
     //@GetMapping("/board/list")
     @Deprecated
     public String list(
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             Model model
     ) {
         Page<PostListDto> postPage = postService.findAllPage(pageable);
@@ -89,7 +89,7 @@ public class PageController {
     public String list(
             @RequestParam(required = false) String searchType,
             @RequestParam(required = false) String keyword,
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             Model model
     ) {
 

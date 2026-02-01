@@ -23,7 +23,6 @@ import deu.se.raspberrypi.idempotency.IdempotencyStore;
 import deu.se.raspberrypi.mapper.PostMapper;
 import deu.se.raspberrypi.util.IpUtils;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +36,12 @@ import deu.se.raspberrypi.repository.TempAttachmentRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -135,6 +134,7 @@ public class PostService {
     }
 
     // 2.1 READ (단일 조회)
+    @Transactional(readOnly = true)
     public PostDto findById(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
@@ -148,6 +148,7 @@ public class PostService {
     }
 
     // 2.2 Read (전체 목록 페이징 조회)
+    @Transactional(readOnly = true)
     public Page<PostListDto> findAllPage(Pageable pageable) {
         Page<Post> page = postRepository.findAll(pageable);
 
@@ -155,6 +156,7 @@ public class PostService {
     }
 
     // 2.3 Read (검색)
+    @Transactional(readOnly = true)
     public Page<PostListDto> searchPost(
             String searchType,
             String keyword,
@@ -179,7 +181,7 @@ public class PostService {
         return toPostListDtoPageForView(page);
     }
 
-    // 2.4 게시글 목록 View DTO 매핑 (Page 유지)
+    // 2.4 게시글 리스트 DTO 포맷팅
     private Page<PostListDto> toPostListDtoPageForView(Page<Post> page) {
         return page.map(post -> {
             PostListDto dto = PostMapper.toPostListDto(post);
@@ -192,6 +194,7 @@ public class PostService {
     }
 
     // 2.5 마이페이지 개인 작성글 조회
+    @Transactional(readOnly = true)
     public Page<MyPostDto> findMyPosts(Long authorId, int page) {
 
         Pageable pageable = PageRequest.of(
