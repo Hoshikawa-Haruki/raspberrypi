@@ -1,0 +1,184 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 2026. 2. 2., 오후 3:10:49
+    Author     : Haruki
+*/
+
+/* ===== 코멘트 컨테이너 ===== */
+.comment-container {
+    width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 20px 50px 40px 50px;
+}
+
+/* ===== 댓글 헤더 ===== */
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 8px 4px 6px 4px;
+    margin-top: 10px;
+    margin-bottom: 0;
+
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+/* 댓글 개수 */
+.comment-count {
+    font-weight: bold;
+    color: #333;
+}
+
+/* 우측 액션 링크 */
+.comment-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.comment-actions a {
+    font-size: 13px;
+    color: #3f4aa8;
+    text-decoration: none;
+}
+
+.comment-actions a:hover {
+    text-decoration: underline;
+}
+
+
+/* ===== 댓글 목록 ===== */
+.comment-item {
+    padding: 12px 5px;
+    border-bottom: 1px solid #eee;
+}
+
+/* 메타 정보 (닉네임 + 시간) */
+.comment-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.comment-author {
+    font-weight:bold;
+    color: #111;
+}
+
+.comment-time {
+    color: #888;
+}
+
+/* 삭제 버튼 */
+.comment-delete {
+    margin-left: auto;
+    border: none;
+    background: transparent;
+    color: #999;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.comment-delete:hover {
+    color: #e74c3c;
+}
+
+/* 댓글 내용 */
+.comment-content {
+    line-height: 1.6;
+    color: #333;
+    word-break: break-word;
+}
+
+
+/* ===== 댓글 작성 폼 ===== */
+.comment-form {
+    margin-top: 20px;
+    border-top: 2px solid #3f4aa8;
+    border-bottom: 2px solid #3f4aa8;
+    padding: 12px;
+    background: #fff;
+}
+
+/* 입력 박스 */
+.comment-write-box {
+    display: flex;
+    border: 1px solid #ddd;
+}
+
+/* 좌측 닉네임 */
+.comment-writer {
+    width: 120px;
+    background: #f6f6f6;
+    border-right: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.writer-name {
+    font-size: 15px;
+    color: #333;
+}
+
+/* 우측 textarea */
+.comment-input-area {
+    flex: 1;
+}
+
+.comment-input-area textarea {
+    width: 100%;
+    height: 120px;
+    border: none;
+    resize: none;
+    padding: 12px;
+    font-family: "Noto Sans KR", sans-serif;
+    font-size: 15px;
+    color: #333;
+    box-sizing: border-box;
+    line-height: 1.5;
+}
+
+.comment-input-area textarea:focus {
+    outline: none;
+}
+
+/* 하단 바 */
+.comment-action-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 8px;
+}
+
+/* 우측 버튼 */
+.right-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-submit {
+    padding: 8px 18px;
+    background: #3f4aa8;
+    color: #fff;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-submit:hover {
+    background: #2f388a;
+}
+
+

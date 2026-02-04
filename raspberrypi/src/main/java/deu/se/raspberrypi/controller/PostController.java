@@ -8,6 +8,7 @@ import deu.se.raspberrypi.dto.PostDto;
 import deu.se.raspberrypi.dto.PostListDto;
 import deu.se.raspberrypi.dto.PostUpdateDto;
 import deu.se.raspberrypi.security.CustomUserDetails;
+import deu.se.raspberrypi.service.CommentService;
 import deu.se.raspberrypi.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +33,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequiredArgsConstructor
-public class PageController {
+public class PostController {
 
     private final PostService postService;
+    private final CommentService commentService;
 
     // 1. 게시글 작성 폼
     @GetMapping("/board/writeForm")
@@ -141,13 +143,14 @@ public class PageController {
         return "board/view";  // => view.jsp 로 forward
     }
 
-    // 4. 게시글 단일 조회 + 검색 페이지 유지 
+    // 4. 게시글 단일 조회 + 검색 페이지 유지 + 댓글
     @GetMapping("/board/view/{id}")
     public String view(
             @PathVariable Long id,
             @RequestParam(required = false) String searchType,
             @RequestParam(required = false) String keyword,
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @AuthenticationPrincipal CustomUserDetails user,
             Model model
     ) {
         // 1. 단일 게시글
@@ -180,6 +183,15 @@ public class PageController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("currentPostId", id);
 
+        // 로그인 사용자 ID (mine 계산용)
+        Long loginMemberId = (user != null)
+                ? user.getMember().getId()
+                : null;
+        // 4. 댓글
+        model.addAttribute(
+                "comments",
+                commentService.findCommentByPostId(id, loginMemberId)
+        );
         return "board/view";
     }
 

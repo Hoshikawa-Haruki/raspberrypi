@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
  *
  * @author Haruki
  */
-public class PostFormatter {
+public class Formatter {
 
     private static final DateTimeFormatter DATE
             = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -23,6 +23,9 @@ public class PostFormatter {
     private static final DateTimeFormatter DATETIME
             = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+    private static final DateTimeFormatter COMMENTTIME
+            = DateTimeFormatter.ofPattern("MM-dd HH:mm");
+
     public static String maskIp(String ip) {
         if (ip == null) {
             return "-";
@@ -31,7 +34,13 @@ public class PostFormatter {
         return parts.length >= 2 ? parts[0] + "." + parts[1] : ip;
     }
 
-    public static String dateFormat(LocalDateTime t) {
+    /**
+     * 게시글 본문 표시용 날짜 포맷 - yyyy-MM-dd HH:mm
+     *
+     * @param t 게시글 작성 시각
+     * @return 목록 화면에 표시할 날짜 문자열
+     */
+    public static String postDateFormat(LocalDateTime t) {
         if (t == null) {
             return "";
         }
@@ -57,5 +66,19 @@ public class PostFormatter {
         }
 
         return t.format(DATE);
+    }
+
+    /**
+     * 댓글 표시용 날짜 포맷 - 오늘 작성: MM-dd HH:mm
+     *
+     * @param t 댓글 작성 시각
+     * @return 목록 화면에 표시할 날짜 문자열
+     */
+    public static String commentDateFormat(LocalDateTime t) {
+        if (t == null) {
+            return "";
+        }
+
+        return t.format(COMMENTTIME);
     }
 }

@@ -18,7 +18,7 @@ import deu.se.raspberrypi.entity.Attachment;
 import deu.se.raspberrypi.entity.AttachmentType;
 import deu.se.raspberrypi.entity.Member;
 import deu.se.raspberrypi.entity.TempAttachment;
-import deu.se.raspberrypi.formatter.PostFormatter;
+import deu.se.raspberrypi.formatter.Formatter;
 import deu.se.raspberrypi.idempotency.IdempotencyStore;
 import deu.se.raspberrypi.mapper.PostMapper;
 import deu.se.raspberrypi.util.IpUtils;
@@ -126,8 +126,8 @@ public class PostService {
                 .map(post -> {
                     PostListDto dto = PostMapper.toPostListDto(post);
                     // 목록에서도 표시용 데이터 가공
-                    dto.setMaskedIp(PostFormatter.maskIp(post.getIpAddress()));
-                    // dto.setFormattedCreatedAt(PostFormatter.dateFormat(post.getCreatedAt()));
+                    dto.setMaskedIp(Formatter.maskIp(post.getIpAddress()));
+                    // dto.setFormattedCreatedAt(Formatter.postDateFormat(post.getCreatedAt()));
                     return dto;
                 })
                 .toList();
@@ -141,8 +141,8 @@ public class PostService {
         PostDto dto = PostMapper.toPostDto(post);
 
         // DTO에 표시용 값 주입
-        dto.setMaskedIp(PostFormatter.maskIp(post.getIpAddress()));
-        dto.setFormattedCreatedAt(PostFormatter.dateFormat(post.getCreatedAt()));
+        dto.setMaskedIp(Formatter.maskIp(post.getIpAddress()));
+        dto.setFormattedCreatedAt(Formatter.postDateFormat(post.getCreatedAt()));
 
         return dto;
     }
@@ -185,9 +185,8 @@ public class PostService {
     private Page<PostListDto> toPostListDtoPageForView(Page<Post> page) {
         return page.map(post -> {
             PostListDto dto = PostMapper.toPostListDto(post);
-            dto.setMaskedIp(PostFormatter.maskIp(post.getIpAddress()));
-            dto.setFormattedCreatedAt(
-                    PostFormatter.postListDateFormat(post.getCreatedAt())
+            dto.setMaskedIp(Formatter.maskIp(post.getIpAddress()));
+            dto.setFormattedCreatedAt(Formatter.postListDateFormat(post.getCreatedAt())
             );
             return dto;
         });
@@ -210,8 +209,7 @@ public class PostService {
             MyPostDto dto = new MyPostDto();
             dto.setId(post.getId());
             dto.setTitle(post.getTitle());
-            dto.setFormattedCreatedAt(
-                    PostFormatter.dateFormat(post.getCreatedAt())
+            dto.setFormattedCreatedAt(Formatter.postDateFormat(post.getCreatedAt())
             );
             return dto;
         });

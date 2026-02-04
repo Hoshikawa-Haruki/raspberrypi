@@ -44,7 +44,7 @@ public class SecurityConfig {
                         "/profile" // 프로필 페이지,
                 ).permitAll()
                 //.requestMatchers("/board/delete/**").authenticated()
-                .requestMatchers("/board/**").hasRole("USER") 
+                .requestMatchers("/board/**", "/comment/**").hasRole("USER")
                 .requestMatchers("/admin/**").hasRole("ADMIN") // TODO : 관리자 페이지
                 // 기타 요청은 인증 필요
                 .anyRequest().authenticated()

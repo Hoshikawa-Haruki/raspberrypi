@@ -15,6 +15,7 @@
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/post.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/comment.css">
     </head>
 
     <body>
@@ -76,7 +77,9 @@
                 </div>
             </div>
         </div>
-
+        <div class="comment-container">
+            <jsp:include page="/WEB-INF/views/board/comment.jsp" />
+        </div>
         <div class="container">
             <jsp:include page="/WEB-INF/views/board/list_body.jsp" />
             <jsp:include page="/WEB-INF/views/board/pagination.jsp" />

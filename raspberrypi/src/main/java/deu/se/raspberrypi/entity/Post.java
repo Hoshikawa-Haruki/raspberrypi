@@ -54,6 +54,15 @@ public class Post {
             fetch = FetchType.LAZY)
     private List<Attachment> attachments = new ArrayList<>();
 
+    // 댓글
+    @OneToMany(
+            mappedBy = "post",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<Comment> comments = new ArrayList<>();
+
     @Column(nullable = false, updatable = false, insertable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
     )
@@ -75,4 +84,15 @@ public class Post {
         attachments.remove(file);
         file.setPost(null); // 관계 해제
     }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.setPost(this);
+    }
+
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
+        comment.setPost(null);
+    }
+
 }
