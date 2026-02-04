@@ -9,6 +9,7 @@ import deu.se.raspberrypi.dto.PostListDto;
 import deu.se.raspberrypi.dto.StoredFileDto;
 import deu.se.raspberrypi.entity.Attachment;
 import deu.se.raspberrypi.entity.Post;
+import deu.se.raspberrypi.formatter.Formatter;
 
 /**
  * Mapper는 순수 변환만 담당해야 함
@@ -16,8 +17,9 @@ import deu.se.raspberrypi.entity.Post;
  * 2) Mapper는 DB를 모르고 있어야 함
  * 
  * 엔티티(게시글) -> DTO 변환 클래스
- * 
+ *
  * 2025.12.22.
+ *
  * @author Haruki
  */
 public class PostMapper {
@@ -57,8 +59,8 @@ public class PostMapper {
         dto.setId(post.getId());
         dto.setAuthorNameSnapshot(post.getAuthorNameSnapshot());
         dto.setTitle(post.getTitle());
-        dto.setIpAddress(post.getIpAddress());
-        dto.setCreatedAt(post.getCreatedAt());
+        dto.setMaskedIp(Formatter.maskIp(post.getIpAddress()));
+        dto.setFormattedCreatedAt(Formatter.postListDateFormat(post.getCreatedAt()));
         return dto;
     }
 

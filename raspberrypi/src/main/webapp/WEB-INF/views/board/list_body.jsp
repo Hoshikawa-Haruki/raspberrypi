@@ -43,9 +43,7 @@
                 <!--onclick="location.href = '${rowUrl}'">   현재글이면 active 표시 -->
 
                 <td>
-                    ${postPage.totalElements
-                      - (postPage.number * postPage.size)
-                      - status.index}
+                    ${post.displayNo}
                 </td>
 
                 <td class="title">

@@ -4,14 +4,17 @@
  */
 package deu.se.raspberrypi.controller;
 
+import deu.se.raspberrypi.dto.PaginationInfoDto;
 import deu.se.raspberrypi.dto.PostDto;
 import deu.se.raspberrypi.dto.PostListDto;
 import deu.se.raspberrypi.dto.PostUpdateDto;
 import deu.se.raspberrypi.security.CustomUserDetails;
 import deu.se.raspberrypi.service.CommentService;
 import deu.se.raspberrypi.service.PostService;
+import deu.se.raspberrypi.util.PaginationUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import static org.hibernate.query.Page.page;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -110,21 +113,10 @@ public class PostController {
         Page<PostListDto> postPage
                 = postService.searchPost(searchType, keyword, pageable);
 
-        int currentPage = postPage.getNumber();
-        int totalPages = postPage.getTotalPages();
-        int startPage = 0;
-        int endPage = -1; // 기본값 (페이지 없음)
+        PaginationInfoDto pageInfo
+                = PaginationUtils.of(postPage, 10);
 
-        if (totalPages > 0) {
-            startPage = (currentPage / 10) * 10;
-            endPage = Math.min(startPage + 9, totalPages - 1);
-        }
-
-        model.addAttribute("currentPage", currentPage);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("postPage", postPage);
+        model.addAttribute("pageInfo", pageInfo);
         model.addAttribute("postList", postPage.getContent());
 
         // 검색 상태 유지용 (중요)
@@ -149,7 +141,7 @@ public class PostController {
             @PathVariable Long id,
             @RequestParam(required = false) String searchType,
             @RequestParam(required = false) String keyword,
-            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal CustomUserDetails user,
             Model model
     ) {
@@ -157,27 +149,15 @@ public class PostController {
         PostDto post = postService.findById(id);
         model.addAttribute("post", post);
 
-        // 2. 검색 + 페이지 상태 유지 (하단 리스트용. 사용하지 않을 시, 삭제 OK)
+        // 2. 검색 + 페이지 상태 유지
         Page<PostListDto> postPage
                 = postService.searchPost(searchType, keyword, pageable);
 
-        int currentPage = postPage.getNumber();
-        int totalPages = postPage.getTotalPages();
-        int startPage = 0;
-        int endPage = -1;
+        PaginationInfoDto pageInfo
+                = PaginationUtils.of(postPage, 10);
 
-        if (totalPages > 0) {
-            startPage = (currentPage / 10) * 10;
-            endPage = Math.min(startPage + 9, totalPages - 1);
-        }
-
-        // 3. pagination.jsp가 요구하는 값들 전부 전달
-        model.addAttribute("postPage", postPage);
+        model.addAttribute("pageInfo", pageInfo);
         model.addAttribute("postList", postPage.getContent());
-        model.addAttribute("currentPage", currentPage);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("totalPages", totalPages);
 
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);

@@ -151,8 +151,9 @@ public class PostService {
     @Transactional(readOnly = true)
     public Page<PostListDto> findAllPage(Pageable pageable) {
         Page<Post> page = postRepository.findAll(pageable);
-
-        return toPostListDtoPageForView(page);
+        Page<PostListDto> dtoPage
+                = toPostListDtoPageForView(page);
+        return applyDisplayNo(dtoPage);
     }
 
     // 2.3 Read (검색)
@@ -178,18 +179,32 @@ public class PostService {
                 postRepository.searchByTitleOrContent(keyword, pageable);
         };
 
-        return toPostListDtoPageForView(page);
+        Page<PostListDto> dtoPage
+                = toPostListDtoPageForView(page);
+
+        return applyDisplayNo(dtoPage);
     }
 
     // 2.4 게시글 리스트 DTO 포맷팅
     private Page<PostListDto> toPostListDtoPageForView(Page<Post> page) {
         return page.map(post -> {
             PostListDto dto = PostMapper.toPostListDto(post);
-            dto.setMaskedIp(Formatter.maskIp(post.getIpAddress()));
-            dto.setFormattedCreatedAt(Formatter.postListDateFormat(post.getCreatedAt())
-            );
             return dto;
         });
+    }
+
+    // 2.5 게시글 표시 번호 적용
+    private Page<PostListDto> applyDisplayNo(Page<PostListDto> dtoPage) {
+
+        long startNo = dtoPage.getTotalElements()
+                - (long) dtoPage.getNumber() * dtoPage.getSize();
+
+        List<PostListDto> content = dtoPage.getContent();
+        for (int i = 0; i < content.size(); i++) {
+            content.get(i).setDisplayNo(startNo - i);
+        }
+
+        return dtoPage;
     }
 
     // 2.5 마이페이지 개인 작성글 조회
