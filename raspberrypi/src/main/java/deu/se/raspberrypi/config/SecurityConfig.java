@@ -4,9 +4,11 @@
  */
 package deu.se.raspberrypi.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -43,11 +45,24 @@ public class SecurityConfig {
                         "/board", "/board/", "/board/list", "/board/view/**",
                         "/profile" // 프로필 페이지,
                 ).permitAll()
-                //.requestMatchers("/board/delete/**").authenticated()
-                .requestMatchers("/board/**", "/comment/**").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/api/comments/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()
+                .requestMatchers("/board/**").hasRole("USER")
                 .requestMatchers("/admin/**").hasRole("ADMIN") // TODO : 관리자 페이지
                 // 기타 요청은 인증 필요
                 .anyRequest().authenticated()
+                )
+                // API(/api/**) 요청에 대해서는 인증 실패 시
+                // 로그인 페이지로 리다이렉트하지 않고 401 Unauthorized를 반환한다.
+                .exceptionHandling(ex -> ex
+                .authenticationEntryPoint((request, response, authException) -> {
+                    if (request.getRequestURI().startsWith("/api/")) {
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    } else {
+                        response.sendRedirect("/member/loginForm");
+                    }
+                })
                 )
                 // 폼 로그인
                 .formLogin(form -> form

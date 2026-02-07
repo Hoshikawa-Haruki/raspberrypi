@@ -9,12 +9,10 @@ import deu.se.raspberrypi.dto.PostDto;
 import deu.se.raspberrypi.dto.PostListDto;
 import deu.se.raspberrypi.dto.PostUpdateDto;
 import deu.se.raspberrypi.security.CustomUserDetails;
-import deu.se.raspberrypi.service.CommentService;
 import deu.se.raspberrypi.service.PostService;
 import deu.se.raspberrypi.util.PaginationUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import static org.hibernate.query.Page.page;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -39,7 +37,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class PostController {
 
     private final PostService postService;
-    private final CommentService commentService;
+
+    private static final int PAGE_SIZE = 10;
 
     // 1. 게시글 작성 폼
     @GetMapping("/board/writeForm")
@@ -94,7 +93,7 @@ public class PostController {
     public String list(
             @RequestParam(required = false) String searchType,
             @RequestParam(required = false) String keyword,
-            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(size = PAGE_SIZE, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             Model model
     ) {
 
@@ -141,7 +140,7 @@ public class PostController {
             @PathVariable Long id,
             @RequestParam(required = false) String searchType,
             @RequestParam(required = false) String keyword,
-            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @PageableDefault(size = PAGE_SIZE, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal CustomUserDetails user,
             Model model
     ) {
@@ -163,15 +162,6 @@ public class PostController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("currentPostId", id);
 
-        // 로그인 사용자 ID (mine 계산용)
-        Long loginMemberId = (user != null)
-                ? user.getMember().getId()
-                : null;
-        // 4. 댓글
-        model.addAttribute(
-                "comments",
-                commentService.findCommentByPostId(id, loginMemberId)
-        );
         return "board/view";
     }
 

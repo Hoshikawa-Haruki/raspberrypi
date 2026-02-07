@@ -5,7 +5,8 @@
 package deu.se.raspberrypi.repository;
 
 import deu.se.raspberrypi.entity.Comment;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -14,7 +15,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    List<Comment> findByPostIdOrderByCreatedAtAsc(Long postId);
-
-
+    Page<Comment> findByPostIdOrderByCreatedAtAsc(
+            Long postId,
+            Pageable pageable
+    );
 }

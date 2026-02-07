@@ -12,8 +12,9 @@ import deu.se.raspberrypi.entity.Post;
 import deu.se.raspberrypi.formatter.Formatter;
 import deu.se.raspberrypi.repository.CommentRepository;
 import deu.se.raspberrypi.repository.PostRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,10 +39,11 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommentReadDto> findCommentByPostId(Long postId, Long loginMemberId) {
-
-        return commentRepository.findByPostIdOrderByCreatedAtAsc(postId)
-                .stream()
+    public Page<CommentReadDto> findCommentByPostId(
+            Long postId,
+            Long loginMemberId,
+            Pageable pageable) {
+        return commentRepository.findByPostIdOrderByCreatedAtAsc(postId, pageable)
                 .map(c -> {
                     CommentReadDto dto = new CommentReadDto();
                     dto.setId(c.getId());
@@ -53,8 +55,17 @@ public class CommentService {
                             && c.getMember().getId().equals(loginMemberId)
                     );
                     return dto;
-                })
-                .toList();
+                });
     }
 
+    public void deleteComment(Long commentId, Member loginMember) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("댓글 없음"));
+
+        if (!comment.getMember().getId().equals(loginMember.getId())) {
+            throw new IllegalStateException("삭제 권한 없음");
+        }
+
+        commentRepository.delete(comment);
+    }
 }

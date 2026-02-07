@@ -57,7 +57,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 /* ===== 댓글 목록 ===== */
 .comment-item {
-    padding: 12px 5px;
+    padding: 10px 5px;
     border-bottom: 1px solid #eee;
 }
 
@@ -181,4 +181,29 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     background: #2f388a;
 }
 
+/* 페이지네이션 */
+.comment-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+}
 
+.comment-pagination button {
+    padding: 4px 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-sub);
+    border-radius: 4px;
+    font-size: inherit;
+}
+.comment-pagination button:hover {
+    color: var(--main-color);
+}
+
+.comment-pagination .active {
+    color: #ff3b30;
+    font-weight: bold;
+}
