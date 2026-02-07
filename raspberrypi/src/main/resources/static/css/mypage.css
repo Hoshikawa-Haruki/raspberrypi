@@ -192,24 +192,28 @@ body {
     font-size: 13px;
 }
 
-.pagination a {
-    padding: 6px 12px;
+/* 버튼 기본 */
+.pagination button {
+    padding: 6px 10px;
     border: 1px solid var(--border-color);
-    border-radius: 6px;
-    text-decoration: none;
-    color: var(--text-sub);
+    border-radius: 4px;
     background: #fff;
+    color: var(--text-sub);
+    cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.pagination a:hover {
+/* hover */
+.pagination button:hover {
     background: var(--main-color);
     color: #fff;
     border-color: var(--main-color);
 }
 
-.pagination span {
-    color: var(--text-sub);
-    font-weight: 500;
+/* 현재 페이지 */
+.pagination button.active {
+    background: var(--main-color);
+    color: #fff;
+    border-color: var(--main-color);
+    font-weight: 600;
 }
-

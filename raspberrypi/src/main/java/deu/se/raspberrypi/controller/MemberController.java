@@ -77,16 +77,7 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/member/mypage")
-    public String myPage(
-            @AuthenticationPrincipal CustomUserDetails principal,
-            @RequestParam(defaultValue = "0") int page,
-            Model model
-    ) {
-        Member member = principal.getMember();
-
-        model.addAttribute("myPostPage",
-                postService.findMyPosts(member.getId(), page));
-
+    public String myPage() {
         return "member/myPage";
     }
 

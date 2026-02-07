@@ -209,13 +209,7 @@ public class PostService {
 
     // 2.5 마이페이지 개인 작성글 조회
     @Transactional(readOnly = true)
-    public Page<MyPostDto> findMyPosts(Long authorId, int page) {
-
-        Pageable pageable = PageRequest.of(
-                page,
-                5, // 마이페이지는 5개씩
-                Sort.by(Sort.Direction.DESC, "createdAt")
-        );
+    public Page<MyPostDto> findMyPosts(Long authorId, Pageable pageable) {
 
         Page<Post> myPostPage
                 = postRepository.findByAuthorId_Id(authorId, pageable);
@@ -224,7 +218,8 @@ public class PostService {
             MyPostDto dto = new MyPostDto();
             dto.setId(post.getId());
             dto.setTitle(post.getTitle());
-            dto.setFormattedCreatedAt(Formatter.postDateFormat(post.getCreatedAt())
+            dto.setFormattedCreatedAt(
+                    Formatter.postDateFormat(post.getCreatedAt())
             );
             return dto;
         });

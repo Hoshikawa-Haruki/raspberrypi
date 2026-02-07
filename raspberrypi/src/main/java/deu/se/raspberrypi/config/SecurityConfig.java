@@ -48,6 +48,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/comments/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/myposts/**").authenticated()
                 .requestMatchers("/board/**").hasRole("USER")
                 .requestMatchers("/admin/**").hasRole("ADMIN") // TODO : 관리자 페이지
                 // 기타 요청은 인증 필요
