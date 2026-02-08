@@ -12,8 +12,8 @@
 
     <!-- 댓글 헤더 -->
     <div class="comment-header">
-        <span class="comment-count">전체 댓글 
-            <span id="comment-count">0</span>
+        <span class="comment-count">
+            전체 댓글 [<span id="comment-count">0</span>]
         </span>
 
         <div class="comment-actions">

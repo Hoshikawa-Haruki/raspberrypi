@@ -4,6 +4,8 @@
  */
 package deu.se.raspberrypi.dto;
 
+import deu.se.raspberrypi.formatter.Formatter;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,4 +23,18 @@ public class MyPostDto {
     private Long id;
     private String title;
     private String formattedCreatedAt;
+    private long commentCount;
+
+    public MyPostDto(
+            Long id,
+            String title,
+            LocalDateTime createdAt,
+            long commentCount
+    ) {
+        this.id = id;
+        this.title = title;
+        this.formattedCreatedAt
+                = Formatter.postDateFormat(createdAt);
+        this.commentCount = commentCount;
+    }
 }

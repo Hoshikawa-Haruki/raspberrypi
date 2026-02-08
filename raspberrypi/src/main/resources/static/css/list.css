@@ -76,6 +76,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     color: #551A8B;          /* 브라우저 기본 보라색 계열 */
 }
 
+/* 댓글 갯수 */
+.row-comment-count {
+    margin-left: 4px;
+    font-size: 13px;
+    color: #777;
+}
+
 .empty {
     text-align: center;
     color: #777;

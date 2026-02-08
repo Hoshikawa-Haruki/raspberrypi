@@ -53,6 +53,9 @@
                 <td class="title">
                     <a href="${pageContext.request.contextPath}${rowUrl}" class="row-link">
                         ${post.title}
+                        <c:if test="${post.commentCount > 0}">
+                            <span class="row-comment-count">[${post.commentCount}]</span>
+                        </c:if>
                     </a>
                 </td>
                 <td class="author">${post.authorNameSnapshot} (${post.maskedIp})</td>

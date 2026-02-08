@@ -4,6 +4,8 @@
  */
 package deu.se.raspberrypi.dto;
 
+import deu.se.raspberrypi.formatter.Formatter;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,5 +25,28 @@ public class PostListDto {
     private String title;
     private String maskedIp;
     private String formattedCreatedAt;
-    private long displayNo;
+    private long displayNo; // 게시글 표시번호
+    private long commentCount; // 댓글 개수
+
+    // JPQL projection 전용 생성자
+    public PostListDto(
+            Long id,
+            String title,
+            String authorNameSnapshot,
+            String ipAddress,
+            LocalDateTime createdAt,
+            long commentCount
+    ) {
+        this.id = id;
+        this.title = title;
+        this.authorNameSnapshot = authorNameSnapshot;
+        this.maskedIp = Formatter.maskIp(ipAddress);
+        this.formattedCreatedAt = Formatter.postListDateFormat(createdAt);
+        this.commentCount = commentCount;
+    }
+
+    // 기본 생성자
+    public PostListDto() {
+    }
+
 }

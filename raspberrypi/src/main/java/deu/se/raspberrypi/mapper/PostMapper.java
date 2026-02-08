@@ -54,6 +54,8 @@ public class PostMapper {
     }
 
     // [3] Entity → PostListDto (목록)
+    // 2026.02.07 PostListDto 생성자 DTO 변환로직 추가
+    @Deprecated
     public static PostListDto toPostListDto(Post post) {
         PostListDto dto = new PostListDto();
         dto.setId(post.getId());

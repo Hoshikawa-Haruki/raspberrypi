@@ -18,19 +18,24 @@ async function loadMyPosts(page = 0) {
     // 게시글 개수 카운트
     document.getElementById("my-post-count").innerText =
             data.totalElements;
-    
+
     const list = document.getElementById("my-post-list");
     list.innerHTML = "";
 
     data.content.forEach(post => {
+        const commentHtml = post.commentCount > 0
+                ? `<span class="comment-count">[${post.commentCount}]</span>`
+                : '';
+
         list.innerHTML += `
-            <li>
-                <a href="/board/view/${post.id}" class="post-title">
-                    ${post.title}
-                </a>
-                <span class="post-date">${post.formattedCreatedAt}</span>
-            </li>
-        `;
+        <li>
+            <a href="/board/view/${post.id}" class="post-title">
+                <span class="title-text">${post.title}</span>
+                ${commentHtml}
+            </a>
+            <span class="post-date">${post.formattedCreatedAt}</span>
+        </li>
+    `;
     });
 
     renderMyPostPagination(data);

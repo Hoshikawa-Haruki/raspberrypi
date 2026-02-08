@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MyPageApiController {
 
-    private static final int PAGE_SIZE = 5;
+    private static final int MY_PAGE_SIZE = 5;
 
     private final PostService postService;
 
@@ -34,7 +34,7 @@ public class MyPageApiController {
     public Page<MyPostDto> myPosts(
             @AuthenticationPrincipal CustomUserDetails principal,
             @PageableDefault(
-                    size = PAGE_SIZE,
+                    size = MY_PAGE_SIZE,
                     sort = "createdAt",
                     direction = Sort.Direction.DESC
             ) Pageable pageable

@@ -39,7 +39,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -133,7 +132,7 @@ public class PostService {
                 .toList();
     }
 
-    // 2.1 READ (단일 조회)
+    // 2.1 READ (게시글 열람)
     @Transactional(readOnly = true)
     public PostDto findById(Long id) {
         Post post = postRepository.findById(id)
@@ -150,10 +149,9 @@ public class PostService {
     // 2.2 Read (전체 목록 페이징 조회)
     @Transactional(readOnly = true)
     public Page<PostListDto> findAllPage(Pageable pageable) {
-        Page<Post> page = postRepository.findAll(pageable);
-        Page<PostListDto> dtoPage
-                = toPostListDtoPageForView(page);
-        return applyDisplayNo(dtoPage);
+        Page<PostListDto> pageList
+                = postRepository.findPostList(pageable);
+        return applyDisplayNo(pageList);
     }
 
     // 2.3 Read (검색)
@@ -168,7 +166,7 @@ public class PostService {
             return findAllPage(pageable);
         }
 
-        Page<Post> page = switch (searchType) {
+        Page<PostListDto> page = switch (searchType) {
             case "title" ->
                 postRepository.searchByTitle(keyword, pageable);
             case "content" ->
@@ -179,13 +177,11 @@ public class PostService {
                 postRepository.searchByTitleOrContent(keyword, pageable);
         };
 
-        Page<PostListDto> dtoPage
-                = toPostListDtoPageForView(page);
-
-        return applyDisplayNo(dtoPage);
+        return applyDisplayNo(page);
     }
 
     // 2.4 게시글 리스트 DTO 포맷팅
+    @Deprecated
     private Page<PostListDto> toPostListDtoPageForView(Page<Post> page) {
         return page.map(post -> {
             PostListDto dto = PostMapper.toPostListDto(post);
@@ -210,19 +206,7 @@ public class PostService {
     // 2.5 마이페이지 개인 작성글 조회
     @Transactional(readOnly = true)
     public Page<MyPostDto> findMyPosts(Long authorId, Pageable pageable) {
-
-        Page<Post> myPostPage
-                = postRepository.findByAuthorId_Id(authorId, pageable);
-
-        return myPostPage.map(post -> {
-            MyPostDto dto = new MyPostDto();
-            dto.setId(post.getId());
-            dto.setTitle(post.getTitle());
-            dto.setFormattedCreatedAt(
-                    Formatter.postDateFormat(post.getCreatedAt())
-            );
-            return dto;
-        });
+        return postRepository.findMyPostsDto(authorId, pageable);
     }
 
     // 3. UPDATE

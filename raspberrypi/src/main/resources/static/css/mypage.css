@@ -172,8 +172,12 @@ body {
     font-weight: 500;
 }
 
-.post-title:hover {
+.post-title:hover .title-text {
     text-decoration: underline;
+}
+.post-title .comment-count {
+    margin-left: 4px;
+    color: #777;
 }
 
 .post-date {
