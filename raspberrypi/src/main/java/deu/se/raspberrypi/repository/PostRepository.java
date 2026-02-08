@@ -4,6 +4,8 @@
  */
 package deu.se.raspberrypi.repository;
 
+import deu.se.raspberrypi.dto.MyPostDto;
+import deu.se.raspberrypi.dto.PostListDto;
 import deu.se.raspberrypi.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,50 +22,135 @@ import org.springframework.stereotype.Repository;
 public interface PostRepository extends JpaRepository<Post, Long> {
     // 기본 CRUD 메서드 (save, findById, findAll, deleteById) 자동 제공
 
-    // 1. 마이페이지 내 작성글
-    Page<Post> findByAuthorId_Id(Long authorId, Pageable pageable);
-
-    // 제목
+    // 1. 마이페이지 작성글
     @Query("""
-        select p
-        from Post p
-        where p.title like %:keyword%
+    SELECT new deu.se.raspberrypi.dto.MyPostDto(
+        p.id,
+        p.title,
+        p.createdAt,
+        (
+            SELECT COUNT(c)
+            FROM Comment c
+            WHERE c.post = p
+        )
+    )
+    FROM Post p
+    WHERE p.authorId.id = :authorId
+    ORDER BY p.createdAt DESC
     """)
-    Page<Post> searchByTitle(
+    Page<MyPostDto> findMyPostsDto(
+            @Param("authorId") Long authorId,
+            Pageable pageable
+    );
+
+    // 전체 목록 (left join으로 댓글 포함)
+    @Query("""
+        SELECT new deu.se.raspberrypi.dto.PostListDto(
+            p.id,
+            p.title,
+            p.authorNameSnapshot,
+            p.ipAddress,
+            p.createdAt,
+            (
+                SELECT COUNT(c)
+                FROM Comment c
+                WHERE c.post = p
+            )
+        )
+        FROM Post p
+        ORDER BY p.id DESC
+        """)
+    Page<PostListDto> findPostList(Pageable pageable);
+
+    // 제목 검색
+    @Query("""
+        SELECT new deu.se.raspberrypi.dto.PostListDto(
+            p.id,
+            p.title,
+            p.authorNameSnapshot,
+            p.ipAddress,
+            p.createdAt,
+            (
+                SELECT COUNT(c)
+                FROM Comment c
+                WHERE c.post = p
+            )
+        )
+        FROM Post p
+        WHERE p.title LIKE %:keyword%
+        ORDER BY p.id DESC
+        """)
+    Page<PostListDto> searchByTitle(
             @Param("keyword") String keyword,
             Pageable pageable
     );
 
-    // 내용
+    // 내용 검색
     @Query("""
-        select p
-        from Post p
-        where p.content like %:keyword%
-    """)
-    Page<Post> searchByContent(
+        SELECT new deu.se.raspberrypi.dto.PostListDto(
+            p.id,
+            p.title,
+            p.authorNameSnapshot,
+            p.ipAddress,
+            p.createdAt,
+            (
+                SELECT COUNT(c)
+                FROM Comment c
+                WHERE c.post = p
+            )
+        )
+        FROM Post p
+        WHERE p.content LIKE %:keyword%
+        ORDER BY p.id DESC
+        """)
+    Page<PostListDto> searchByContent(
             @Param("keyword") String keyword,
             Pageable pageable
     );
 
-    // 작성자
+    // 작성자 검색
     @Query("""
-        select p
-        from Post p
-        where p.authorNameSnapshot like %:keyword%
-    """)
-    Page<Post> searchByWriter(
+        SELECT new deu.se.raspberrypi.dto.PostListDto(
+            p.id,
+            p.title,
+            p.authorNameSnapshot,
+            p.ipAddress,
+            p.createdAt,
+            (
+                SELECT COUNT(c)
+                FROM Comment c
+                WHERE c.post = p
+            )
+        )
+        FROM Post p
+        WHERE p.authorNameSnapshot LIKE %:keyword%
+        ORDER BY p.id DESC
+        """)
+    Page<PostListDto> searchByWriter(
             @Param("keyword") String keyword,
             Pageable pageable
     );
 
-    // 제목 + 내용
+    // 제목 + 내용 검색
     @Query("""
-        select p
-        from Post p
-        where p.title like %:keyword%
-           or p.content like %:keyword%
-    """)
-    Page<Post> searchByTitleOrContent(
+        SELECT new deu.se.raspberrypi.dto.PostListDto(
+            p.id,
+            p.title,
+            p.authorNameSnapshot,
+            p.ipAddress,
+            p.createdAt,
+            (
+                SELECT COUNT(c)
+                FROM Comment c
+                WHERE c.post = p
+            )
+        )
+        FROM Post p
+        WHERE p.title LIKE %:keyword%
+           OR p.content LIKE %:keyword%
+        ORDER BY p.id DESC
+        """)
+    Page<PostListDto> searchByTitleOrContent(
             @Param("keyword") String keyword,
             Pageable pageable
     );
