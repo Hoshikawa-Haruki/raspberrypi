@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <head>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/top_menu.css">
 </head>
@@ -23,9 +23,7 @@
     <sec:authorize access="isAuthenticated()">
         <span class="user-greeting">
             <a href="${pageContext.request.contextPath}/member/mypage">
-                <strong>
-                    <sec:authentication property="principal.member.nickname"/>
-                </strong>
+                <strong>${loginUserNickname}</strong>
             </a> 님
         </span>
         <form method="post"

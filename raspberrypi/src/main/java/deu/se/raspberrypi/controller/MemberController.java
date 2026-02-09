@@ -5,19 +5,14 @@
 package deu.se.raspberrypi.controller;
 
 import deu.se.raspberrypi.dto.SignupRequestDto;
-import deu.se.raspberrypi.entity.Member;
-import deu.se.raspberrypi.security.CustomUserDetails;
 import deu.se.raspberrypi.service.MemberService;
-import deu.se.raspberrypi.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 /**
@@ -29,16 +24,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class MemberController {
 
     private final MemberService memberService;
-    private final PostService postService;
-
-    // member 영역 전용 공통 데이터
-    // 적용 범위 = MemberController 안의 모든 핸들러 메서드
-    @ModelAttribute("user")
-    public Member currentUser(
-            @AuthenticationPrincipal CustomUserDetails principal
-    ) {
-        return principal != null ? principal.getMember() : null;
-    }
 
     @GetMapping("/member/loginForm")
     public String loginForm() {
