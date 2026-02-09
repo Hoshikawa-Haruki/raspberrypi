@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!-- 댓글 영역 -->
 <div class="comment-section">
@@ -32,9 +32,15 @@
         <div class="comment-write-box">
             <div class="comment-writer">
                 <span class="writer-name">
-                    ${loginUserNickname}
+                    <sec:authorize access="isAuthenticated()">
+                        <sec:authentication property="principal.member.nickname" />
+                    </sec:authorize>
+                    <sec:authorize access="isAnonymous()">
+                        로그인이 필요합니다
+                    </sec:authorize>
                 </span>
             </div>
+
 
             <div class="comment-input-area">
                 <textarea id="comment-content"

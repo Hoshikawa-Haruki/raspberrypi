@@ -145,6 +145,8 @@ function renderCommentPagination(data) {
 
     const currentPage = data.number;      // 0-based
     const totalPages = data.totalPages;
+    
+    if (totalPages === 0) return;
 
     const startPage =
             Math.floor(currentPage / COMMENT_PAGE_BLOCK) * COMMENT_PAGE_BLOCK;
@@ -160,11 +162,9 @@ function renderCommentPagination(data) {
 
     // 페이지 번호
     for (let i = startPage; i < endPage; i++) {
-        const btn = createPageButton(i + 1, i);
-        if (i === currentPage) {
-            btn.classList.add("active");
-        }
-        container.appendChild(btn);
+        container.appendChild(
+                createPageButton(i + 1, i, currentPage)
+                );
     }
 
     // 다음 블록
@@ -176,13 +176,18 @@ function renderCommentPagination(data) {
 }
 
 // 페이지 버튼 생성 
-function createPageButton(label, page) {
+function createPageButton(label, page, currentPage) {
     const btn = document.createElement("button");
     btn.textContent = label;
     btn.classList.add("nav");
 
-    btn.onclick = () => loadComments(page);
+    if (page === currentPage) {
+        btn.classList.add("active");
+        btn.disabled = true;      // 클릭 차단
+        return btn;
+    }
 
+    btn.onclick = () => loadComments(page);
     return btn;
 }
 
@@ -196,5 +201,3 @@ async function moveToLastCommentPage() {
     const lastPage = data.totalPages - 1;
     loadComments(lastPage);
 }
-
-

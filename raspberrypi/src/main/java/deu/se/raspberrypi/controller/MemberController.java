@@ -66,7 +66,7 @@ public class MemberController {
             return "member/signup";
         }
         try { // 3) 회원가입처리
-            memberService.register(dto);
+            memberService.signup(dto);
             return "redirect:/member/loginForm?signupSuccess";
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());

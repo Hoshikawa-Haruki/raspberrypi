@@ -20,7 +20,21 @@ async function loadMyPosts(page = 0) {
             data.totalElements;
 
     const list = document.getElementById("my-post-list");
+    const empty = document.getElementById("my-post-empty");
+    const pagination = document.getElementById("my-post-pagination");
+
     list.innerHTML = "";
+
+    // 🔹 게시글 없음
+    if (data.content.length === 0) {
+        empty.style.display = "block";
+        pagination.style.display = "none";
+        return;
+    }
+
+    // 🔹 게시글 있음
+    empty.style.display = "none";
+    pagination.style.display = "flex";
 
     data.content.forEach(post => {
         const commentHtml = post.commentCount > 0
@@ -28,14 +42,14 @@ async function loadMyPosts(page = 0) {
                 : '';
 
         list.innerHTML += `
-        <li>
-            <a href="/board/view/${post.id}" class="post-title">
-                <span class="title-text">${post.title}</span>
-                ${commentHtml}
-            </a>
-            <span class="post-date">${post.formattedCreatedAt}</span>
-        </li>
-    `;
+            <li>
+                <a href="/board/view/${post.id}" class="post-title">
+                    <span class="title-text">${post.title}</span>
+                    ${commentHtml}
+                </a>
+                <span class="post-date">${post.formattedCreatedAt}</span>
+            </li>
+        `;
     });
 
     renderMyPostPagination(data);

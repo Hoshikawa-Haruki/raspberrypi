@@ -39,6 +39,7 @@ h2 {
     padding-bottom: 15px;
 }
 
+/*todo: 버튼 클래스 명확화*/
 button,
 .btn {
     padding: 7px 15px;

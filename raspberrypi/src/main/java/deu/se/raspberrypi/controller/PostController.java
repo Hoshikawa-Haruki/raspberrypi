@@ -141,7 +141,6 @@ public class PostController {
             @RequestParam(required = false) String searchType,
             @RequestParam(required = false) String keyword,
             @PageableDefault(size = PAGE_SIZE, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-            @AuthenticationPrincipal CustomUserDetails user,
             Model model
     ) {
         // 1. 단일 게시글

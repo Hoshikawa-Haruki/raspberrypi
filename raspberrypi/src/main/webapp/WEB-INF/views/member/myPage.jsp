@@ -73,6 +73,9 @@
                         </div>
                         <div class="card-body">
                             <ul class="my-post-list" id="my-post-list"></ul>
+                            <p id="my-post-empty" class="empty" style="display:none;">
+                                등록된 게시글이 없습니다.
+                            </p>
                             <div class="pagination" id="my-post-pagination"></div>
                         </div>
                     </div>

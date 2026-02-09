@@ -22,7 +22,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder; // BCrypt 암호화
 
-    public void register(SignupRequestDto dto) {
+    public void signup(SignupRequestDto dto) {
 
         if (memberRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");

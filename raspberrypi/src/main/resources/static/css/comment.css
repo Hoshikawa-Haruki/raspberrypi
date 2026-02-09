@@ -58,7 +58,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 /* ===== 댓글 목록 ===== */
 .comment-item {
     padding: 10px 5px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #ddd;
 }
 
 /* 메타 정보 (닉네임 + 시간) */
@@ -82,11 +82,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 /* 삭제 버튼 */
 .comment-delete {
     margin-left: auto;
+    margin-right: 10px;
     border: none;
     background: transparent;
     color: #999;
     cursor: pointer;
     font-size: 16px;
+    line-height: 1;
+    padding: 2px 6px;   
 }
 
 .comment-delete:hover {
@@ -106,42 +109,47 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     margin-top: 20px;
     border-top: 2px solid #3f4aa8;
     border-bottom: 2px solid #3f4aa8;
-    padding: 12px;
+    padding: 10px;
     background: #fff;
 }
 
-/* 입력 박스 */
+/* 댓글 입력 박스 */
 .comment-write-box {
     display: flex;
-    border: 1px solid #ddd;
+    gap: 10px;
 }
 
 /* 좌측 닉네임 */
 .comment-writer {
     width: 120px;
+    height: 20px;
+    padding: 10px;
+    line-height: 1.5;         /* 줄 간격 살짝 */
     background: #f6f6f6;
-    border-right: 1px solid #ddd;
+    border: 1px solid #ddd;
+
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: center;     /* 세로 가운데 */
+    justify-content: center; /* 가로 가운데 */
+    text-align: center;       /* 여러 줄 텍스트 가운데 */
 }
 
 .writer-name {
-    font-size: 15px;
+    font-size: 14px;
     color: #333;
 }
 
 /* 우측 textarea */
 .comment-input-area {
-    flex: 1;
+    flex: 1; /* 남은공간 전부 할당 */
 }
 
 .comment-input-area textarea {
     width: 100%;
     height: 120px;
-    border: none;
+    border: 1px solid #ddd;
     resize: none;
-    padding: 12px;
+    padding: 10px;
     font-family: "Noto Sans KR", sans-serif;
     font-size: 15px;
     color: #333;
@@ -206,4 +214,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 .comment-pagination .active {
     color: #ff3b30;
     font-weight: bold;
+}
+
+.comment-pagination button:disabled {
+    pointer-events: none !important;
+    cursor: default;
 }
