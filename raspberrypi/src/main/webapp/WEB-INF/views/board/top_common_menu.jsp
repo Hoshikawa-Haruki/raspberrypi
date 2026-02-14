@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <head>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/top_menu.css">
@@ -45,7 +46,9 @@
             <li><a href="/profile">프로필</a></li>
             <li><a href="/board/list">게시판</a></li>
             <li><a href="/portfolio">포트폴리오</a></li>
-            <li><a href="/member/mypage">마이페이지</a></li>
+                <sec:authorize access="isAuthenticated()">
+                <li><a href="/member/mypage">마이페이지</a></li>
+                </sec:authorize>
         </ul>
     </div>
 </nav>      

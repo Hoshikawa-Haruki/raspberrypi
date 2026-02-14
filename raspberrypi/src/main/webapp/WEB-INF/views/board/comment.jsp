@@ -33,7 +33,7 @@
             <div class="comment-writer">
                 <span class="writer-name">
                     <sec:authorize access="isAuthenticated()">
-                        <sec:authentication property="principal.member.nickname" />
+                        ${loginUserNickname}
                     </sec:authorize>
                     <sec:authorize access="isAnonymous()">
                         로그인이 필요합니다

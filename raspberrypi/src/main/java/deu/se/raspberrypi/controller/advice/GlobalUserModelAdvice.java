@@ -24,13 +24,9 @@ public class GlobalUserModelAdvice {
             Model model,
             @AuthenticationPrincipal CustomUserDetails principal
     ) {
-        // 로그인 안 한 경우
-        if (principal == null) {
-            return;
+        if (principal != null) {
+            model.addAttribute("loginUserNickname",
+                    principal.getNickName());
         }
-
-        // 로그인한 경우: 네비게이션 표시용 정보만
-        String nickname = principal.getMember().getNickname();
-        model.addAttribute("loginUserNickname", nickname);
     }
 }
