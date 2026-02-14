@@ -4,11 +4,14 @@
  */
 package deu.se.raspberrypi.controller;
 
+import deu.se.raspberrypi.dto.MemberProfileDto;
 import deu.se.raspberrypi.dto.SignupRequestDto;
+import deu.se.raspberrypi.security.CustomUserDetails;
 import deu.se.raspberrypi.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -61,7 +64,16 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/member/mypage")
-    public String myPage() {
+    public String myPage(
+            @AuthenticationPrincipal CustomUserDetails user,
+            Model model
+    ) {
+
+        MemberProfileDto profile
+                = memberService.getProfile(user.getMemberId());
+
+        model.addAttribute("user", profile);
+
         return "member/myPage";
     }
 

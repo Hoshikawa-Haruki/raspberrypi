@@ -1,7 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 
 <!DOCTYPE html>
@@ -58,7 +57,7 @@
                 </div>
                 <div>
                     <!-- 로그인 했을 때만 수정/삭제 버튼 조건 체크 -->
-                    <sec:authorize access="isAuthenticated() and ${post.authorId} == authentication.principal.member.id">
+                    <c:if test="${loginMemberId != null && post.authorId == loginMemberId}">
                         <form method="get" action="${pageContext.request.contextPath}/board/updateForm/${post.id}" style="display:inline;">
                             <button type="submit" class="btn">✏ 수정</button>
                         </form>
@@ -73,7 +72,7 @@
 
                             <button type="submit" class="btn btn-danger" onclick="return confirm('삭제하시겠습니까?');">🗑 삭제</button>
                         </form>
-                    </sec:authorize>
+                    </c:if>
                 </div>
             </div>
         </div>

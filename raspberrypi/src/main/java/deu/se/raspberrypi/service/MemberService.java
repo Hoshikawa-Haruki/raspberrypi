@@ -4,6 +4,7 @@
  */
 package deu.se.raspberrypi.service;
 
+import deu.se.raspberrypi.dto.MemberProfileDto;
 import deu.se.raspberrypi.dto.SignupRequestDto;
 import deu.se.raspberrypi.entity.Member;
 import deu.se.raspberrypi.repository.MemberRepository;
@@ -35,5 +36,13 @@ public class MemberService {
                 .build();
 
         memberRepository.save(member);
+    }
+
+    // 마이페이지 사용자 정보 DTO 리턴
+    public MemberProfileDto getProfile(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        return MemberProfileDto.from(member);
     }
 }
