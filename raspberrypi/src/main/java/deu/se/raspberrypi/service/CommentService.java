@@ -11,6 +11,7 @@ import deu.se.raspberrypi.entity.Member;
 import deu.se.raspberrypi.entity.Post;
 import deu.se.raspberrypi.formatter.Formatter;
 import deu.se.raspberrypi.repository.CommentRepository;
+import deu.se.raspberrypi.repository.MemberRepository;
 import deu.se.raspberrypi.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,12 +30,16 @@ public class CommentService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final MemberRepository memberRepository;
 
-    public void createComment(CommentCreateDto dto, Member loginMember) {
+    public void createComment(CommentCreateDto dto, Long memberId) {
         Post post = postRepository.findById(dto.getPostId())
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
 
-        Comment comment = new Comment(post, loginMember, dto.getContent());
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+
+        Comment comment = new Comment(post, member, dto.getContent());
         commentRepository.save(comment);
     }
 
@@ -58,11 +63,11 @@ public class CommentService {
                 });
     }
 
-    public void deleteComment(Long commentId, Member loginMember) {
+    public void deleteComment(Long commentId, Long loginMemberId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글 없음"));
 
-        if (!comment.getMember().getId().equals(loginMember.getId())) {
+        if (!comment.getMember().getId().equals(loginMemberId)) {
             throw new IllegalStateException("삭제 권한 없음");
         }
 

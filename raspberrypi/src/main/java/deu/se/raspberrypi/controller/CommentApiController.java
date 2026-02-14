@@ -40,11 +40,12 @@ public class CommentApiController {
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Long loginMemberId = (user != null)
-                ? user.getMember().getId()
+                ? user.getMemberId()
                 : null;
 
         return commentService.findCommentByPostId(postId, loginMemberId, pageable);
     }
+
     /* 다음 형태로 응답 JSON 반환
         {
         "content": [ { 댓글 DTO }, { 댓글 DTO } ],
@@ -54,13 +55,12 @@ public class CommentApiController {
         "size": 10
         }
      */
-
     @PostMapping
     public void createComment(
             @RequestBody CommentCreateDto dto,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-        commentService.createComment(dto, user.getMember());
+        commentService.createComment(dto, user.getMemberId());
     }
 
     @DeleteMapping("/{id}")
@@ -68,6 +68,6 @@ public class CommentApiController {
             @PathVariable Long id,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-        commentService.deleteComment(id, user.getMember());
+        commentService.deleteComment(id, user.getMemberId());
     }
 }

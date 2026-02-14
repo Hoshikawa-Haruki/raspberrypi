@@ -21,6 +21,7 @@ import deu.se.raspberrypi.entity.TempAttachment;
 import deu.se.raspberrypi.formatter.Formatter;
 import deu.se.raspberrypi.idempotency.IdempotencyStore;
 import deu.se.raspberrypi.mapper.PostMapper;
+import deu.se.raspberrypi.repository.MemberRepository;
 import deu.se.raspberrypi.util.IpUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.format.DateTimeFormatter;
@@ -50,11 +51,14 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final FileService fileService;
+    private final MemberRepository memberRepository;
     private final TempAttachmentRepository tempAttachmentRepository;
     private final IdempotencyStore idempotencyStore;
 
     // CREATE
-    public void save(PostDto dto, Member member, HttpServletRequest request) {
+    public void save(PostDto dto, Long memberId, HttpServletRequest request) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
         // 0) idem 키 생성
         String idemKey = "post:create:" + dto.getIdempotencyKey();
@@ -210,7 +214,9 @@ public class PostService {
     }
 
     // 3. UPDATE
-    public void updateWithFiles(Long id, PostUpdateDto dto, Member member) {
+    public void updateWithFiles(Long id, PostUpdateDto dto, Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
         // 0) idem 키 생성
         String idemKey = "post:update:" + id + ":" + dto.getIdempotencyKey();
@@ -220,6 +226,10 @@ public class PostService {
 
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        if (!post.getAuthorId().getId().equals(memberId)) {
+            throw new IllegalStateException("수정 권한 없음");
+        }
 
         // 1) 제목 수정
         post.setTitle(dto.getTitle());

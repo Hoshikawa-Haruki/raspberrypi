@@ -76,7 +76,7 @@ public class UploadController {
 
         log.info("[WYSIWYG] 임시 이미지 업로드 요청: {}", file.getOriginalFilename());
 
-        Long uploaderId = user.getMember().getId(); // ★ 로그인 사용자 ID
+        Long uploaderId = user.getMemberId(); // ★ 로그인 사용자 ID
         StoredFileDto dto = fileService.handleTempUpload(file);
 
         if (dto == null) {

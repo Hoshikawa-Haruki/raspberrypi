@@ -53,7 +53,7 @@ public class PostController {
             HttpServletRequest request) {
         // Spring이 자동으로 dto 객체를 생성해서 넘겨줌
         //JSP의 <form>의 name 속성과 DTO의 필드명이 동일하면, Spring이 내부적으로 setter를 호출해서 DTO에 값을 자동 주입함
-        postService.save(dto, user.getMember(), request); // Spring Security가 세션에 넣어둔 로그인 Member 엔티티 반환
+        postService.save(dto, user.getMemberId(), request); // Spring Security가 세션에 넣어둔 로그인 Member 엔티티 반환
         return "redirect:/board/list";
     }
 
@@ -141,6 +141,7 @@ public class PostController {
             @RequestParam(required = false) String searchType,
             @RequestParam(required = false) String keyword,
             @PageableDefault(size = PAGE_SIZE, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @AuthenticationPrincipal CustomUserDetails user,
             Model model
     ) {
         // 1. 단일 게시글
@@ -161,6 +162,9 @@ public class PostController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("currentPostId", id);
 
+        Long loginMemberId = (user != null) ? user.getMemberId() : null;
+        model.addAttribute("loginMemberId", loginMemberId);
+
         return "board/view";
     }
 
@@ -177,7 +181,7 @@ public class PostController {
     public String updatePost(@PathVariable Long id,
             PostUpdateDto dto,
             @AuthenticationPrincipal CustomUserDetails user) {
-        postService.updateWithFiles(id, dto, user.getMember());
+        postService.updateWithFiles(id, dto, user.getMemberId());
         return "redirect:/board/view/" + id;
     }
 

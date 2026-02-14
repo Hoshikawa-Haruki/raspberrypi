@@ -32,7 +32,7 @@ public class MyPageApiController {
 
     @GetMapping
     public Page<MyPostDto> myPosts(
-            @AuthenticationPrincipal CustomUserDetails principal,
+            @AuthenticationPrincipal CustomUserDetails user,
             @PageableDefault(
                     size = MY_PAGE_SIZE,
                     sort = "createdAt",
@@ -40,7 +40,7 @@ public class MyPageApiController {
             ) Pageable pageable
     ) {
         return postService.findMyPosts(
-                principal.getMember().getId(),
+                user.getMemberId(),
                 pageable
         );
     }
