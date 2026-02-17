@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
             formData.append("image", blob, fakeName);
             // image : 업로드 요청의 request parameter명 (@image)
 
-            const res = await fetch(uploadUrl, {// 서버 이미지 업로드
+            const res = await fetch(uploadUrl, {// 서버 이미지 업로드 HTTP 요청
                 method: "POST",
                 body: formData
             });

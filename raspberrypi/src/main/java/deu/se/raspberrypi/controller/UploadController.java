@@ -39,6 +39,8 @@ public class UploadController {
     private final AttachmentRepository attachmentRepository;
     private final TempAttachmentRepository tempAttachmentRepository;
 
+    // 2026.02.17. 현재 사용 X
+    @Deprecated
     @PostMapping("/image")
     @ResponseBody
     public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) {
