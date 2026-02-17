@@ -209,4 +209,8 @@ public class PostController {
         return "redirect:/board/list";
     }
 
+    @GetMapping("/portfolio")
+    public String portfolioPage() {
+        return "/board/portfolio_list";
+    }
 }

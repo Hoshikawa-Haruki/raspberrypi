@@ -1,0 +1,166 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 2026. 2. 15., 오후 4:06:52
+    Author     : Haruki
+*/
+
+/* =========================
+   Layout
+========================= */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* =========================
+   Title
+========================= */
+
+.board-title {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 60px;
+    letter-spacing: -0.5px;
+}
+
+/* =========================
+   Grid
+========================= */
+
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 60px 40px;
+}
+
+/* =========================
+   Card
+========================= */
+
+.post-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* =========================
+   Thumbnail
+========================= */
+
+.card-thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.post-card:hover .card-thumb img {
+    transform: scale(1.05);
+}
+
+/* =========================
+   Body
+========================= */
+
+.card-body {
+    margin-top: 20px;
+}
+
+/* Title */
+
+.card-title {
+    position: relative;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #111;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* underline animation */
+.card-title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0%;
+    height: 2px;
+    background: #111;
+    transition: width 0.3s ease;
+}
+
+.post-card:hover .card-title::after {
+    width: 100%;
+}
+
+/* Summary */
+
+.card-summary {
+    margin-top: 10px;
+    font-size: 15px;
+    color: #666;
+    line-height: 1.7;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* =========================
+   Meta
+========================= */
+
+.card-meta {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #aaa;
+}
+
+.meta-bottom {
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-author {
+    font-weight: 500;
+    color: #444;
+}
+
+.card-likes {
+    color: #888;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 1024px) {
+    .post-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .post-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,126 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 2026. 2. 15., 오후 3:55:21
+    Author     : Haruki
+*/
+
+.board-title {
+    margin-bottom: 20px;
+    font-size: 28px;
+    font-weight: 500;
+}
+
+/* Grid */
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+/* Card */
+.post-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    transition: all 0.2s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.card-thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;   /* 썸네일 비율 */
+    overflow: hidden;
+}
+
+.card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 0px;
+    color: #111;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;      /* 2줄 제한 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-summary {
+    margin-top: 8px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;   /* 3줄 제한 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+/* 메타 전체 영역 */
+.card-meta {
+    margin-top: 22px;
+}
+
+/* 상단 메타 (날짜, 댓글 등) */
+.card-meta-top {
+    font-size: 13px;
+    color: #aaa;
+    margin-bottom: 14px;
+}
+
+/* 하단 메타 (작성자 + 좋아요) */
+.card-meta-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid #e5e5e5;;  /* 구분선 */
+}
+
+/* 작성자 영역 */
+.author-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.author-img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.author-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* 좋아요 */
+.likes {
+    font-size: 14px;
+    color: #777;
+}
