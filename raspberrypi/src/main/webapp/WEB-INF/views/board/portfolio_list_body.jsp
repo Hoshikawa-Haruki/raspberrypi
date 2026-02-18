@@ -7,8 +7,16 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<div class="board-header">
+    <h2 class="board-title">📂 Portfolio</h2>
 
-<h2 class="board-title">📂 Portfolio</h2>
+    <div class="write-actions">
+        <a class="btn-write"
+           href="${pageContext.request.contextPath}/board/writeForm">
+            ✏️ 새 포폴 작성
+        </a>
+    </div>
+</div>
 
 <div class="post-grid">
 
@@ -44,7 +52,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </a>
 

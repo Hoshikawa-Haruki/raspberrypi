@@ -7,13 +7,15 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<h2>📋 게시글 목록</h2>
+<div class="board-header">
+    <h2 class="board-title">📋 게시글 목록</h2>
 
-<div class="write-actions">
-    <a class="btn-write"
-       href="${pageContext.request.contextPath}/board/writeForm">
-        ✏️ 새 글 작성
-    </a>
+    <div class="write-actions">
+        <a class="btn-write"
+           href="${pageContext.request.contextPath}/board/writeForm">
+            ✏️ 새 글 작성
+        </a>
+    </div>
 </div>
 
 <table class="board-table">
