@@ -47,9 +47,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     text-align: center;
 }
 
-.board-table tr:hover {
+.board-table tbody tr:hover {
     background: #f8f9fa;
-    /*cursor: pointer;*/
 }
 
 /* 제목 */

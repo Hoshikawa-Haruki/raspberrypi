@@ -23,7 +23,7 @@ body {
 .container {
     width: 900px;
     margin: 30px auto;
-    background-color: #fff;
+    background-color: #fcfcfc;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
