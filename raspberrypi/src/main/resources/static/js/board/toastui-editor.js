@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ===============================
      * Toast UI Editor 초기화
      * =============================== */
-    const editor = new toastui.Editor({
+    window.editor = new toastui.Editor({
         el: document.querySelector('#editor'), // jsp div와 바인딩
         height: '800px',
         initialEditType: 'wysiwyg',
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("postForm");
     if (form) {
         form.addEventListener("submit", () => {
-            document.getElementById("content").value = editor.getHTML();
+            document.getElementById("content").value = window.editor.getHTML();
         });
     }
 

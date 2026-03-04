@@ -15,7 +15,9 @@ html {
 
 body {
     font-family: "Noto Sans KR", sans-serif;
-    background-color: #f6f7f9;
+    background-color: #e7fdea;
+        /*#e7fdeb;*/
+        /*#f8f9fa;*/
     margin: 0;
     padding: 0;
 }
@@ -23,7 +25,8 @@ body {
 .container {
     width: 900px;
     margin: 30px auto;
-    background-color: #fcfcfc;
+    /*background-color: #fcfcfc;*/
+    background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);

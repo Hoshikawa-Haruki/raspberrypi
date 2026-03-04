@@ -25,7 +25,7 @@
             <form id="postForm" method="post" enctype="multipart/form-data"
                   action="${pageContext.request.contextPath}/board/update/${post.id}">
 
-                <input type="text" name="title" maxlength="40" value="${post.title}"
+                <input type="text" name="title" class="title-input" maxlength="40" value="${post.title}"
                        placeholder="제목을 입력해 주세요." required>
 
                 <!-- 에디터 -->

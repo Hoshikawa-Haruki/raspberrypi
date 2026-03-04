@@ -44,7 +44,7 @@ public class SecurityConfig {
                         "/login", "/member/signup", // 회원가입, 로그인 요청
                         "/board", "/board/", "/board/list", "/board/view/**",
                         "/profile", // 프로필 페이지,
-                        "/portfolio/**"
+                        "/portfolio"
                 ).permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/comments/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated()

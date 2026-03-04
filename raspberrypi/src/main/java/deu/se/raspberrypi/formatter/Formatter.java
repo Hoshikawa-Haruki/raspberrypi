@@ -69,6 +69,20 @@ public class Formatter {
     }
 
     /**
+     * 포트폴리오 목록 표시용 날짜 포맷 - yyyy-MM-dd
+     *
+     * @param t 게시글 작성 시각
+     * @return 목록 화면에 표시할 날짜 문자열
+     */
+    public static String portfolioListDateFormat(LocalDateTime t) {
+        if (t == null) {
+            return "";
+        }
+
+        return t.format(DATE);
+    }
+
+    /**
      * 댓글 표시용 날짜 포맷 - 오늘 작성: MM-dd HH:mm
      *
      * @param t 댓글 작성 시각

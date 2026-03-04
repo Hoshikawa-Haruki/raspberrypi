@@ -51,8 +51,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 /* Grid */
 .post-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
+    grid-template-columns: repeat(3, 1fr); /* 3등분, fr = fraction (비율 단위) */
+    /*    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        최소 300px 유지하면서
+        들어갈 수 있는 만큼 자동 배치*/
+    gap: 20px;
 }
 
 /* Card */
@@ -61,6 +64,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     flex-direction: column;
     text-decoration: none;
     background: #fff;
+    height: 460px;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 14px rgba(0,0,0,0.06);
@@ -74,8 +78,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 .card-thumb {
     width: 100%;
-    aspect-ratio: 16 / 9;   /* 썸네일 비율 */
+    aspect-ratio: 16 / 10;   /* 썸네일 비율 */
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .card-thumb img {
@@ -85,7 +90,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 }
 
 .card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;             /* 남은 공간 다 할당 */
     padding: 15px;
+    gap: 10px;
+}
+
+.card-main {
+    flex: 1;
 }
 
 .card-title {
@@ -102,37 +115,50 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 }
 
 .card-summary {
-    margin-top: 8px;
-    margin-bottom: 15px;
+    margin-top: 4px;
+    margin-bottom: 4px;
     font-size: 14px;
     color: #555;
     line-height: 1.5;
-
     display: -webkit-box;
     -webkit-line-clamp: 3;   /* 3줄 제한 */
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
 /* 메타 전체 영역 */
 .card-meta {
-    margin-top: 22px;
+    /*border-top: 1px solid #e5e5e5;*/
+    margin-top: 0;
+    position: relative;
 }
 
-/* 상단 메타 (날짜, 댓글 등) */
+.card-meta::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -15px;
+    right: -15px;
+    height: 1px;
+    background: #e5e5e5;
+
+    transform: scaleY(0.5);   /* 0.5px 느낌 */
+    transform-origin: top;
+}
+
+/* 상단 메타 (작성자 + 좋아요) */
 .card-meta-top {
-    font-size: 13px;
-    color: #aaa;
-    margin-bottom: 14px;
-}
-
-/* 하단 메타 (작성자 + 좋아요) */
-.card-meta-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 16px;
-    border-top: 1px solid #e5e5e5;
-    ;  /* 구분선 */
+    margin-top: 10px;
+}
+
+/* 하단 메타 (날짜, 댓글 등) */
+.card-meta-bottom {
+    font-size: 13px;
+    color: #aaa;
+    margin-top: 10px;
 }
 
 /* 작성자 영역 */
@@ -159,4 +185,35 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 .likes {
     font-size: 14px;
     color: #777;
+}
+
+/* 태그 영역 */
+.tag-area {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+}
+
+.tag-pill {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tag {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-weight: 500;
+}
+
+.tag.period {
+    background: #eef2ff;
+    color: #4c6ef5;
+}
+
+.tag.tech {
+    background: #e6f4ea;
+    color: #1e7e34;
 }
