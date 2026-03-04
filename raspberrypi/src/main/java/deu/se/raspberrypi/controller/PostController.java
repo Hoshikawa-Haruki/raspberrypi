@@ -28,8 +28,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
- * 2025.12.25. PostController 로 수정 고려
- *
  * @author Haruki
  */
 @Controller
@@ -207,10 +205,5 @@ public class PostController {
         }
 
         return "redirect:/board/list";
-    }
-
-    @GetMapping("/portfolio")
-    public String portfolioPage() {
-        return "/board/portfolio_list";
     }
 }

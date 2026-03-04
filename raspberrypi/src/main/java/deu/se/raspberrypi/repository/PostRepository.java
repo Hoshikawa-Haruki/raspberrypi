@@ -30,7 +30,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         p.createdAt,
         (
             SELECT COUNT(c)
-            FROM Comment c
+            FROM PostComment c
             WHERE c.post = p
         )
     )
@@ -53,7 +53,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             p.createdAt,
             (
                 SELECT COUNT(c)
-                FROM Comment c
+                FROM PostComment c
                 WHERE c.post = p
             )
         )
@@ -72,7 +72,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             p.createdAt,
             (
                 SELECT COUNT(c)
-                FROM Comment c
+                FROM PostComment c
                 WHERE c.post = p
             )
         )
@@ -95,7 +95,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             p.createdAt,
             (
                 SELECT COUNT(c)
-                FROM Comment c
+                FROM PostComment c
                 WHERE c.post = p
             )
         )
@@ -118,7 +118,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             p.createdAt,
             (
                 SELECT COUNT(c)
-                FROM Comment c
+                FROM PostComment c
                 WHERE c.post = p
             )
         )
@@ -141,7 +141,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             p.createdAt,
             (
                 SELECT COUNT(c)
-                FROM Comment c
+                FROM PostComment c
                 WHERE c.post = p
             )
         )
