@@ -28,14 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/comments")
-public class CommentApiController {
+@RequestMapping("/api/portfolios/{portfolioId}/comments")
+public class PortfolioCommentApiController {
 
     private final CommentService commentService;
 
     @GetMapping
     public Page<CommentReadDto> commentList(
-            @RequestParam Long postId,
+            @RequestParam Long portfolioId,
             @PageableDefault(size = 10) Pageable pageable,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
@@ -43,24 +43,15 @@ public class CommentApiController {
                 ? user.getMemberId()
                 : null;
 
-        return commentService.findPostCommentByPostId(postId, loginMemberId, pageable);
+        return commentService.findPortfolioCommentByPortfolioId(portfolioId, loginMemberId, pageable);
     }
 
-    /* 다음 형태로 응답 JSON 반환
-        {
-        "content": [ { 댓글 DTO }, { 댓글 DTO } ],
-        "number": 0,
-        "totalPages": 4,
-        "totalElements": 73,
-        "size": 10
-        }
-     */
     @PostMapping
     public void createComment(
             @RequestBody CommentCreateDto dto,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-        commentService.createPostComment(dto, user.getMemberId());
+        commentService.createPortfolioComment(dto, user.getMemberId());
     }
 
     @DeleteMapping("/{id}")
@@ -68,6 +59,6 @@ public class CommentApiController {
             @PathVariable Long id,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-        commentService.deletePostComment(id, user.getMemberId());
+        commentService.deletePortfolioComment(id, user.getMemberId());
     }
 }

@@ -4,7 +4,7 @@
  */
 package deu.se.raspberrypi.repository;
 
-import deu.se.raspberrypi.entity.Comment;
+import deu.se.raspberrypi.entity.PostComment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,9 +13,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author Haruki
  */
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public interface PostCommentRepository extends JpaRepository<PostComment, Long> {
 
-    Page<Comment> findByPostIdOrderByCreatedAtAsc(
+    Page<PostComment> findByPostIdOrderByCreatedAtAsc(
             Long postId,
             Pageable pageable
     );
