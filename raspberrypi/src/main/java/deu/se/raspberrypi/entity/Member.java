@@ -4,13 +4,10 @@
  */
 package deu.se.raspberrypi.entity;
 
+import deu.se.raspberrypi.entity.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,11 +26,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-public class Member {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Member extends BaseEntity {
 
     @Column(nullable = false, unique = true, length = 100)
     private String email; // 로그인 ID
@@ -55,9 +48,4 @@ public class Member {
     @Builder.Default
     @Column(nullable = false, length = 20)
     private String status = "ACTIVE"; // ACTIVE / BANNED / UNVERIFIED
-
-    @Column(nullable = false, updatable = false, insertable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-    )
-    private LocalDateTime createdAt;
 }

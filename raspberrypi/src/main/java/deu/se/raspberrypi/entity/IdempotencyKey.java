@@ -4,19 +4,17 @@
  */
 package deu.se.raspberrypi.entity;
 
+import deu.se.raspberrypi.entity.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
+ * 중복요청방지 TTL 기록용 엔티티
  *
  * @author Haruki
  */
@@ -27,19 +25,10 @@ import lombok.NoArgsConstructor;
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class IdempotencyKey {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class IdempotencyKey extends BaseEntity {
 
     @Column(nullable = false, length = 128)
     private String idemKey;
-
-    @Column(nullable = false, updatable = false, insertable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-    )
-    private LocalDateTime createdAt;
 
     public IdempotencyKey(String idemKey) {
         this.idemKey = idemKey;

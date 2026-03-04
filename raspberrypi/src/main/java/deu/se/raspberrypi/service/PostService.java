@@ -12,12 +12,9 @@ import deu.se.raspberrypi.dto.MyPostDto;
 import deu.se.raspberrypi.dto.PostDto;
 import deu.se.raspberrypi.dto.PostListDto;
 import deu.se.raspberrypi.dto.PostUpdateDto;
-import deu.se.raspberrypi.dto.StoredFileDto;
 import deu.se.raspberrypi.entity.Post;
 import deu.se.raspberrypi.entity.Attachment;
-import deu.se.raspberrypi.entity.AttachmentType;
 import deu.se.raspberrypi.entity.Member;
-import deu.se.raspberrypi.entity.TempAttachment;
 import deu.se.raspberrypi.formatter.Formatter;
 import deu.se.raspberrypi.idempotency.IdempotencyStore;
 import deu.se.raspberrypi.mapper.PostMapper;
@@ -31,14 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import deu.se.raspberrypi.repository.PostRepository;
-import deu.se.raspberrypi.repository.TempAttachmentRepository;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,9 +40,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final FileService fileService;
+    private final InlineImageService inlineImageService;
+    private final AttachmentService attachmentService;
     private final MemberRepository memberRepository;
-    private final TempAttachmentRepository tempAttachmentRepository;
     private final IdempotencyStore idempotencyStore;
 
     // CREATE
@@ -78,10 +68,10 @@ public class PostService {
         post.setAuthorNameSnapshot(member.getNickname());
 
         // 인라인 이미지 처리 (temp → attachment)
-        handleInlineImages(post, dto.getContent(), member.getId());
+        inlineImageService.handleInlineImages(post, dto.getContent(), member.getId());
 
         // 첨부파일(FILE) 업로드 처리
-        addFileAttachments(post, dto.getFiles());
+        attachmentService.addFileAttachments(post, dto.getFiles());
 
         postRepository.save(post);
 
@@ -235,66 +225,17 @@ public class PostService {
         post.setTitle(dto.getTitle());
 
         // 2) 첨부파일 삭제 (DB + 실제 파일)
-        removeAttachmentsById(post, dto.getDeleteFileIds());
+        attachmentService.removeAttachmentsById(post, dto.getDeleteFileIds());
 
         // 3) 신규 첨부파일(FILE) 업로드 처리
-        addFileAttachments(post, dto.getNewFiles());
+        attachmentService.addFileAttachments(post, dto.getNewFiles());
 
-        // 본문 기준 인라인 이미지 셋 생성
-        Set<String> inlineUuidSet
-                = new HashSet<>(extractImageUuids(dto.getContent()));
         // 삭제된 기존 인라인 이미지 처리 (attachment)
-        cleanupInlineImages(post, inlineUuidSet);
+        inlineImageService.cleanupInlineImages(post, dto.getContent());
         // 신규 인라인 이미지 처리 (temp → attachment)
-        handleInlineImages(post, dto.getContent(), member.getId());
+        inlineImageService.handleInlineImages(post, dto.getContent(), member.getId());
 
         postRepository.save(post);
-    }
-
-    // 3.1 게시글 수정 : 첨부파일 추가 메서드
-    private void addFileAttachments(Post post, List<MultipartFile> files) {
-
-        if (files == null || files.isEmpty()) {
-            return;
-        }
-
-        for (MultipartFile file : files) {
-            if (file.isEmpty()) {
-                continue;
-            }
-            // FileService 호출 → 실제 저장된 파일명 받기// FileService 호출 → 실제 저장된 파일명 받기
-            StoredFileDto fileDto = fileService.handleUpload(file);
-
-            if (fileDto == null) {
-                continue;
-            }
-
-            // 업로드 결과를 엔티티로 변환
-            Attachment attachment = new Attachment();
-            attachment.setUuid(fileDto.getUuid());
-            attachment.setExt(fileDto.getExt());
-            attachment.setOriginalName(file.getOriginalFilename());
-            attachment.setType(AttachmentType.FILE); // 첨부파일 enum 타입 설정
-            post.addAttachment(attachment); // 양방향 동기화 (cascade로 attachment 테이블에 자동 저장됨)
-        }
-    }
-
-    // 3.2 게시글 수정 : 첨부파일 삭제 메서드
-    private void removeAttachmentsById(Post post, List<Long> deleteIds) {
-
-        if (deleteIds == null || deleteIds.isEmpty()) {
-            return;
-        }
-
-        Set<Long> deleteIdSet = new HashSet<>(deleteIds);
-
-        post.getAttachments().stream() // 첨부파일에 대해서
-                .filter(att -> deleteIdSet.contains(att.getId())) // id가 일치하는 파일에 대해서
-                .toList() // list로 생성
-                .forEach(att -> { // 삭제 수행
-                    fileService.deletePhysicalFile(att.getUuid(), att.getExt());
-                    post.removeAttachment(att); // 엔티티 관계 해제
-                });
     }
 
     // 4. DELETE
@@ -302,80 +243,8 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
 
-        // 첨부파일 & 이미지 삭제
-        for (Attachment att : post.getAttachments()) {
-            fileService.deletePhysicalFile(att.getUuid(), att.getExt());
-        }
+        // 첨부파일 삭제
+        attachmentService.deleteAllAttachments(post);
         postRepository.delete(post);
-    }
-
-    // 5. 인라인 이미지 UUID 추출 메서드
-    private List<String> extractImageUuids(String html) {
-
-        if (html == null) {
-            return List.of();
-        }
-        // /upload/uuid.png
-        // /upload_temp/uuid.jpg
-        Pattern p = Pattern.compile("/upload(?:_temp)?/([a-zA-Z0-9\\-]+)\\.(png|jpg|jpeg|gif|webp)",
-                Pattern.CASE_INSENSITIVE); // 대소문자 대응
-        Matcher m = p.matcher(html);
-
-        List<String> result = new ArrayList<>();
-        while (m.find()) {
-            result.add(m.group(1)); // uuid
-        }
-        return result;
-    }
-
-    // 5.1 인라인 이미지 승격/삭제 메서드
-    private void handleInlineImages(Post post, String content, Long uploaderId) {
-
-        // 본문에서 인라인 이미지 UUID 추출
-        List<String> inlineUuids = extractImageUuids(content);
-        // Set으로 만들어 검색 : O(1) 복잡도
-        Set<String> inlineUuidSet = new HashSet<>(inlineUuids);
-
-        // uploaderId 기준 temp 이미지 조회
-        List<TempAttachment> tempImageList
-                = tempAttachmentRepository.findByUploaderId(uploaderId);
-
-        for (TempAttachment temp : tempImageList) {
-            if (inlineUuidSet.contains(temp.getUuid())) { // tempImage가 본문에 있으면
-                // 승격 처리
-                Attachment att = new Attachment();
-                att.setUuid(temp.getUuid());
-                att.setExt(temp.getExt());
-                att.setOriginalName(temp.getOriginalName());
-                // type 기본값 = INLINE
-                post.addAttachment(att); // FK 설정 + 양방향 동기화
-                // 실제 파일 temp → upload 이동 (승격)
-                fileService.moveTempToUpload(temp.getUuid(), temp.getExt());
-            } else { // 본문에 없으면
-                // 미사용 tempImage 삭제
-                fileService.deleteTempFile(temp.getUuid(), temp.getExt());
-            }
-        }
-
-        // 이미지 승격 후, content 경로 치환
-        post.setContent(
-                content.replace("/upload_temp/", "/upload/")
-        );
-
-        // temp DB 정리 → 쿼리 1번으로 최적화
-        tempAttachmentRepository.deleteAll(tempImageList);
-    }
-
-    // 5.2 게시글 수정 : 본문(content) 기준 제거된 인라인 이미지(AttachmentType.INLINE) 정리
-    private void cleanupInlineImages(Post post, Set<String> inlineUuidSet) {
-
-        post.getAttachments().stream() // List<Attachment>를 stream으로 변환
-                .filter(att -> att.getType() == AttachmentType.INLINE) // 조건1 : 인라인만
-                .filter(att -> !inlineUuidSet.contains(att.getUuid())) // 조건2 : 본문에 없는 uuid만 남김 (삭제대상)
-                .toList() // 결과를 새로운 List로 생성 (ConcurrentModification 방지)
-                .forEach(att -> { // 해당 리스트를 대상으로 for each 수행
-                    fileService.deletePhysicalFile(att.getUuid(), att.getExt()); // 실제 파일 삭제
-                    post.removeAttachment(att);                                  // DB row 삭제(orphanRemoval)
-                });
     }
 }

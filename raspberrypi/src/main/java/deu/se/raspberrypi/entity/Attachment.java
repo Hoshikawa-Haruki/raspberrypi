@@ -9,8 +9,8 @@ package deu.se.raspberrypi.entity;
  *
  * @author Haruki
  */
+import deu.se.raspberrypi.entity.base.BaseAttachment;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,37 +18,13 @@ import lombok.Setter;
 @Table(name = "attachment_file")
 @Getter
 @Setter
-public class Attachment {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 파일 고유번호 1 
-
-    @Column(nullable = false, unique = true)
-    private String uuid; // UUID 2
-
-    @Column(nullable = false)
-    private String originalName; // 원본 파일명 3 (메타데이터로 분리 예정)
-
-    @Column(nullable = false, length = 10)
-    private String ext; // 확장자 4
+public class Attachment extends BaseAttachment {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "post_id",
-            referencedColumnName = "id",
-            foreignKey = @ForeignKey(
-                    name = "fk_attachment_boardpost",
-                    foreignKeyDefinition = "FOREIGN KEY (post_id) REFERENCES board_post(id) ON DELETE CASCADE"
-            )
-    )
-    private Post post; // 게시글 FK 5
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-    @Column(nullable = false, updatable = false, insertable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt; // 첨부파일 업로드 시점 6
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private AttachmentType type = AttachmentType.INLINE; // 첨부파일 타입
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "portfolio_id")
+    private Portfolio portfolio;
 }
