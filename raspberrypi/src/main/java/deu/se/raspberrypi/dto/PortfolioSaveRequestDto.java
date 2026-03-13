@@ -28,8 +28,8 @@ public class PortfolioSaveRequestDto {
     private LocalDate projectStart;
     private LocalDate projectEnd;
 
-    private MultipartFile thumbnailFile;   // 저장용
-    private List<MultipartFile> files;     // 저장용
+    private MultipartFile thumbnailFile;   // 썸네일
+    private List<MultipartFile> files;     // 첨부파일
     private String idempotencyKey;
 
 }

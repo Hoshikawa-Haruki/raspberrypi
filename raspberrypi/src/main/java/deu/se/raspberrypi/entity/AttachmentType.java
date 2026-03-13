@@ -10,5 +10,6 @@ package deu.se.raspberrypi.entity;
  */
 public enum AttachmentType {
     INLINE, // 본문 인라인 이미지
-    FILE      // form 첨부파일
+    FILE,      // form 첨부파일
+    THUMBNAIL // 썸네일
 }

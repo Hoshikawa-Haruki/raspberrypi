@@ -67,7 +67,7 @@ public class PostMapper {
     }
 
     // [공용] Attachment → StoredFileDto
-    private static StoredFileDto toStoredFileDto(Attachment attachment) {
+    public static StoredFileDto toStoredFileDto(Attachment attachment) {
         StoredFileDto file = new StoredFileDto();
         file.setId(attachment.getId());
         file.setUuid(attachment.getUuid());

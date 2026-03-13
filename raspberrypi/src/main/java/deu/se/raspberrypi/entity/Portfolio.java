@@ -62,8 +62,10 @@ public class Portfolio extends BaseEntity implements ContentEntity {
     )
     private List<PortfolioComment> comments = new ArrayList<>();
 
-    @Column(length = 500)
-    private String thumbnailUrl;
+//    @Column(length = 500)
+//    private String thumbnailUrl;
+    // TODO:: FK로 빼는게 좋을거같음
+    // 2026.03.10.
 
     @Column(length = 500)
     private String techStack;

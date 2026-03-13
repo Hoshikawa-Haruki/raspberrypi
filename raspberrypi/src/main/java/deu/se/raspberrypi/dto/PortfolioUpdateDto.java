@@ -5,38 +5,31 @@
 package deu.se.raspberrypi.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
+ * 포트폴리오 수정요청 DTO
  *
- * 포트폴리오 조회 응답 DTO
- * 
  * @author Haruki
  */
 @Getter
 @Setter
-public class PortfolioResponseDto {
+public class PortfolioUpdateDto {
 
-    private Long id;
-
-    private Long authorId;
-    private String authorNameSnapshot;
-
+    private Long id;                    // 수정할 포폴 ID
     private String title;
     private String summary;
     private String content;
 
-    private String thumbnailUrl;
-    private String techStack;
-
     private LocalDate projectStart;
     private LocalDate projectEnd;
-
-    private List<StoredFileDto> attachments;
-
-    private LocalDateTime createdAt;
-
+    private String techStack;
+    // 
+    private List<Long> deleteFileIds;   // 기존 첨부 중 삭제할 파일들의 id
+    private List<MultipartFile> newFiles; // 새로 업로드할 파일들
+    private MultipartFile thumbnailFile;
+    private String idempotencyKey;
 }

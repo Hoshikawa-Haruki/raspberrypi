@@ -8,34 +8,37 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 안쓰임 지금은
+ *
+ * 포트폴리오 조회 응답 DTO
+ *
  * @author Haruki
  */
 @Getter
 @Setter
-public class PortfolioDto {
+public class PortfolioViewDto {
 
     private Long id;
 
+    /* 작성자 정보 */
     private Long authorId;
     private String authorNameSnapshot;
 
+    /* 기본 정보 */
     private String title;
-    private String summary;
     private String content;
+    private String summary;
 
-    private String thumbnailUrl; // 썸네일 url
-    private String techStack; // 기술스택
-
+    /* 포트폴리오 메타 */
+    private List<String> techStacks;   // ex) ["Spring", "Redis", "Docker"]
     private LocalDate projectStart;
     private LocalDate projectEnd;
 
-    private List<MultipartFile> files;             // 저장용
-    private List<StoredFileDto> attachments;       // 조회용 (저장된 첨부파일 정보)
-    
+    /* 첨부파일 */
+    private List<StoredFileDto> attachments;
+    private String thumbnailUrl; // 썸네일
+
+    /* 작성일 */
     private String formattedCreatedAt;
-    private String idempotencyKey;
 }

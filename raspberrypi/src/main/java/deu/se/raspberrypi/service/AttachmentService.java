@@ -72,11 +72,65 @@ public class AttachmentService {
                     contentEntity.removeAttachment(att); // 엔티티 관계 해제
                 });
     }
-    
+
     // 3. 게시글 삭제 : 모든 첨부파일 삭제
     public void deleteAllAttachments(ContentEntity contentEntity) {
         for (Attachment att : contentEntity.getAttachments()) {
             fileService.deletePhysicalFile(att.getUuid(), att.getExt());
         }
+    }
+
+    // 4. 썸네일 업로드
+    public void addThumbnail(ContentEntity contentEntity, MultipartFile thumbnailFile) {
+
+        if (thumbnailFile == null || thumbnailFile.isEmpty()) {
+            return;
+        }
+
+        StoredFileDto fileDto = fileService.handleUpload(thumbnailFile);
+
+        if (fileDto == null) {
+            return;
+        }
+
+        Attachment attachment = new Attachment();
+        attachment.setUuid(fileDto.getUuid());
+        attachment.setExt(fileDto.getExt());
+        attachment.setOriginalName(thumbnailFile.getOriginalFilename());
+        attachment.setType(AttachmentType.THUMBNAIL);
+
+        contentEntity.addAttachment(attachment);
+    }
+
+    // 5. 썸네일 수정
+    public void updateThumbnail(ContentEntity contentEntity, MultipartFile thumbnailFile) {
+
+        if (thumbnailFile == null || thumbnailFile.isEmpty()) {
+            return;
+        }
+
+        // 기존 썸네일 삭제
+        contentEntity.getAttachments().stream()
+                .filter(att -> att.getType() == AttachmentType.THUMBNAIL) // portfolio.attachments 중 type = THUMBNAIL를 찾아서 삭제
+                .toList()
+                .forEach(att -> {
+                    fileService.deletePhysicalFile(att.getUuid(), att.getExt());
+                    contentEntity.removeAttachment(att);
+                });
+
+        // 새 썸네일 저장
+        StoredFileDto fileDto = fileService.handleUpload(thumbnailFile);
+
+        if (fileDto == null) {
+            return;
+        }
+
+        Attachment attachment = new Attachment();
+        attachment.setUuid(fileDto.getUuid());
+        attachment.setExt(fileDto.getExt());
+        attachment.setOriginalName(thumbnailFile.getOriginalFilename());
+        attachment.setType(AttachmentType.THUMBNAIL);
+
+        contentEntity.addAttachment(attachment);
     }
 }

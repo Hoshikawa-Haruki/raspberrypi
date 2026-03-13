@@ -10,10 +10,10 @@
         <title>${post.title}</title>
         <jsp:include page="/WEB-INF/views/board/head.jsp" />
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/list.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/portfolio_view.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/portfolio_list.css">
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/post.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/comment.css">
     </head>
 
@@ -26,9 +26,32 @@
                 <div class="post-title"> <c:out value="${post.title}"/>
                 </div>
                 <div class="post-info">
-                    <span class="left-info">${post.authorNameSnapshot} (${post.maskedIp})</span>
+                    <span class="left-info">${post.authorNameSnapshot}</span>
                     |
                     <span class="right-info">${post.formattedCreatedAt}</span>
+                </div>
+            </div>
+
+            <div class="portfolio-view-meta">
+
+                <!-- 프로젝트 기간 -->
+                <div class="tag-meta-item">
+                    <label>프로젝트 기간</label>
+                    <div class="tag-pill">
+                        <span class="tag period">
+                            ${post.projectStart} ~ ${post.projectEnd}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- 기술 스택 -->
+                <div class="tag-meta-item">
+                    <label>기술 스택</label>
+                    <div class="tag-pill">
+                        <c:forEach var="tag" items="${post.techStacks}">
+                            <span class="tag tech">${tag}</span>
+                        </c:forEach>
+                    </div>
                 </div>
             </div>
 
@@ -53,16 +76,16 @@
             <!-- 하단 버튼 -->
             <div class="post-footer">
                 <div>
-                    <a href="${pageContext.request.contextPath}/board/list" class="btn">목록</a>
+                    <a href="${pageContext.request.contextPath}/portfolio" class="btn btn-list">목록</a>
                 </div>
                 <div>
                     <!-- 로그인 했을 때만 수정/삭제 버튼 조건 체크 -->
                     <c:if test="${loginMemberId != null && post.authorId == loginMemberId}">
-                        <form method="get" action="${pageContext.request.contextPath}/board/updateForm/${post.id}" style="display:inline;">
+                        <form method="get" action="${pageContext.request.contextPath}/portfolio/updateForm/${post.id}" style="display:inline;">
                             <button type="submit" class="btn">✏ 수정</button>
                         </form>
 
-                        <form method="post" action="${pageContext.request.contextPath}/board/delete/${post.id}" style="display:inline;">
+                        <form method="post" action="${pageContext.request.contextPath}/portfolio/delete/${post.id}" style="display:inline;">
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 
                             <!-- 검색 상태 전달 -->
@@ -80,11 +103,8 @@
             <jsp:include page="/WEB-INF/views/board/comment.jsp" />
         </div>
         <div class="container">
-            <jsp:include page="/WEB-INF/views/board/list_body.jsp" />
-            <jsp:include page="/WEB-INF/views/board/pagination.jsp" />
-            <jsp:include page="/WEB-INF/views/board/search.jsp" />
+            <jsp:include page="/WEB-INF/views/board/portfolio_list_body.jsp" />
         </div>
-
         <jsp:include page="/WEB-INF/views/board/footer.jsp"/>
 
         <script type="module"

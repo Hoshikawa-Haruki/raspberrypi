@@ -1,0 +1,80 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 2026. 3. 5., 오후 8:20:47
+    Author     : Haruki
+*/
+
+/* =========================
+   Portfolio Meta 정보
+========================= */
+
+.portfolio-view-meta {
+    display: flex;
+    gap: 16px;
+    margin: 10px 0; /* top 부분은 적용 안됨 (css 적용규칙 때문)*/
+    flex-wrap: wrap;
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 20px;
+}
+
+/* =========================
+   프로젝트 기간, 기술스택 태그
+========================= */
+
+.tag-meta-item {
+    flex: 1;
+    min-width: 220px;
+    background-color: #F9FAFB;
+    /*#f6f7f9;*/
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 12px;
+}
+
+.tag-meta-item label {
+    display: block;
+    font-weight: 700;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 6px;
+}
+
+.portfolio-view-meta .tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 4px; /* 알약모양 */
+    font-weight: 500;
+}
+
+.tag-pill {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tag.period {
+    background: #eef2ff;
+    color: #4c6ef5;
+}
+
+.tag.tech {
+    background: #e6f4ea;
+    color: #1e7e34;
+}
+
+
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 768px) {
+    .portfolio-view-meta {
+        flex-direction: column;
+    }
+}   

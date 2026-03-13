@@ -27,25 +27,30 @@ public class PortfolioListDto {
     private String formattedCreatedAt;
     private long commentCount; // 댓글 개수
 
-    // JPQL projection 생성자
-    public PortfolioListDto(Portfolio p, long commentCount) {
+    public static PortfolioListDto createDto(
+            Portfolio p,
+            long commentCount,
+            String thumbnailUrl
+    ) {
 
-        this.id = p.getId();
-        this.title = p.getTitle();
-        this.summary = p.getSummary();
-        this.thumbnailUrl = p.getThumbnailUrl();
-        this.authorNameSnapshot = p.getAuthorNameSnapshot();
-        this.techStack = p.getTechStack();
-        this.commentCount = commentCount;
+        PortfolioListDto dto = new PortfolioListDto();
 
-        this.formattedCreatedAt
+        dto.id = p.getId();
+        dto.title = p.getTitle();
+        dto.summary = p.getSummary();
+        dto.authorNameSnapshot = p.getAuthorNameSnapshot();
+        dto.techStack = p.getTechStack();
+        dto.commentCount = commentCount;
+        dto.thumbnailUrl = thumbnailUrl;
+
+        dto.formattedCreatedAt
                 = Formatter.portfolioListDateFormat(p.getCreatedAt());
 
         if (p.getProjectStart() != null && p.getProjectEnd() != null) {
-            this.formattedProjectPeriod
-                    = p.getProjectStart()
-                    + " ~ "
-                    + p.getProjectEnd();
+            dto.formattedProjectPeriod
+                    = p.getProjectStart() + " ~ " + p.getProjectEnd();
         }
+
+        return dto;
     }
 }

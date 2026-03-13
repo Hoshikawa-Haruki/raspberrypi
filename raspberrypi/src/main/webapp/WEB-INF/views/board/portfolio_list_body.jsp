@@ -12,7 +12,7 @@
     <h2 class="board-title">📂 Portfolio</h2>
 
     <div class="write-actions">
-        <a class="btn-write"
+        <a class="btn btn-write"
            href="${pageContext.request.contextPath}/portfolio/writeForm">
             ✏️ 새 포폴 작성
         </a>
@@ -27,9 +27,7 @@
            href="${pageContext.request.contextPath}/portfolio/${p.id}">
 
             <div class="card-thumb">
-                <img src="${empty p.thumbnailUrl 
-                            ? pageContext.request.contextPath.concat('/images/default-thumb.png') 
-                            : p.thumbnailUrl}">
+                <img src="${p.thumbnailUrl}">
             </div>
 
             <div class="card-body">
@@ -44,7 +42,7 @@
                 </div>
 
                 <!-- 태그 영역 -->
-                <div class="tag-area">
+                <div class="portfolio-list-tag-area">
 
                     <!-- 프로젝트 기간 태그 -->
                     <c:if test="${not empty p.formattedProjectPeriod}">
