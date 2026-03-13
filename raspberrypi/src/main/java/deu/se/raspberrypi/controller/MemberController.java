@@ -41,19 +41,14 @@ public class MemberController {
     @PostMapping("/member/signup")
     public String signup(@Valid SignupRequestDto dto, BindingResult bindingResult, Model model) {
 
-        // 1) Bean Validation 실패 처리
+        // Bean Validation 실패 처리
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorMessage",
                     bindingResult.getAllErrors().get(0).getDefaultMessage());
             return "member/signup";
         }
 
-        // 2) 비밀번호 일치 확인
-        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
-            model.addAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
-            return "member/signup";
-        }
-        try { // 3) 회원가입처리
+        try { // 회원가입
             memberService.signup(dto);
             return "redirect:/member/loginForm?signupSuccess";
         } catch (IllegalArgumentException e) {

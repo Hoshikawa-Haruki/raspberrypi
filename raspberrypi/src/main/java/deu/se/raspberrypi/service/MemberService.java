@@ -25,6 +25,12 @@ public class MemberService {
 
     public void signup(SignupRequestDto dto) {
 
+        // 비밀번호 일치 확인
+        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        // 이메일 중복 체크
         if (memberRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
@@ -44,5 +50,9 @@ public class MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         return MemberProfileDto.from(member);
+    }
+
+    public boolean existsEmail(String email) {
+        return memberRepository.existsByEmail(email);
     }
 }

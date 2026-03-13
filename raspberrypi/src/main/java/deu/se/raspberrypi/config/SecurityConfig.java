@@ -46,7 +46,7 @@ public class SecurityConfig {
                         "/profile", // 프로필 페이지,
                         "/portfolio"
                 ).permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/comments/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/comments/**", "/api/member/check-email").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/myposts/**").authenticated()
