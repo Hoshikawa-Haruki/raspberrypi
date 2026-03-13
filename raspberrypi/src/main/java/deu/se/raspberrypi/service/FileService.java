@@ -7,6 +7,7 @@ package deu.se.raspberrypi.service;
 import deu.se.raspberrypi.dto.StoredFileDto;
 import deu.se.raspberrypi.entity.Attachment;
 import deu.se.raspberrypi.repository.AttachmentRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * 파일 업로드/다운로드 처리를 담당하는 서비스 클래스
  *
- * FilePathResolver를 제거하고 application.properties 설정으로 경로 관리 2025.10.17.
  *
  * @author Haruki
  */
@@ -40,56 +40,24 @@ public class FileService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
-    private String tempUploadDir = "C:/Users/Haruki/Desktop/raspberrypi/upload_temp";
+    @Value("${file.temp-dir}")
+    private String tempUploadDir;
+
+    private Path uploadPath;
+    private Path tempUploadPath;
 
     private final AttachmentRepository attachmentRepository;
 
-    public StoredFileDto handleUpload(MultipartFile file) {
-        return storeFile(file, Paths.get(uploadDir));
+    @PostConstruct
+    public void init() {
+        uploadPath = Paths.get(uploadDir);
+        tempUploadPath = Paths.get(tempUploadDir);
     }
 
-//    public StoredFileDto handleUpload(MultipartFile upfile) {
-//
-//        // 1. 파일이 비었으면 null 반환
-//        if (upfile == null || upfile.isEmpty()) {
-//            log.info("첨부파일이 없음. 업로드 생략");
-//            return null;
-//        }
-//
-//        // 2. 저장 경로 지정
-//        Path baseDir = Paths.get(uploadDir);
-//        try {
-//            Files.createDirectories(baseDir);
-//        } catch (IOException e) {
-//            log.error("업로드 디렉터리 생성 실패: {}", e.getMessage());
-//            throw new RuntimeException("업로드 디렉터리 생성 실패", e);
-//        }
-//
-//        // 3. UUID 생성, 확장자 추출
-//        String originalName = StringUtils.cleanPath(upfile.getOriginalFilename());
-//        if (originalName.contains("..")) {
-//            throw new IllegalArgumentException("유효하지 않은 파일명입니다.");
-//        }
-//        String ext = StringUtils.getFilenameExtension(originalName); // 1) 확장자 추출
-//        String uuid = UUID.randomUUID().toString(); // 2) uuid 생성
-//        String savedName = uuid + "." + ext; // 3) 파일명 생성
-//        Path dest = baseDir.resolve(savedName); // 4) 파일이 저장될 전체 경로 생성
-//
-//        // 4. 파일 저장
-//        try {
-//            upfile.transferTo(dest);
-//            log.info("파일 저장 완료: {}", dest.toAbsolutePath());
-//            // DTO로 결과 반환
-//            StoredFileDto fileDto = new StoredFileDto();
-//            fileDto.setUuid(uuid);
-//            fileDto.setExt(ext);
-//            fileDto.setOriginalName(originalName);
-//            return fileDto;
-//        } catch (IOException e) {
-//            log.error("파일 저장 실패: {}", e.getMessage());
-//            throw new RuntimeException("파일 저장 실패", e);
-//        }
-//    }
+    public StoredFileDto handleUpload(MultipartFile file) {
+        return storeFile(file, uploadPath);
+    }
+
     public void handleDownload(String uuid, HttpServletResponse response) {
 
         // 1. UUID 로 DB 조회
@@ -100,7 +68,7 @@ public class FileService {
         String originalName = att.getOriginalName();
 
         // 2. 다운로드 경로
-        Path filePath = Paths.get(uploadDir).resolve(uuid + "." + ext);
+        Path filePath = uploadPath.resolve(uuid + "." + ext);
         if (!Files.exists(filePath)) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
@@ -139,7 +107,7 @@ public class FileService {
     }
 
     public void deletePhysicalFile(String uuid, String ext) {
-        Path path = Paths.get(uploadDir, uuid + "." + ext);
+        Path path = uploadPath.resolve(uuid + "." + ext);
 
         try {
             Files.deleteIfExists(path);
@@ -154,7 +122,8 @@ public class FileService {
     // - 파일 이동/삭제를 비동기로 처리
     // 2025.12.11.
     public void deleteTempFile(String uuid, String ext) {
-        Path path = Paths.get("C:/Users/Haruki/Desktop/raspberrypi/upload_temp", uuid + "." + ext);
+        Path path = tempUploadPath.resolve(uuid + "." + ext);
+
         try {
             Files.deleteIfExists(path);
             log.info("임시파일 삭제 완료: {}", path);
@@ -166,12 +135,9 @@ public class FileService {
     public void moveTempToUpload(String uuid, String ext) {
 
         // temp 실제 경로
-        Path tempFile = Paths.get("C:/Users/Haruki/Desktop/raspberrypi/upload_temp",
-                uuid + "." + ext);
-
+        Path tempFile = tempUploadPath.resolve(uuid + "." + ext);
         // upload 실제 경로
-        Path uploadFile = Paths.get("C:/Users/Haruki/Desktop/raspberrypi/upload",
-                uuid + "." + ext);
+        Path uploadFile = uploadPath.resolve(uuid + "." + ext);
 
         try {
             // upload 폴더 없으면 생성
@@ -189,7 +155,7 @@ public class FileService {
     }
 
     public StoredFileDto handleTempUpload(MultipartFile file) {
-        return storeFile(file, Paths.get(tempUploadDir));
+        return storeFile(file, tempUploadPath);
     }
 
     private StoredFileDto storeFile(MultipartFile upfile, Path baseDir) {
@@ -210,10 +176,14 @@ public class FileService {
 
         // 3. UUID 생성, 확장자 추출
         String originalName = StringUtils.cleanPath(upfile.getOriginalFilename());
+
         if (originalName.contains("..")) {
             throw new IllegalArgumentException("유효하지 않은 파일명입니다.");
         }
         String ext = StringUtils.getFilenameExtension(originalName);
+        if (ext == null || ext.isBlank()) {
+            throw new IllegalArgumentException("파일 확장자가 없습니다.");
+        }
         String uuid = UUID.randomUUID().toString();
         Path dest = baseDir.resolve(uuid + "." + ext); // 파일이 저장될 전체 경로 생성
 
