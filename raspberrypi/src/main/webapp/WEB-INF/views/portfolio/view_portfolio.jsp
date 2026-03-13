@@ -15,6 +15,7 @@
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/post.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/comment.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
     </head>
 
     <body>
@@ -105,7 +106,10 @@
         <div class="container">
             <jsp:include page="/WEB-INF/views/board/portfolio_list_body.jsp" />
         </div>
-        <jsp:include page="/WEB-INF/views/board/footer.jsp"/>
+
+        <footer>        
+            <jsp:include page="/WEB-INF/views/board/footer.jsp"/>
+        </footer>
 
         <script type="module"
         src="${pageContext.request.contextPath}/js/pages/board-view.js"></script>

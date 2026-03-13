@@ -16,7 +16,6 @@
     <body>
         <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
         <div class="login-wrapper">
-
             <!-- 왼쪽 폼 -->
             <div class="login-form">
                 <h2>📝 회원가입</h2>

@@ -55,13 +55,15 @@
 
                     <!-- 기술 스택 태그들 -->
                     <c:if test="${not empty p.techStack}">
-                        <div class="tag-pill">
-                            <c:forEach var="tag"
-                                       items="${fn:split(p.techStack, ',')}">
-                                <span class="tag tech">
-                                    ${fn:trim(tag)}
-                                </span>
-                            </c:forEach>
+                        <div class="tag-tech-wrapper">
+                            <div class="tag-pill">
+                                <c:forEach var="tag"
+                                           items="${fn:split(p.techStack, ',')}">
+                                    <span class="tag tech">
+                                        ${fn:trim(tag)}
+                                    </span>
+                                </c:forEach>
+                            </div>
                         </div>
                     </c:if>
                 </div>

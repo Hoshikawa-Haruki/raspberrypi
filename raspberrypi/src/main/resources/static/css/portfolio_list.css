@@ -41,7 +41,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     flex-direction: column;
     text-decoration: none;
     background: #fff;
-    height: 460px;
+    height: 480px;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 14px rgba(0,0,0,0.06);
@@ -178,6 +178,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     gap: 6px;
 }
 
+.tag-tech-wrapper {
+    max-height: 56px;     /* 2줄 높이 */
+    overflow: hidden;
+}
+
+/* .portfolio-list-tag-area 안에 있는 .tag 요소 */
+/* portfoliolist 페이지 태그 공통 */
 .portfolio-list-tag-area .tag {
     font-size: 12px;
     padding: 4px 8px;
@@ -185,12 +192,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     font-weight: 500;
 }
 
-.tag.period {
+/* 기간 태그 */
+.portfolio-list-tag-area .tag.period {
     background: #eef2ff;
     color: #4c6ef5;
 }
 
-.tag.tech {
+/* 기술 태그 */
+.portfolio-list-tag-area .tag.tech {
     background: #e6f4ea;
     color: #1e7e34;
+    max-width: 105px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

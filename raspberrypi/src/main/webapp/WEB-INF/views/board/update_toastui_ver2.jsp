@@ -14,11 +14,14 @@
         <jsp:include page="/WEB-INF/views/board/head.jsp" />
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/write.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
         <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
         <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     </head>
     <body>
-        <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
+        <header>
+            <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
+        </header>
         <div class="container">
             <h2>✏️ 위지윅 수정</h2>
 
@@ -94,6 +97,9 @@
         <!-- update 전용 JS -->
         <script src="${pageContext.request.contextPath}/js/board/toastui-editor.js"></script>
 
+        <footer class="site-footer">
+            <jsp:include page="/WEB-INF/views/board/footer.jsp"/>
+        </footer>
     </body>
 </html>
 

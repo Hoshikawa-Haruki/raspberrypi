@@ -15,6 +15,8 @@
               href="${pageContext.request.contextPath}/css/post.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/comment.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
+
     </head>
 
     <body>
@@ -84,7 +86,9 @@
             <jsp:include page="/WEB-INF/views/board/search.jsp" />
         </div>
 
-        <jsp:include page="/WEB-INF/views/board/footer.jsp"/>
+        <footer class="site-footer">
+            <jsp:include page="/WEB-INF/views/board/footer.jsp"/>
+        </footer>
 
         <script type="module"
         src="${pageContext.request.contextPath}/js/pages/board-view.js"></script>

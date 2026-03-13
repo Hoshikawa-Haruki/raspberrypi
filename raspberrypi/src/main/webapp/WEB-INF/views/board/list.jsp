@@ -16,18 +16,26 @@
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/list.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
+
     </head>
 
     <body>
-        <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
+        <header>       
+            <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
+        </header>
 
-        <div class="container">
-            <jsp:include page="/WEB-INF/views/board/list_body.jsp" />
-            <jsp:include page="/WEB-INF/views/board/pagination.jsp" />
-            <jsp:include page="/WEB-INF/views/board/search.jsp" />
-        </div>
+        <main>
+            <div class="container">
+                <jsp:include page="/WEB-INF/views/board/list_body.jsp" />
+                <jsp:include page="/WEB-INF/views/board/pagination.jsp" />
+                <jsp:include page="/WEB-INF/views/board/search.jsp" />
+            </div>
+        </main>
 
-        <jsp:include page="/WEB-INF/views/board/footer.jsp"/>
+        <footer class="site-footer">
+            <jsp:include page="/WEB-INF/views/board/footer.jsp"/>
+        </footer>
     </body>
 
 </html>
