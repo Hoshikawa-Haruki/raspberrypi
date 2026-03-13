@@ -16,8 +16,8 @@ html {
 body {
     font-family: "Noto Sans KR", sans-serif;
     background-color: #e7fdea;
-        /*#e7fdeb;*/
-        /*#f8f9fa;*/
+    /*#e7fdeb;*/
+    /*#f8f9fa;*/
     margin: 0;
     padding: 0;
 }
@@ -43,7 +43,7 @@ h2 {
 }
 
 /*todo: 버튼 클래스 명확화*/
-button,
+/*button,
 .btn {
     padding: 7px 15px;
     border: 1px solid #ccc;
@@ -58,6 +58,32 @@ button,
 button:hover,
 .btn:hover {
     background-color: #e9ecef;
+}*/
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+/* 글 작성, 목록 버튼 */
+.btn-list,
+.btn-write {
+    color: white;
+    background: #4FC273;
+}
+
+.btn-list:hover,
+.btn-write:hover {
+    background: #5DFCA9;
 }
 
 /* 유튜브 iframe */

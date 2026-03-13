@@ -16,10 +16,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     --text-sub: #666;
 }
 
-body {
-    background: var(--bg-color);
-}
-
 .mypage-wrapper {
     padding: 40px 0;
 }

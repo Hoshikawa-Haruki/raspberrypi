@@ -11,7 +11,7 @@
     <h2 class="board-title">📋 게시글 목록</h2>
 
     <div class="write-actions">
-        <a class="btn-write"
+        <a class="btn btn-write"
            href="${pageContext.request.contextPath}/board/writeForm">
             ✏️ 새 글 작성
         </a>

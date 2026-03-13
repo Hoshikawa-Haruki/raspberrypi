@@ -31,7 +31,6 @@
                     <span class="right-info">${post.formattedCreatedAt}</span>
                 </div>
             </div>
-
             <!-- 본문 -->
             <div class="post-content">${post.content}</div>
 
@@ -53,7 +52,7 @@
             <!-- 하단 버튼 -->
             <div class="post-footer">
                 <div>
-                    <a href="${pageContext.request.contextPath}/board/list" class="btn">목록</a>
+                    <a href="${pageContext.request.contextPath}/board/list" class="btn btn-list">목록</a>
                 </div>
                 <div>
                     <!-- 로그인 했을 때만 수정/삭제 버튼 조건 체크 -->

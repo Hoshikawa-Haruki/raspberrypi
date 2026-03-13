@@ -12,14 +12,34 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 /* ---- 상단 로그인/회원가입 메뉴 ---- */
 /*=================================*/
 
+.top-header{
+    width: 900px;
+    height: 60px;
+    margin: 10px auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.site-logo img{
+    height:60px;
+    display:block;
+}
+
 .top-user-menu {
-    width: 900px; /* container와 동일 */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/*.top-user-menu {
+    width: 900px;  container와 동일 
     margin: 20px auto 20px;
     display: flex;
     justify-content: flex-end;
-    align-items: center;   /* 세로 중앙 정렬 */
-    gap: 12px; /* 버튼 간격 */
-}
+    align-items: center;    세로 중앙 정렬 
+    gap: 12px;  버튼 간격 
+}*/
 .top-user-menu form {
     margin: 0;
     padding: 0;

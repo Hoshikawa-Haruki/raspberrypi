@@ -27,24 +27,25 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     margin: 0;
 }
 
-.btn-write {
+.btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 8px 14px;
-    border: 1px solid #ccc;
     border-radius: 4px;
-    background: white;
-    color: #333;
-    text-decoration: none;
-    font-size: 14px;
+    color: white; 
+    font-weight: 600;
+    font-size: 15px;
     cursor: pointer;
-    transition: all 0.15s ease;
+    text-decoration: none;
+}
+
+.btn-write {
+    background: #5DFCA9;
 }
 
 .btn-write:hover {
-    background: #f5f5f5;
-    border-color: #bbb;
+    background: #60FC5D;
 }
 
 .board-table {

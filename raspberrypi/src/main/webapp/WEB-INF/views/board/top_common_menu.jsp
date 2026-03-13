@@ -11,31 +11,38 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/top_menu.css">
 </head>
 
-<div class="top-user-menu">
-    <sec:authorize access="isAnonymous()">
-        <a href="${pageContext.request.contextPath}/member/loginForm" class="top-btn">
-            로그인
-        </a>
-        <a href="${pageContext.request.contextPath}/member/signupForm" class="top-btn">
-            회원가입
-        </a>
-    </sec:authorize>
+<div class="top-header">
+    
+    <a href="${pageContext.request.contextPath}/" class="site-logo">
+        <img src="${pageContext.request.contextPath}/images/retrodays.png" alt="RetroDays">
+    </a>
+    
+    <div class="top-user-menu">
+        <sec:authorize access="isAnonymous()">
+            <a href="${pageContext.request.contextPath}/member/loginForm" class="top-btn">
+                로그인
+            </a>
+            <a href="${pageContext.request.contextPath}/member/signupForm" class="top-btn">
+                회원가입
+            </a>
+        </sec:authorize>
 
-    <sec:authorize access="isAuthenticated()">
-        <span class="user-greeting">
-            <a href="${pageContext.request.contextPath}/member/mypage">
-                <strong>${loginUserNickname}</strong>
-            </a> 님
-        </span>
-        <form method="post"
-              action="${pageContext.request.contextPath}/logout"
-              style="display:inline;">
-            <input type="hidden"
-                   name="${_csrf.parameterName}"
-                   value="${_csrf.token}">
-            <button type="submit" class="top-btn">로그아웃</button>
-        </form>
-    </sec:authorize>
+        <sec:authorize access="isAuthenticated()">
+            <span class="user-greeting">
+                <a href="${pageContext.request.contextPath}/member/mypage">
+                    <strong>${loginUserNickname}</strong>
+                </a> 님
+            </span>
+            <form method="post"
+                  action="${pageContext.request.contextPath}/logout"
+                  style="display:inline;">
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}">
+                <button type="submit" class="top-btn">로그아웃</button>
+            </form>
+        </sec:authorize>
+    </div>
 </div>
 
 <!-- 네비게이션 -->
