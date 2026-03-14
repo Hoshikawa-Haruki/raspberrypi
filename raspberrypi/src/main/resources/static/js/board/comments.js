@@ -45,34 +45,81 @@ document.addEventListener("DOMContentLoaded", () => {
                     e.target.value = "";
                 }
             });
+    // 삭제 버튼 이벤트 위임
+    document.getElementById("comment-list")
+            .addEventListener("click", (e) => {
+
+                const btn = e.target.closest(".comment-delete");
+                if (!btn)
+                    return;
+
+                const id = btn.dataset.id;
+                deleteComment(id);
+            });
 });
 
 // 댓글 목록 호출
 async function loadComments(page = 0) {
+
     const res = await fetch(
             `/api/comments?postId=${POST_ID}&page=${page}&size=${COMMENT_SIZE}`
             );
+
     const data = await res.json();
     const comments = data.content;
 
     const box = document.getElementById("comment-list");
-    box.innerHTML = "";
+    box.replaceChildren(); // comment-list 안에 있는 모든 댓글 요소들을 전부 삭제
+
+    const fragment = document.createDocumentFragment();
 
     comments.forEach(c => {
-        box.innerHTML += `
-            <div class="comment-item">
-                <div class="comment-meta">
-                    <span class="comment-author">${c.authorNameSnapshot}</span>
-                    <span class="comment-time">${c.formattedCreatedAt}</span>
-                    ${c.mine ? `
-                        <button class="comment-delete"
-                                onclick="deleteComment(${c.id})">×</button>
-                    ` : ""}
-                </div>
-                <div class="comment-content">${c.content}</div>
-            </div>
-        `;
+
+        const item = document.createElement("div");
+        item.className = "comment-item";
+
+        // meta 영역
+        const meta = document.createElement("div");
+        meta.className = "comment-meta";
+
+        const author = document.createElement("span");
+        author.className = "comment-author";
+        author.textContent = c.authorNameSnapshot;
+
+        const time = document.createElement("span");
+        time.className = "comment-time";
+        time.textContent = c.formattedCreatedAt;
+
+        meta.appendChild(author);
+        meta.appendChild(time);
+
+        // 삭제 버튼
+        if (c.mine) {
+            const btn = document.createElement("button");
+            btn.className = "comment-delete";
+            btn.dataset.id = c.id;
+            btn.type = "button";
+
+            const img = document.createElement("img");
+            img.src = "/images/delete2.svg";
+            img.alt = "삭제";
+
+            btn.appendChild(img);
+            meta.appendChild(btn);
+        }
+
+        // 댓글 내용 (XSS 방어)
+        const content = document.createElement("div");
+        content.className = "comment-content";
+        content.textContent = c.content;
+
+        item.appendChild(meta);
+        item.appendChild(content);
+
+        fragment.appendChild(item);
     });
+
+    box.appendChild(fragment);
 
     document.getElementById("comment-count").innerText =
             data.totalElements;
@@ -145,8 +192,9 @@ function renderCommentPagination(data) {
 
     const currentPage = data.number;      // 0-based
     const totalPages = data.totalPages;
-    
-    if (totalPages === 0) return;
+
+    if (totalPages === 0)
+        return;
 
     const startPage =
             Math.floor(currentPage / COMMENT_PAGE_BLOCK) * COMMENT_PAGE_BLOCK;

@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import deu.se.raspberrypi.repository.PostCommentRepository;
+import org.springframework.web.util.HtmlUtils;
 
 /**
  *
@@ -81,7 +82,6 @@ public class CommentService {
     }
 
     /* === 포트폴리오 Comment 메서드 === */
-    
     public void createPortfolioComment(CommentCreateDto dto, Long memberId) {
         Portfolio portfolio = portfolioRepository.findById(dto.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("포트폴리오가 존재하지 않습니다."));

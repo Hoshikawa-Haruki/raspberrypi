@@ -24,7 +24,7 @@
 
     <!-- 댓글 목록 -->
     <div class="comment-list" id="comment-list"></div>
-    <div id="comment-pagination" class="comment-pagination"></div>
+    <div class="comment-pagination" id="comment-pagination"></div>
 
     <!-- 댓글 작성 -->
     <div id="comment-form" class="comment-form">

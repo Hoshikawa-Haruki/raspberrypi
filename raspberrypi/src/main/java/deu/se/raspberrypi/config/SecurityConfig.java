@@ -47,6 +47,7 @@ public class SecurityConfig {
                         "/portfolio"
                 ).permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/comments/**", "/api/member/check-email").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/member/withdraw").authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/myposts/**").authenticated()
