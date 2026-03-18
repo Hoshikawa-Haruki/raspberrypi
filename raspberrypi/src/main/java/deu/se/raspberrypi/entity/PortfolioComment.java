@@ -5,6 +5,7 @@
 package deu.se.raspberrypi.entity;
 
 import deu.se.raspberrypi.entity.base.BaseEntity;
+import deu.se.raspberrypi.entity.base.CommentCommon;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,7 +25,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PortfolioComment extends BaseEntity {
+public class PortfolioComment extends BaseEntity implements CommentCommon{
 
     /* 게시글 FK */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,14 +37,17 @@ public class PortfolioComment extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @Column(length = 50, nullable = false)
+    private String authorNameSnapshot;
+
     /* 댓글 내용 */
     @Column(nullable = false, length = 1000)
     private String content;
 
     /* ===== 생성자 ===== */
-    public PortfolioComment(Portfolio portfolio, Member member, String content) {
-        this.portfolio = portfolio;
+    public PortfolioComment(Member member, String content) {
         this.member = member;
         this.content = content;
+        this.authorNameSnapshot = member.getNickname();
     }
 }

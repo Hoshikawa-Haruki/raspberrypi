@@ -30,7 +30,7 @@ public abstract class BaseEntity {
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     protected LocalDateTime createdAt;
 
-    @Column(nullable = false, updatable = false, insertable = false,
+    @Column(nullable = false, insertable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     protected LocalDateTime updatedAt;
 }
