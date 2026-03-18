@@ -11,6 +11,7 @@ import deu.se.raspberrypi.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -54,5 +55,20 @@ public class MemberService {
 
     public boolean existsEmail(String email) {
         return memberRepository.existsByEmail(email);
+    }
+
+    @Transactional
+    public void withdraw(Long memberId, String password) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+
+        // 비밀번호 확인
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        // 회원 soft delete
+        member.softDelete();
     }
 }

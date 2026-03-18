@@ -27,6 +27,12 @@ public class GlobalUserModelAdvice {
         if (principal != null) {
             model.addAttribute("loginUserNickname",
                     principal.getNickName());
+            
+            model.addAttribute("loginMemberId",
+                    principal.getMemberId());
+
+            model.addAttribute("loginUserRole",
+                    principal.getRole());
         }
     }
 }

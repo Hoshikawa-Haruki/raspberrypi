@@ -8,6 +8,8 @@ import deu.se.raspberrypi.dto.MemberProfileDto;
 import deu.se.raspberrypi.dto.SignupRequestDto;
 import deu.se.raspberrypi.security.CustomUserDetails;
 import deu.se.raspberrypi.service.MemberService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -73,8 +76,33 @@ public class MemberController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/member/withdraw")
+    @GetMapping("/member/withdrawForm")
     public String withdrawForm() {
         return "/member/withdraw";
+    }
+
+    @PostMapping("/member/withdraw")
+    public String withdraw(
+            @RequestParam String password,
+            @AuthenticationPrincipal CustomUserDetails user,
+            Model model,
+            HttpServletRequest request
+    ) throws ServletException {
+
+        try {
+            memberService.withdraw(user.getMemberId(), password);
+
+            request.logout();
+             return "redirect:/member/withdraw-success"; // 탈퇴완료 페이지로 이동
+
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            model.addAttribute("error", e.getMessage());
+            return "member/withdraw";
+        }
+    }
+
+    @GetMapping("/member/withdraw-success")
+    public String withdrawSuccess() {
+        return "member/withdraw_success";
     }
 }

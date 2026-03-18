@@ -8,6 +8,8 @@ import deu.se.raspberrypi.entity.Member;
 import deu.se.raspberrypi.repository.MemberRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,16 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<Member> opt = memberRepository.findByEmail(email);
         Member member = opt.orElseThrow(() -> new UsernameNotFoundException("No Such user: " + email));
+
+        // 상태 체크 추가
+        if ("DELETED".equals(member.getStatus())) {
+            throw new DisabledException("탈퇴한 계정입니다.");
+        }
+
+        if ("BANNED".equals(member.getStatus())) {
+            throw new LockedException("정지된 계정입니다.");
+        }
+        
         return CustomUserDetails.from(member); // 로그인 시점의 유저 정보 리턴
     }
 }

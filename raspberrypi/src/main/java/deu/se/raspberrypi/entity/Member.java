@@ -8,6 +8,7 @@ import deu.se.raspberrypi.entity.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,5 +48,13 @@ public class Member extends BaseEntity {
 
     @Builder.Default
     @Column(nullable = false, length = 20)
-    private String status = "ACTIVE"; // ACTIVE / BANNED / UNVERIFIED
+    private String status = "ACTIVE"; // ACTIVE / BANNED / DELETED
+
+    @Column
+    private LocalDateTime deletedAt;
+
+    public void softDelete() {
+        this.status = "DELETED";
+        this.deletedAt = LocalDateTime.now();
+    }
 }
