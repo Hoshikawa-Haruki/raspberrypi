@@ -21,15 +21,15 @@
                 <h2>📝 회원가입</h2>
                 <form method="post" action="${pageContext.request.contextPath}/member/signup">
                     <input id="email" type="email" name="email" placeholder="이메일" required />
-                    <div id="emailMsg" style="font-size:13px; margin:0;"></div>
+                    <div id="emailMsg" class="error-msg"></div>
                     <input id="password" type="password" name="password" placeholder="비밀번호" minlength="4" maxlength="20" required />
                     <input id="confirmPassword" type="password" name="confirmPassword" placeholder="비밀번호 확인" minlength="4" required />
-                    <div id="passwordMsg" style="font-size:13px; margin:0;"></div>
+                    <div id="passwordMsg" class="error-msg"></div>
                     <input type="text" name="nickname" placeholder="닉네임" minlength="2" maxlength="10" required />
                     <input type="hidden" name="_csrf" value="${_csrf.token}">
 
                     <c:if test="${not empty errorMessage}">
-                        <div style="color:red; font-weight:bold; margin-bottom:10px;">
+                        <div class="form-error">
                             ${errorMessage}
                         </div>
                     </c:if>

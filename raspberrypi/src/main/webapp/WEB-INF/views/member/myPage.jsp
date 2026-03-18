@@ -11,6 +11,8 @@
 <html>
     <head>
         <title>마이페이지</title>
+        <meta name="_csrf" content="${_csrf.token}">
+        <meta name="_csrf_header" content="${_csrf.headerName}">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/mypage.css">
     </head>
@@ -31,12 +33,15 @@
                     </div>
 
                     <ul class="mypage-menu">
-                        <li class="active">프로필 관리</li>
-                        <li>보안 설정</li>
-                        <li>이력 관리</li>
+                        <li>
+                            <a href="/member/withdrawForm">프로필 관리</a>
+                        </li>
+                        <li>
+                            <a href="/member/withdrawForm">보안 설정</a>
+                        </li>
                         <li class="danger">
-                            <a href="/member/withdraw">회원탈퇴</a></li>
-
+                            <a href="/member/withdrawForm">회원탈퇴</a>
+                        </li>
                     </ul>
                 </aside>
 

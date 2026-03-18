@@ -22,14 +22,23 @@
                 <h2>🔐 로그인</h2>
                 <fieldset class="login-fieldset">
                     <form method="post" action="${pageContext.request.contextPath}/login">
-                        <input type="email" name="email" placeholder="이메일" required />
+                        <input type="email" name="email" value="${param.email}" placeholder="이메일" required />
                         <input type="password" name="password" placeholder="비밀번호" required />
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         <button type="submit">로그인</button>
 
-                        <div class="options">
-                            <label><input type="checkbox" name="remember"> 로그인 상태 유지</label>
+                        <div class="form-error">
+                            <c:if test="${not empty sessionScope.loginErrorMessage}">
+                                ${sessionScope.loginErrorMessage}
+                            </c:if>
+                        </div>
 
+                        <c:remove var="loginErrorMessage" scope="session"/>
+
+                        <div class="options">
+                            <label>
+                                <input type="checkbox" name="remember-me"> 로그인 상태 유지
+                            </label>
                         </div>
 
                         <div class="links">

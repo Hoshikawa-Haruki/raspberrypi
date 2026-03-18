@@ -31,10 +31,15 @@
                     </div>
 
                     <ul class="mypage-menu">
-                        <li><a href="/mypage">프로필 관리</a></li>
-                        <li>보안 설정</li>
-                        <li>이력 관리</li>
-                        <li class="danger active">회원탈퇴</li>
+                        <li>
+                            <a href="/member/withdrawForm">프로필 관리</a>
+                        </li>
+                        <li>
+                            <a href="/member/withdrawForm">보안 설정</a>
+                        </li>
+                        <li class="danger">
+                            <a href="/member/withdrawForm">회원탈퇴</a>
+                        </li>
                     </ul>
                 </aside>
 
@@ -42,58 +47,73 @@
                 <section class="mypage-right">
 
                     <div class="card">
-                        <div class="card-header">회원 탈퇴</div>
+                        <div class="card-header danger-header">회원 탈퇴</div>
+
                         <div class="card-body">
 
-                            <p class="text-danger fw-bold">
-                                회원 탈퇴 시 아래 정보가 모두 삭제되며 복구할 수 없습니다.
-                            </p>
+                            <!-- 경고 박스 -->
+                            <div class="danger-box">
+                                <div class="danger-title">
+                                    ⚠ 회원 탈퇴 시 계정은 비활성화되며, 로그인 및 서비스 이용이 제한됩니다.
+                                </div>
 
-                            <ul class="text-muted">
-                                <li>작성한 게시글 및 댓글</li>
-                                <li>계정 정보 (이메일, 닉네임)</li>
-                                <li>활동 이력</li>
-                            </ul>
+                                <ul>
+                                    <li>계정 정보 (이메일, 비밀번호, 닉네임)는 더 이상 사용되지 않습니다</li>
+                                    <li>작성한 게시글 및 댓글은 서비스 기록 보존을 위해 유지될 수 있습니다</li>
+                                    <li>활동 이력은 일부 보존될 수 있습니다</li>
+                                </ul>
 
-                            <hr>
+                                <hr>
+
+                                <p class="danger-note">
+                                    이 작업은 되돌릴 수 없습니다.
+                                </p>
+                            </div>
 
                             <form method="post" action="${pageContext.request.contextPath}/member/withdraw">
 
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 
                                 <!-- 비밀번호 확인 -->
-                                <div class="mb-3">
-                                    <label class="form-label">비밀번호 확인</label>
+                                <div class="form-group">
+                                    <label>비밀번호 확인</label>
                                     <input type="password" name="password" class="form-control" required>
+
+                                    <c:if test="${not empty error}">
+                                        <div class="error-msg">${error}</div>
+                                    </c:if>
                                 </div>
 
-                                <!-- 동의 체크 -->
-                                <div class="form-check mb-4">
-                                    <input class="form-check-input" type="checkbox" id="agreeCheck" required>
-                                    <label class="form-check-label" for="agreeCheck">
-                                        위 내용을 모두 확인했으며, 탈퇴에 동의합니다.
+
+
+                                <!-- 동의 -->
+                                <div class="agree-box">
+                                    <input type="checkbox" id="agreeCheck" required>
+                                    <label for="agreeCheck">
+                                        위 내용을 모두 확인했으며 탈퇴에 동의합니다.
                                     </label>
                                 </div>
 
                                 <!-- 버튼 -->
-                                <div class="text-end">
+                                <div class="withdraw-actions">
                                     <a href="${pageContext.request.contextPath}/mypage"
-                                       class="btn btn-outline-secondary">
+                                       class="btn btn-cancel">
                                         취소
                                     </a>
 
                                     <button type="submit"
                                             class="btn btn-danger"
-                                            onclick="return confirm('정말 회원 탈퇴하시겠습니까?');">
+                                            onclick="return confirm('정말 회원 탈퇴하시겠습니까?\n이 작업은 되돌릴 수 없습니다.');">
                                         회원 탈퇴
                                     </button>
                                 </div>
+
                             </form>
-                                       
+
                         </div>
                     </div>
                 </section>
-                                       
+
             </div>
         </div>
     </body>
