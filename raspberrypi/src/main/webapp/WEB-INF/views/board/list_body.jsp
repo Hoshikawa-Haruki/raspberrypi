@@ -8,7 +8,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <div class="board-header">
-    <h2 class="board-title">📋 게시글 목록</h2>
+    <h2 class="board-title">📋 자유 게시판</h2>
 
     <div class="write-actions">
         <a class="btn btn-write"
@@ -54,7 +54,7 @@
 
                     <td class="title">
                         <a href="${pageContext.request.contextPath}${rowUrl}" class="row-link">
-                            ${post.title}
+                            <span class="row-title-text">${post.title}</span>
                             <c:if test="${post.commentCount > 0}">
                                 <span class="row-comment-count">[${post.commentCount}]</span>
                             </c:if>
@@ -91,7 +91,7 @@
         if (searchType === 'author') {
             selector = '.author';
         } else {
-            selector = '.row-link';
+            selector = '.row-title-text';
         }
         var regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi'); // 전부, 대소문자 구분 X
 

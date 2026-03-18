@@ -24,7 +24,7 @@
     <c:forEach var="p" items="${portfolioList}">
 
         <a class="post-card"
-           href="${pageContext.request.contextPath}/portfolio/${p.id}">
+           href="${pageContext.request.contextPath}/portfolio/view/${p.id}">
 
             <div class="card-thumb">
                 <img src="${p.thumbnailUrl}">
@@ -87,36 +87,36 @@
         </a>
     </c:forEach>
 
-    <a class="post-card" href="#">
-        <div class="card-thumb">
-            <img src="https://picsum.photos/500/400?random=2">
-        </div>
-
-        <div class="card-body">
-            <h3 class="card-title">
-                Redis기반 중복요청 방지 시스템 구현
-            </h3>
-            <p class="card-summary">
-                Idempotency Key 설계를 통해 중복 저장을 방지하고,
-                실제 트래픽 환경을 고려한 구조를 설계했습니다.
-            </p> <div class="card-meta">
-                <div class="card-meta-top">
-                    2026-02-15 · 댓글 3개
-                </div>
-
-                <div class="card-meta-bottom">
-                    <div class="author-area">
-                        <img class="author-img" src="https://picsum.photos/40?random=10">
-                        <span class="author-name">Haruki</span>
+    <!--    <a class="post-card" href="#">
+            <div class="card-thumb">
+                <img src="https://picsum.photos/500/400?random=2">
+            </div>
+    
+            <div class="card-body">
+                <h3 class="card-title">
+                    Redis기반 중복요청 방지 시스템 구현
+                </h3>
+                <p class="card-summary">
+                    Idempotency Key 설계를 통해 중복 저장을 방지하고,
+                    실제 트래픽 환경을 고려한 구조를 설계했습니다.
+                </p> <div class="card-meta">
+                    <div class="card-meta-top">
+                        2026-02-15 · 댓글 3개
                     </div>
-                    <div class="likes">
-                        ♥ 127
+    
+                    <div class="card-meta-bottom">
+                        <div class="author-area">
+                            <img class="author-img" src="https://picsum.photos/40?random=10">
+                            <span class="author-name">Haruki</span>
+                        </div>
+                        <div class="likes">
+                            ♥ 127
+                        </div>
+    
                     </div>
-
                 </div>
             </div>
-        </div>
-    </a>
+        </a>-->
 
 </div>
 

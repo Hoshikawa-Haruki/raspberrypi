@@ -4,12 +4,14 @@
  */
 package deu.se.raspberrypi.controller;
 
+import deu.se.raspberrypi.dto.PaginationInfoDto;
 import deu.se.raspberrypi.dto.PortfolioListDto;
 import deu.se.raspberrypi.dto.PortfolioViewDto;
 import deu.se.raspberrypi.dto.PortfolioSaveRequestDto;
 import deu.se.raspberrypi.dto.PortfolioUpdateDto;
 import deu.se.raspberrypi.security.CustomUserDetails;
 import deu.se.raspberrypi.service.PortfolioService;
+import deu.se.raspberrypi.util.PaginationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,13 +37,16 @@ public class PortfolioController {
     // 0. 포트폴리오 리스트 조회
     @GetMapping("/portfolio")
     public String portfolioListPage(
-            @PageableDefault(size = 9, sort = "createdAt",
+            @PageableDefault(size = 6, sort = "createdAt",
                     direction = Sort.Direction.DESC) Pageable pageable,
             Model model) {
 
         Page<PortfolioListDto> page = portfolioService.getPortfolioList(pageable);
 
-        model.addAttribute("portfolioPage", page);
+        PaginationInfoDto pageInfo
+                = PaginationUtils.of(page, 10);
+
+        model.addAttribute("pageInfo", pageInfo);
         model.addAttribute("portfolioList", page.getContent());
 
         return "board/portfolio_list";
@@ -62,17 +67,30 @@ public class PortfolioController {
     }
 
     // 3. 포트폴리오 단일 조회
-    @GetMapping("/portfolio/{id}")
+    @GetMapping("/portfolio/view/{id}")
     public String viewPortfolio(
             @PathVariable Long id,
             @AuthenticationPrincipal CustomUserDetails user,
+            @PageableDefault(size = 6, sort = "createdAt",
+                    direction = Sort.Direction.DESC) Pageable pageable,
             Model model) {
+
+        // 상세 조회
         PortfolioViewDto portfolio = portfolioService.getPortfolioById(id);
         model.addAttribute("post", portfolio);
+
+        // 로그인정보
         Long loginMemberId = (user != null) ? user.getMemberId() : null;
         model.addAttribute("loginMemberId", loginMemberId);
 
-        return "portfolio/view_portfolio";  // => view_portfolio.jsp 로 forward
+        // 리스트
+        Page<PortfolioListDto> page = portfolioService.getPortfolioList(pageable);
+        PaginationInfoDto pageInfo
+                = PaginationUtils.of(page, 10);
+
+        model.addAttribute("pageInfo", pageInfo);
+        model.addAttribute("portfolioList", page.getContent()); // 실제 데이터 리스트
+        return "portfolio/view_portfolio";
     }
 
     // 4. 포트폴리오 수정 폼
@@ -89,7 +107,7 @@ public class PortfolioController {
             PortfolioUpdateDto dto,
             @AuthenticationPrincipal CustomUserDetails user) {
         portfolioService.update(id, dto, user.getMemberId());
-        return "redirect:/portfolio/" + id;
+        return "redirect:/portfolio/view/" + id;
     }
 
     // 6. 포트폴리오 삭제 요청
