@@ -105,14 +105,25 @@
         </div>
         <div class="container">
             <jsp:include page="/WEB-INF/views/board/portfolio_list_body.jsp" />
+            <jsp:include page="/WEB-INF/views/board/pagination.jsp" />
+
         </div>
 
-        <footer>        
+        <footer class="site-footer">
             <jsp:include page="/WEB-INF/views/board/footer.jsp"/>
         </footer>
 
+        <script>
+            window.PAGE_CONTEXT = {
+                commentType: "portfolio",
+                postId: ${post.id},
+                csrfToken: '${_csrf.token}'
+            };
+        </script>
+
         <script type="module"
-        src="${pageContext.request.contextPath}/js/pages/board-view.js"></script>
+                src="${pageContext.request.contextPath}/js/pages/board-view.js">
+        </script>
 
     </body>
 </html>
