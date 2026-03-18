@@ -4,6 +4,8 @@
  */
 package deu.se.raspberrypi.config;
 
+import deu.se.raspberrypi.security.CustomAuthFailureHandler;
+import deu.se.raspberrypi.security.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +25,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final CustomAuthFailureHandler customAuthFailureHandler;
+    private final CustomUserDetailsService customUserDetailsService;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -40,17 +45,21 @@ public class SecurityConfig {
                         "/images/**", // 정적이미지
                         "/upload/**",
                         "/upload_temp/**",
-                        "/member/loginForm", "/member/signupForm", // 로그인, 회원가입 페이지 요청
-                        "/login", "/member/signup", // 회원가입, 로그인 요청
+                        "/login", // 로그인 요청
                         "/board", "/board/", "/board/list", "/board/view/**",
                         "/profile", // 프로필 페이지,
-                        "/portfolio"
+                        "/portfolio",
+                        "/portfolio/view/**"
                 ).permitAll()
+                .requestMatchers("/member/loginForm", "/member/signupForm", "/member/signup").anonymous() // 로그인, 회원가입 페이지 
                 .requestMatchers(HttpMethod.GET, "/api/comments/**", "/api/member/check-email").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/member/withdraw").authenticated()
+                .requestMatchers(HttpMethod.GET, "/member/withdraw-success").permitAll()
+                .requestMatchers(HttpMethod.GET, "/member/withdrawForm").authenticated()
+                .requestMatchers(HttpMethod.POST, "/member/withdraw").authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/myposts/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/posts/**").authenticated()
                 .requestMatchers("/board/**").hasRole("USER")
                 .requestMatchers("/admin/**").hasRole("ADMIN") // TODO : 관리자 페이지
                 // 기타 요청은 인증 필요
@@ -74,7 +83,13 @@ public class SecurityConfig {
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/board/list", true) // 로그인 성공 후 이동 페이지
+                .failureHandler(customAuthFailureHandler) // 로그인 실패 처리 핸들러
                 .permitAll()
+                )
+                .rememberMe(remember -> remember // 자동 로그인
+                .key("my-remember-key-123") // 아무 문자열 (중요)
+                .tokenValiditySeconds(60 * 60 * 24 * 7) // 7일
+                .userDetailsService(customUserDetailsService)
                 )
                 // 로그아웃
                 .logout(logout -> logout
