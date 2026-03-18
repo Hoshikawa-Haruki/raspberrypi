@@ -7,6 +7,9 @@ let currentMyPostPage = 0;
 const MY_POST_PAGE_SIZE = 5;
 const MY_POST_BLOCK = 5;
 
+const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
 document.addEventListener("DOMContentLoaded", () => {
     loadMyPosts();
 });
@@ -48,6 +51,10 @@ async function loadMyPosts(page = 0) {
                     ${commentHtml}
                 </a>
                 <span class="post-date">${post.formattedCreatedAt}</span>
+        
+                <button class="post-delete-btn" data-id="${post.id}" type="button" aria-label="삭제">
+                    <img src="/images/delete2.svg" alt="삭제">
+                </button>
             </li>
         `;
     });
@@ -89,3 +96,43 @@ function createMyPostBtn(label, page) {
     return btn;
 }
 
+
+// ===============================
+// 전역 이벤트 리스너
+// ===============================
+
+document.addEventListener("click", async (e) => {
+
+    const btn = e.target.closest(".post-delete-btn");
+    if (!btn)
+        return;
+
+    e.stopPropagation();
+
+    const postId = btn.dataset.id;
+
+    if (!confirm("정말 삭제하시겠습니까?"))
+        return;
+
+    try {
+        const res = await fetch(`/api/posts/${postId}`, {
+            method: "DELETE",
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        });
+        if (!res.ok)
+            throw new Error();
+
+        const li = btn.closest("li");
+        li.remove();
+
+        // 카운트 감소
+        const countEl = document.getElementById("my-post-count");
+        countEl.innerText = parseInt(countEl.innerText) - 1;
+
+    } catch (err) {
+        alert("삭제 실패");
+        console.error(err);
+    }
+});

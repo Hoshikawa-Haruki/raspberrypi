@@ -72,6 +72,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     cursor: pointer;
 }
 
+.mypage-menu li a {
+    display: block;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
 .mypage-menu li:hover {
     background: #f8f9fa;
 }
@@ -82,12 +88,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 .mypage-menu li.active {
     color: var(--main-color);
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .mypage-menu li.danger a {
     color: #c0392b;
     text-decoration: none;
+    font-weight: 600;
 }
 
 /* ===== 우측 영역 ===== */
@@ -171,9 +178,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     background: #f8f9fa;
 }
 
-/*.my-post-list li:last-child {
-    border-bottom: none;
-}*/
+.my-post-list li:first-child {
+    border-top: 1px solid #f0f0f0;
+}
 
 .post-title {
     color: var(--text-main);
@@ -197,7 +204,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     font-size: 13px;
     color: #999;
     white-space: nowrap;
-    padding-right: 10px;
+}
+
+/* 내 작성글 삭제 버튼 */
+.post-delete-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    margin:0 10px;
+}
+
+.post-delete-btn img {
+    display: block;
+    width: 14px;
+    height: 14px;
+    opacity: 0.6;
+}
+
+.post-delete-btn:hover img {
+    opacity: 1;
+    filter: brightness(0) saturate(100%) invert(17%) sepia(92%) saturate(5224%) hue-rotate(350deg);
 }
 
 /* ===== 페이지네이션 ===== */
@@ -234,4 +261,144 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     color: #fff;
     border-color: var(--main-color);
     font-weight: 600;
+}
+
+
+/* ============================= */
+/* 회원탈퇴 페이지 스타일 */
+/* ============================= */
+
+/* 위험 카드 헤더 */
+.card-header.danger-header {
+    background: #dc3545;
+}
+
+/* 탈퇴 경고 박스 */
+.danger-box {
+    background: #fff5f5;
+    border: 1px solid #f5c2c7;
+    padding: 18px 20px;
+    border-radius: 10px;
+    margin-bottom: 22px;
+}
+
+.danger-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #b02a37;
+    margin-bottom: 10px;
+}
+
+.danger-box ul {
+    padding-left: 18px;
+    margin: 6px 0 10px 0;
+}
+
+.danger-box li {
+    font-size: 14px;
+    color: var(--text-main);
+    margin-bottom: 4px;
+}
+
+.danger-note {
+    font-size: 13px;
+    color: #6c757d;
+    margin-top: 8px;
+}
+
+/* ===== 비밀번호 입력 ===== */
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #f1b0b7;   /* 🔴 살짝 위험톤 */
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #dc3545;   /* 🔴 진한 빨강 */
+    box-shadow: 0 0 0 2px rgba(44,123,229,0.1);
+}
+
+/* ===== 동의 체크 ===== */
+
+.agree-box {
+    margin: 20px 0;
+    padding: 14px 16px;
+    background: #fff5f5;
+    border: 1px solid #f5c2c7;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.agree-box input {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.agree-box label {
+    cursor: pointer;
+    font-size: 14px;
+    color: #444;
+}
+
+/* ===== 탈퇴 버튼 영역 ===== */
+
+.withdraw-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* 취소 버튼 */
+
+.btn-cancel {
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
+    background: #fff;
+    border-radius: 6px;
+    font-size: 14px;
+    color: var(--text-main);
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #f8f9fa;
+}
+
+/* 탈퇴 버튼 */
+
+.btn-danger {
+    padding: 8px 16px;
+    background: #dc3545;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-danger:hover {
+    background: #c82333;
 }
