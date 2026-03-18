@@ -62,9 +62,5 @@
 
 </div>
 
-<script>
-    window.POST_ID = ${post.id};
-    window.CSRF_TOKEN = '${_csrf.token}';
-</script>
 <script src="${pageContext.request.contextPath}/js/board/comments.js"></script>
 

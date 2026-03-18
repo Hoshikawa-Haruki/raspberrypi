@@ -60,9 +60,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // 댓글 목록 호출
 async function loadComments(page = 0) {
+    const {commentType, postId} = window.PAGE_CONTEXT;
 
     const res = await fetch(
-            `/api/comments?postId=${POST_ID}&page=${page}&size=${COMMENT_SIZE}`
+            `/api/comments?postId=${postId}&type=${commentType}&page=${page}&size=${COMMENT_SIZE}`
             );
 
     const data = await res.json();
@@ -130,15 +131,18 @@ async function loadComments(page = 0) {
 
 // 댓글 작성
 async function submitComment(content) {
-    const res = await fetch("/api/comments", {
+
+    const {commentType, postId, csrfToken} = window.PAGE_CONTEXT;
+
+    const res = await fetch(`/api/comments?type=${commentType}`, {
         method: "POST",
         credentials: "same-origin", // 세션 인증 핵심
         headers: {
             "Content-Type": "application/json",
-            "X-CSRF-TOKEN": CSRF_TOKEN // CSRF 보호
+            "X-CSRF-TOKEN": csrfToken
         },
         body: JSON.stringify({
-            postId: POST_ID,
+            postId: postId,
             content: content
         })
     });
@@ -159,15 +163,18 @@ async function submitComment(content) {
 }
 
 async function deleteComment(id) {
+
     if (!confirm("댓글을 삭제하시겠습니까?")) {
         return; // 취소
     }
 
-    const res = await fetch(`/api/comments/${id}`, {
+    const {commentType, csrfToken} = window.PAGE_CONTEXT;
+
+    const res = await fetch(`/api/comments/${id}?type=${commentType}`, {
         method: "DELETE",
         credentials: "same-origin",
         headers: {
-            "X-CSRF-TOKEN": CSRF_TOKEN
+            "X-CSRF-TOKEN": csrfToken
         }
     });
 
@@ -241,9 +248,13 @@ function createPageButton(label, page, currentPage) {
 
 // 마지막 댓글 페이지로 이동
 async function moveToLastCommentPage() {
+
+    const {commentType, postId} = window.PAGE_CONTEXT;
+
     const res = await fetch(
-            `/api/comments?postId=${POST_ID}&page=0&size=${COMMENT_SIZE}`
+            `/api/comments?postId=${postId}&type=${commentType}&page=0&size=${COMMENT_SIZE}`
             );
+
     const data = await res.json();
 
     const lastPage = data.totalPages - 1;

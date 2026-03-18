@@ -36,6 +36,7 @@ public class CommentApiController {
     @GetMapping
     public Page<CommentReadDto> commentList(
             @RequestParam Long postId,
+            @RequestParam String type,
             @PageableDefault(size = 10) Pageable pageable,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
@@ -43,7 +44,7 @@ public class CommentApiController {
                 ? user.getMemberId()
                 : null;
 
-        return commentService.findPostCommentByPostId(postId, loginMemberId, pageable);
+        return commentService.findComments(type, postId, loginMemberId, pageable);
     }
 
     /* 다음 형태로 응답 JSON 반환
@@ -57,17 +58,29 @@ public class CommentApiController {
      */
     @PostMapping
     public void createComment(
+            @RequestParam String type,
             @RequestBody CommentCreateDto dto,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
+        if ("portfolio".equals(type)) {
+            commentService.createPortfolioComment(dto, user.getMemberId());
+            return;
+        }
+
         commentService.createPostComment(dto, user.getMemberId());
     }
 
     @DeleteMapping("/{id}")
     public void deleteComment(
             @PathVariable Long id,
+            @RequestParam String type,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
+        if ("portfolio".equals(type)) {
+            commentService.deletePortfolioComment(id, user.getMemberId());
+            return;
+        }
+
         commentService.deletePostComment(id, user.getMemberId());
     }
 }

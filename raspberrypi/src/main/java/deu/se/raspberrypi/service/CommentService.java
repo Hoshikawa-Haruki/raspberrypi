@@ -12,6 +12,7 @@ import deu.se.raspberrypi.entity.Portfolio;
 import deu.se.raspberrypi.entity.PortfolioComment;
 import deu.se.raspberrypi.entity.Post;
 import deu.se.raspberrypi.formatter.Formatter;
+import static deu.se.raspberrypi.mapper.CommentMapper.toDto;
 import deu.se.raspberrypi.repository.MemberRepository;
 import deu.se.raspberrypi.repository.PortfolioCommentRepository;
 import deu.se.raspberrypi.repository.PortfolioRepository;
@@ -22,7 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import deu.se.raspberrypi.repository.PostCommentRepository;
-import org.springframework.web.util.HtmlUtils;
 
 /**
  *
@@ -39,6 +39,25 @@ public class CommentService {
     private final PortfolioCommentRepository portfolioCommentRepository;
     private final MemberRepository memberRepository;
 
+    @Transactional(readOnly = true)
+    public Page<CommentReadDto> findComments(
+            String type,
+            Long postId,
+            Long loginMemberId,
+            Pageable pageable
+    ) {
+
+        if ("portfolio".equals(type)) {
+            return portfolioCommentRepository
+                    .findByPortfolioIdOrderByCreatedAtAsc(postId, pageable)
+                    .map(c -> toDto(c, loginMemberId));
+        }
+
+        return postCommentRepository
+                .findByPostIdOrderByCreatedAtAsc(postId, pageable)
+                .map(c -> toDto(c, loginMemberId));
+    }
+
     public void createPostComment(CommentCreateDto dto, Long memberId) {
         Post post = postRepository.findById(dto.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
@@ -46,28 +65,9 @@ public class CommentService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
-        PostComment comment = new PostComment(post, member, dto.getContent());
+        PostComment comment = new PostComment(member, dto.getContent());
+        post.addComment(comment);
         postCommentRepository.save(comment);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<CommentReadDto> findPostCommentByPostId(
-            Long postId,
-            Long loginMemberId,
-            Pageable pageable) {
-        return postCommentRepository.findByPostIdOrderByCreatedAtAsc(postId, pageable)
-                .map(c -> {
-                    CommentReadDto dto = new CommentReadDto();
-                    dto.setId(c.getId());
-                    dto.setAuthorNameSnapshot(c.getMember().getNickname());
-                    dto.setContent(c.getContent());
-                    dto.setFormattedCreatedAt(Formatter.commentDateFormat(c.getCreatedAt()));
-                    dto.setMine(
-                            loginMemberId != null
-                            && c.getMember().getId().equals(loginMemberId)
-                    );
-                    return dto;
-                });
     }
 
     public void deletePostComment(Long commentId, Long loginMemberId) {
@@ -78,7 +78,8 @@ public class CommentService {
             throw new IllegalStateException("삭제 권한 없음");
         }
 
-        postCommentRepository.delete(comment);
+        Post post = comment.getPost();
+        post.removeComment(comment);   // orphanRemoval → 자동 delete
     }
 
     /* === 포트폴리오 Comment 메서드 === */
@@ -89,7 +90,8 @@ public class CommentService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
-        PortfolioComment comment = new PortfolioComment(portfolio, member, dto.getContent());
+        PortfolioComment comment = new PortfolioComment(member, dto.getContent());
+        portfolio.addComment(comment);
         portfolioCommentRepository.save(comment);
     }
 
@@ -124,8 +126,8 @@ public class CommentService {
         if (!comment.getMember().getId().equals(loginMemberId)) {
             throw new IllegalStateException("삭제 권한 없음");
         }
-
-        portfolioCommentRepository.delete(comment);
+        Portfolio portfolio = comment.getPortfolio();
+        portfolio.removeComment(comment);   // orphanRemoval → 자동 delete
     }
 
 }
