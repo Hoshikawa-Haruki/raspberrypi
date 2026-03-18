@@ -44,8 +44,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 /* 제목 여백 조절 */
 .post-content h1,
 .post-content h2,
-.post-content h3 {
-    margin-top: 18px;
+.post-content h3,
+.post-content h4 {
+    margin-top: 10px;
     margin-bottom: 6px;
     padding-bottom: 6px;
     /* border-bottom: none; 제목하단 hr*/

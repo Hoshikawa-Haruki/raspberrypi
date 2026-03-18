@@ -89,11 +89,12 @@ button:hover,
 .btn-write {
     color: white;
     background: #4FC273;
+    font-weight: 600;
 }
 
 .btn-list:hover,
 .btn-write:hover {
-    background: #5DFCA9;
+    background: #63CA84;
 }
 
 /* 유튜브 iframe */
@@ -112,4 +113,12 @@ button:hover,
     height: 100%;
     border: none;
     border-radius: 6px;
+}
+
+/* 에러메시지 */
+.error-msg {
+    color: #e63946;
+    font-size: 13px;
+    font-weight: 400;
+    margin: 0 5px;
 }

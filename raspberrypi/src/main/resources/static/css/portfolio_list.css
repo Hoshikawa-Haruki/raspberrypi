@@ -43,6 +43,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     background: #fff;
     height: 480px;
     border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.06); /* 옅은 테두리 */
     overflow: hidden;
     box-shadow: 0 4px 14px rgba(0,0,0,0.06);
     transition: all 0.2s ease;

@@ -101,6 +101,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 }
 /* 댓글 내용 */
 .comment-content {
+    font-size: 15px;
     line-height: 1.6;
     color: #333;
     word-break: break-word;

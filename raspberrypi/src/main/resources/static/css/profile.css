@@ -23,9 +23,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     height: fit-content;
     /* 카드 형태 디자인 */
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    background: #fcfcfc;
+    background-color: #ffffff;
     padding: 16px 22px;
     border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.06); /* 옅은 테두리 */
 }
 
 .title {
@@ -117,11 +118,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 /* 우측 프로필 */
 .section {
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    background: #fcfcfc;
+    background-color: #ffffff;
     padding: 28px;
     border-radius: 12px;
     margin-bottom: 32px;
     font-size: 14px;
+    border: 1px solid rgba(0,0,0,0.06); /* 옅은 테두리 */
 }
 
 .section h2 {

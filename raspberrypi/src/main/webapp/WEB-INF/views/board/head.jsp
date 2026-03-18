@@ -8,4 +8,4 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
-<link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/rappi_favicon.png">
+<link rel="icon" type="image/png" href="${pageContext.request.contextPath}/images/retrodays2.png">

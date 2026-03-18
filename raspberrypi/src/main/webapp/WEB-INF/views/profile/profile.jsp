@@ -20,7 +20,7 @@
         <header>
             <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
         </header>
-        
+
         <main>
             <div class="career-page">
 
@@ -40,7 +40,7 @@
                     </section>
 
                     <section class="block">
-                        <h3>개인 정보 1</h3>
+                        <h3>기본 정보</h3>
                         <div class="profile-row">
                             <span class="profile-title">이름</span>
                             <span class="profile-content">
@@ -51,7 +51,7 @@
                         <div class="profile-row">
                             <span class="profile-title">이메일</span>
                             <span class="profile-content">
-                                hairtai0524@gmail.com
+                                hairtail0524@gmail.com
                             </span>
                         </div>
 
@@ -64,7 +64,7 @@
                     </section>
 
                     <section class="block">
-                        <h3>개인 정보 2</h3>
+                        <h3>교육 및 성과</h3>
                         <ul class="info-list">
                             <li>동의대학교 컴퓨터소프트웨어공학과 전공</li>
                             <li>GPA 4.27 / 4.5</li>
@@ -84,14 +84,18 @@
                 <main class="right">
 
                     <section class="section">
-                        <h2>전공 & 학력</h2>
+                        <h2>Major & Awards</h2>
                         <div class="carrer-row">
                             <span class="period">2020.03 – 2026.02</span>
-                            <span>동의대학교 컴퓨터소프트웨어공학과 졸업</span>
+                            <span>동의대학교 컴퓨터소프트웨어공학 공학사 (졸업)</span>
                         </div>
                         <div class="carrer-row">
-                            <span class="period">2020.03 – 2026.02</span>
-                            <span>동의대학교 컴퓨터소프트웨어공학과 졸업</span>
+                            <span class="period">2026.02</span>
+                            <span>KB국민은행장 졸업 표창 수상</span>
+                        </div>
+                        <div class="carrer-row">
+                            <span class="period">2025.07</span>
+                            <span>RISE_AI 2025 동의 AI/SW 융합 해커톤 특별상 수상</span>
                         </div>
                     </section>
 
@@ -100,7 +104,7 @@
                         <div class="skill-row">
                             <span class="skill-title">Backend</span>
                             <span class="skill-content">
-                                Java, Spring Boot, Spring MVC (REST API), Spring Security, JPA
+                                Java, Spring Boot, Spring MVC (REST API)
                             </span>
                         </div>
 

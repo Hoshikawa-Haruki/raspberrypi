@@ -27,27 +27,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     margin: 0;
 }
 
-.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
-    border-radius: 4px;
-    color: white; 
-    font-weight: 600;
-    font-size: 15px;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.btn-write {
-    background: #5DFCA9;
-}
-
-.btn-write:hover {
-    background: #60FC5D;
-}
-
 .board-table {
     width: 100%;
     border-collapse: collapse;

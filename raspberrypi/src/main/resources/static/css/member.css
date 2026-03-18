@@ -74,7 +74,7 @@ html {
     border-radius: 8px;
     padding: 20px 25px;
     background: #fafafa;
-    margin-bottom: 20px;
+    min-height: 305px;
 }
 
 .options {
@@ -117,9 +117,10 @@ html {
     border-radius: 4px;
 }
 
-/* 에러메시지 */
-.error-msg {
-    color: #e63946;
-    font-weight: bold;
-    margin: 10px 0;
+.form-error {
+    color: #dc3545;
+    margin: 5px;
+    font-size: 14px;
+    font-weight: 400;
+    min-height: 1.5em;
 }

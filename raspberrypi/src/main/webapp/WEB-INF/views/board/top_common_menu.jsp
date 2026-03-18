@@ -14,7 +14,7 @@
 <div class="top-header">
     
     <a href="${pageContext.request.contextPath}/" class="site-logo">
-        <img src="${pageContext.request.contextPath}/images/retrodays.png" alt="RetroDays">
+        <img src="${pageContext.request.contextPath}/images/retrodays_link.png" alt="RetroDays">
     </a>
     
     <div class="top-user-menu">
