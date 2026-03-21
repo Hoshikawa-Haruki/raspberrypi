@@ -11,6 +11,7 @@
 <html>
     <head>
         <title>마이페이지</title>
+        <jsp:include page="/WEB-INF/views/board/head.jsp" />
         <meta name="_csrf" content="${_csrf.token}">
         <meta name="_csrf_header" content="${_csrf.headerName}">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
@@ -37,7 +38,7 @@
                             <a href="/member/withdrawForm">프로필 관리</a>
                         </li>
                         <li>
-                            <a href="/member/withdrawForm">보안 설정</a>
+                            <a href="/member/security">보안 설정</a>
                         </li>
                         <li class="danger">
                             <a href="/member/withdrawForm">회원탈퇴</a>

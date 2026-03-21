@@ -48,7 +48,7 @@ public class MemberService {
     // 마이페이지 사용자 정보 DTO 리턴
     public MemberProfileDto getProfile(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("회원정보가 존재하지 않습니다."));
 
         return MemberProfileDto.from(member);
     }
@@ -61,7 +61,7 @@ public class MemberService {
     public void withdraw(Long memberId, String password) {
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("회원정보가 존재하지 않습니다."));
 
         // 비밀번호 확인
         if (!passwordEncoder.matches(password, member.getPassword())) {
@@ -70,5 +70,26 @@ public class MemberService {
 
         // 회원 soft delete
         member.softDelete();
+    }
+
+    // 비밀번호 변경
+    @Transactional
+    public void changePassword(Long memberId, String currentPassword, String newPassword) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원정보가 존재하지 않습니다."));
+
+        // 1. 현재 비밀번호 검증
+        if (!passwordEncoder.matches(currentPassword, member.getPassword())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        // 2. 기존 비밀번호와 동일한지 체크
+        if (passwordEncoder.matches(newPassword, member.getPassword())) {
+            throw new IllegalArgumentException("기존 비밀번호와 동일하게 설정할 수 없습니다.");
+        }
+
+        // 새 비밀번호 변경
+        member.changePassword(passwordEncoder.encode(newPassword));
     }
 }

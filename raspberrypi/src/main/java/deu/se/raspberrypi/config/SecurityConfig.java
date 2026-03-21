@@ -52,7 +52,8 @@ public class SecurityConfig {
                         "/portfolio/view/**"
                 ).permitAll()
                 .requestMatchers("/member/loginForm", "/member/signupForm", "/member/signup").anonymous() // 로그인, 회원가입 페이지 
-                .requestMatchers(HttpMethod.GET, "/api/comments/**", "/api/member/check-email").permitAll()
+                .requestMatchers("/member/security").authenticated() // 비밀번호 변경
+                .requestMatchers(HttpMethod.GET, "/api/comments/**", "/api/member/check-email").permitAll() // 댓글 호출, 이메일 중복체크
                 .requestMatchers(HttpMethod.GET, "/member/withdraw-success").permitAll()
                 .requestMatchers(HttpMethod.GET, "/member/withdrawForm").authenticated()
                 .requestMatchers(HttpMethod.POST, "/member/withdraw").authenticated()
@@ -90,12 +91,12 @@ public class SecurityConfig {
                 .key("my-remember-key-123") // 아무 문자열 (중요)
                 .tokenValiditySeconds(60 * 60 * 24 * 7) // 7일
                 .userDetailsService(customUserDetailsService)
-                )
+        )
                 // 로그아웃
                 .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
-                );
+        );
 
         return http.build();
     }

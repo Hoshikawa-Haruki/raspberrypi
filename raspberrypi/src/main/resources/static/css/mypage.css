@@ -67,7 +67,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 }
 
 .mypage-menu li {
-    padding: 14px 16px;
     border-bottom: 1px solid var(--border-color);
     cursor: pointer;
 }
@@ -370,7 +369,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 /* 취소 버튼 */
 
-.btn-cancel {
+.withdraw-actions .btn-cancel {
     padding: 8px 16px;
     border: 1px solid var(--border-color);
     background: #fff;
@@ -381,13 +380,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     transition: background 0.2s;
 }
 
-.btn-cancel:hover {
+.withdraw-actions .btn-cancel:hover {
     background: #f8f9fa;
 }
 
 /* 탈퇴 버튼 */
-
-.btn-danger {
+.withdraw-actions .btn-danger {
     padding: 8px 16px;
     background: #dc3545;
     border: none;
@@ -399,6 +397,83 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     transition: background 0.2s;
 }
 
-.btn-danger:hover {
+.withdraw-actions .btn-danger:hover {
     background: #c82333;
+}
+
+/* ============================= */
+/* 비밀번호 변경 페이지 스타일 */
+/* ============================= */
+
+.desc-box {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 18px 20px;
+    background: #fafafa;
+    border-radius: 10px;
+    margin-bottom: 22px;
+}
+
+.security-desc {
+    color: #2c7be5;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.security-tiplist {
+    display: flex;
+    flex-direction: column;
+    padding-left: 18px;
+    margin-bottom: 0;
+    color: #ff5722;
+    font-size: 14px;
+    gap: 4px;
+}
+
+.security-form input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #f9f9f9;
+    font-size: 15px;
+}
+
+.security-form .btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #03c75a; /* 네이버 그린 */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    margin-top: 12px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.security-form .btn-cancel {
+    width: 100%;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.security-form .error-msg {
+    color: #dc3545;
+    font-size: 14px;
+}
+
+.form-error {
+    color: #dc3545;
+    margin: 5px;
+    font-size: 14px;
+    font-weight: 400;
+    min-height: 1.5em;
 }

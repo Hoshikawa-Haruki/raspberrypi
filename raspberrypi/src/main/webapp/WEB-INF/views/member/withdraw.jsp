@@ -32,10 +32,10 @@
 
                     <ul class="mypage-menu">
                         <li>
-                            <a href="/member/withdrawForm">프로필 관리</a>
+                            <a href="/member/mypage">프로필 관리</a>
                         </li>
                         <li>
-                            <a href="/member/withdrawForm">보안 설정</a>
+                            <a href="/member/security">보안 설정</a>
                         </li>
                         <li class="danger">
                             <a href="/member/withdrawForm">회원탈퇴</a>

@@ -75,12 +75,14 @@ public class MemberController {
         return "member/myPage";
     }
 
+    // 회원탈퇴 페이지 호출
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/member/withdrawForm")
     public String withdrawForm() {
         return "/member/withdraw";
     }
 
+    // 회원탈퇴 요청
     @PostMapping("/member/withdraw")
     public String withdraw(
             @RequestParam String password,
@@ -93,7 +95,7 @@ public class MemberController {
             memberService.withdraw(user.getMemberId(), password);
 
             request.logout();
-             return "redirect:/member/withdraw-success"; // 탈퇴완료 페이지로 이동
+            return "redirect:/member/withdraw-success"; // 탈퇴완료 페이지로 이동
 
         } catch (IllegalArgumentException | IllegalStateException e) {
             model.addAttribute("error", e.getMessage());
@@ -101,8 +103,38 @@ public class MemberController {
         }
     }
 
+    // 회원탈퇴 완료 페이지
     @GetMapping("/member/withdraw-success")
     public String withdrawSuccess() {
         return "member/withdraw_success";
+    }
+
+    // 비밀번호 변경 페이지
+    @GetMapping("/member/security")
+    public String security() {
+        return "member/security";
+    }
+
+    // 비밀번호 변경
+    @PostMapping("/member/change-password")
+    public String changePassword(
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String confirmPassword,
+            @AuthenticationPrincipal CustomUserDetails user,
+            Model model
+    ) {
+        try {
+            if (!newPassword.equals(confirmPassword)) {
+                model.addAttribute("error", "새 비밀번호가 일치하지 않습니다.");
+                return "member/security";
+            }
+
+            memberService.changePassword(user.getMemberId(), currentPassword, newPassword);
+            return "redirect:/member/security?success=true";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "member/security";
+        }
     }
 }
