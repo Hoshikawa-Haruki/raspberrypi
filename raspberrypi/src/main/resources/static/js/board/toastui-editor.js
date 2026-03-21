@@ -46,10 +46,10 @@ document.addEventListener("DOMContentLoaded", () => {
         ]
     });
 
-    // Ctrl+V 이미지 붙여넣기 처리
     const editorRoot = document.querySelector('#editor');
 
     // Toast UI 내부 handler보다 먼저 실행, base64 삽입 전에 가로챔
+    // copy & paste
     editorRoot.addEventListener('paste', async (e) => {
 
         const clipboard = e.clipboardData;
@@ -69,38 +69,66 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!blob)
                 return;
 
-            const MAX_SIZE = 10 * 1024 * 1024;
-            if (blob.size > MAX_SIZE) {
-                alert("이미지 크기는 10MB 이하만 업로드 가능합니다.");
-                return;
-            }
-
-            const ext = blob.type.split('/')[1]; // image/png → png 확장자 추출
-            const fakeName = 'gov-' + Date.now() + '.' + ext; // 임시파일명 (기본은 image로 나옴)
-
-            const formData = new FormData(); // 멀티파트 요청 컨테이너
-            formData.append("image", blob, fakeName);
-            // image : 업로드 요청의 request parameter명 (@image)
-
-            const res = await fetch(uploadUrl, {// 서버 이미지 업로드 HTTP 요청
-                method: "POST",
-                body: formData
-            });
-
-            const data = await res.json();
-
-            if (data.success) {
-                editor.exec('addImage', {
-                    imageUrl: data.url,
-                    altText: 'pasted-image'
-                });
-            } else {
-                alert("이미지 업로드 실패");
-            }
-
+            await uploadImage(blob, true);
             return;
         }
     }, true);
+
+    // drag & drop
+    editorRoot.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const files = e.dataTransfer?.files;
+        if (!files)
+            return;
+
+        for (const file of files) {
+            if (!file.type.startsWith('image/'))
+                continue;
+            await uploadImage(file, false);
+        }
+    }, true);
+
+    async function uploadImage(file, isPaste = false) {
+        const MAX_SIZE = 10 * 1024 * 1024;
+
+        if (file.size > MAX_SIZE) {
+            alert("이미지 크기는 10MB 이하만 업로드 가능합니다.");
+            return;
+        }
+
+        const ext = file.type.split('/')[1] || 'png';
+
+        let filename;
+
+        if (isPaste) {
+            // ✅ paste일 때만 강제 파일명
+            filename = 'paste-' + Date.now() + '.' + ext;
+        } else {
+            // ✅ 일반 업로드는 원래 이름 유지
+            filename = file.name;
+        }
+
+        const formData = new FormData();
+        formData.append("image", file, filename);
+
+        const res = await fetch(uploadUrl, {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            editor.exec('addImage', {
+                imageUrl: data.url,
+                altText: filename
+            });
+        } else {
+            alert("이미지 업로드 실패");
+        }
+    }
 
     /* 커스텀 이미지 업로드 처리 함수 */
     function openImageDialog() {
@@ -114,29 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
         fileInput.onchange = async (e) => {
             for (const file of e.target.files) {
 
-                if (file.size > MAX_SIZE) {
-                    alert("이미지 크기는 10MB 이하만 업로드 가능합니다.");
-                    continue;
-                }
-
-                const formData = new FormData();
-                formData.append("image", file);
-
-                const res = await fetch(uploadUrl, {
-                    method: "POST",
-                    body: formData // multipart 요청
-                });
-
-                const data = await res.json();
-
-                if (data.success) {
-                    editor.exec('addImage', {
-                        imageUrl: data.url, // 파일경로
-                        altText: file.name // 파일명
-                    });
-                } else {
-                    alert("이미지 업로드 실패");
-                }
+                await uploadImage(file, false);
             }
         };
 
