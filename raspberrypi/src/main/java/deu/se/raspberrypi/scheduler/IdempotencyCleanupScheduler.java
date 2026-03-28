@@ -26,7 +26,7 @@ public class IdempotencyCleanupScheduler {
 
     private final IdempotencyKeyRepository idempotencyKeyRepository;
 
-    @Scheduled(cron = "0 0 4 * * *") // 10초마다 실행
+    @Scheduled(cron = "0 0 5 * * *") // 매일 새벽 5시 실행
     @Transactional
     public void cleanupExpiredIdempotencyKeys() {
 

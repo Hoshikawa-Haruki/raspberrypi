@@ -30,6 +30,7 @@
                         <div class="form-error">
                             <c:if test="${not empty sessionScope.loginErrorMessage}">
                                 ${sessionScope.loginErrorMessage}
+                                <c:remove var="loginErrorMessage" scope="session"/>
                             </c:if>
                         </div>
 

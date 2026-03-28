@@ -10,7 +10,7 @@
 
 <html>
     <head>
-        <title>짭케 마이너 갤러리</title>
+        <title>RetroDays</title>
         <jsp:include page="/WEB-INF/views/board/head.jsp" />
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/write.css">
@@ -23,7 +23,7 @@
             <jsp:include page="/WEB-INF/views/board/top_common_menu.jsp" />
         </header>
         <div class="container">
-            <h2>✏️ 위지윅 수정</h2>
+            <h2>✏️ 게시글 수정</h2>
 
             <form id="postForm" method="post" enctype="multipart/form-data"
                   action="${pageContext.request.contextPath}/board/update/${post.id}">

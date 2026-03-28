@@ -105,6 +105,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     line-height: 1.6;
     color: #333;
     word-break: break-word;
+    white-space: pre-line;
 }
 
 

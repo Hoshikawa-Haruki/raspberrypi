@@ -132,35 +132,3 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     background-color: #fff3b0;
     font-weight: 600;
 }
-
-/* ===== 페이지네이션 ===== */
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    margin-top: 20px;
-    font-size: 15px;
-}
-
-.pagination a,
-.pagination span {
-    padding: 4px 6px;
-    text-decoration: none;
-    color: var(--text-sub);
-    border-radius: 4px;
-}
-
-.pagination a:hover {
-    color: var(--main-color);
-}
-
-.pagination .active {
-    color: #ff3b30;   /* 현재 페이지 빨간색 */
-    font-weight: bold;
-}
-
-.pagination .nav {
-    margin: 0;
-    color: var(--text-sub);
-}

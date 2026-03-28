@@ -9,12 +9,13 @@
 
 <html>
     <head>
-        <title>짭케 마이너 갤러리</title>
+        <title>RetroDays</title>
         <jsp:include page="/WEB-INF/views/board/head.jsp" />
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/list.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/portfolio_list.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/pagination.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
 

@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
     <head>
-        <title>짭케 마이너 갤러리</title>
+        <title>RetroDays</title>
         <jsp:include page="/WEB-INF/views/board/head.jsp" />
         <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
         <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
@@ -25,7 +25,7 @@
         </header>
 
         <div class="container">
-            <h2>✏️ 위지윅 작성</h2>
+            <h2>✏️ 게시글 작성</h2>
 
             <form id="postForm" method="post" enctype="multipart/form-data"
                   action="${pageContext.request.contextPath}/board/save">

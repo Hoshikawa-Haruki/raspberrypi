@@ -61,12 +61,13 @@ textarea {
     width: auto;
     padding: 8px 16px;
     border-radius: 2px;
+    cursor: pointer;
 }
 
 /* Toast UI 에디터 내부 이미지 */
 .toastui-editor-contents p img {
     display: block;
-    max-width: 70%;
+    max-width: 80%;
     max-height: 600px;
     height: auto;
     margin: 8px 0;

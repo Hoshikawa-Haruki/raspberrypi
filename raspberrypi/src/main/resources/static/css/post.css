@@ -97,7 +97,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 /* WYSIWYG 이미지 크기 제어 */
 .post-content img {
-    max-width: 70%;   /* container 넘지 않게 */
+    max-width: 80%;   /* container 넘지 않게 */
     max-height: 600px;   /* 세로 최대 높이 */
     height: auto;
     display: block;

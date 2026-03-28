@@ -12,6 +12,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/portfolio_view.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/portfolio_list.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/pagination.css">
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/post.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/comment.css">

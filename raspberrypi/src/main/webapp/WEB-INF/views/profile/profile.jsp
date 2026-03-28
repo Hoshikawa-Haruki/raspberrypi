@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/profile.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
 
-        <title>짭케 마이너 갤러리 프로필</title>
+        <title>RetroDays</title>
     </head>
     <body>
         <header>
