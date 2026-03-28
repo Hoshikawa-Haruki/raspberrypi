@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/list.css">
         <link rel="stylesheet" type="text/css"
               href="${pageContext.request.contextPath}/css/post.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/pagination.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/comment.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
@@ -57,22 +58,35 @@
                     <a href="${pageContext.request.contextPath}/board/list" class="btn btn-list">목록</a>
                 </div>
                 <div>
-                    <!-- 로그인 했을 때만 수정/삭제 버튼 조건 체크 -->
-                    <c:if test="${loginMemberId != null && post.authorId == loginMemberId}">
-                        <form method="get" action="${pageContext.request.contextPath}/board/updateForm/${post.id}" style="display:inline;">
+                    <!-- 수정 버튼: 작성자만 -->
+                    <c:if test="${loginMemberId != null && post.authorId eq loginMemberId}">
+                        <form method="get"
+                              action="${pageContext.request.contextPath}/board/updateForm/${post.id}"
+                              style="display:inline;">
                             <button type="submit" class="btn">✏ 수정</button>
                         </form>
+                    </c:if>
 
-                        <form method="post" action="${pageContext.request.contextPath}/board/delete/${post.id}" style="display:inline;">
-                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                    <!-- 삭제 버튼: 작성자 OR 관리자 -->
+                    <c:if test="${loginMemberId != null 
+                                  && (post.authorId eq loginMemberId || loginUserRole eq 'ROLE_ADMIN')}">
+                          <form method="post"
+                                action="${pageContext.request.contextPath}/board/delete/${post.id}"
+                                style="display:inline;">
 
-                            <!-- 검색 상태 전달 -->
-                            <input type="hidden" name="searchType" value="${searchType}">
-                            <input type="hidden" name="keyword" value="${keyword}">
-                            <input type="hidden" name="page" value="${param.page}">
+                              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('삭제하시겠습니까?');">🗑 삭제</button>
-                        </form>
+                              <!-- 검색 상태 전달 -->
+                              <input type="hidden" name="searchType" value="${searchType}">
+                              <input type="hidden" name="keyword" value="${keyword}">
+                              <input type="hidden" name="page" value="${param.page}">
+
+                              <button type="submit"
+                                      class="btn btn-danger"
+                                      onclick="return confirm('삭제하시겠습니까?');">
+                                  🗑 삭제
+                              </button>
+                          </form>
                     </c:if>
                 </div>
             </div>
@@ -89,7 +103,7 @@
         <footer class="site-footer">
             <jsp:include page="/WEB-INF/views/board/footer.jsp"/>
         </footer>
-        
+
         <script>
             window.PAGE_CONTEXT = {
                 commentType: "post",
@@ -97,9 +111,9 @@
                 csrfToken: '${_csrf.token}'
             };
         </script>
-        
+
         <script type="module"
-        src="${pageContext.request.contextPath}/js/pages/board-view.js">
+                src="${pageContext.request.contextPath}/js/pages/board-view.js">
         </script>
 
     </body>

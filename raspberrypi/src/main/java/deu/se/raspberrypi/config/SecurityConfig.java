@@ -61,8 +61,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/myposts/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/posts/**").authenticated()
-                .requestMatchers("/board/**").hasRole("USER")
-                .requestMatchers("/admin/**").hasRole("ADMIN") // TODO : 관리자 페이지
+                .requestMatchers("/board/writeForm", "/board/updateForm/**", "/board/update/**", "/board/save").authenticated()
+                .requestMatchers("/board/delete/**").authenticated()
+                .requestMatchers("/admin/**").hasRole("ADMIN") // TODO : 관리자페이지
                 // 기타 요청은 인증 필요
                 .anyRequest().authenticated()
                 )
@@ -88,6 +89,7 @@ public class SecurityConfig {
                 .permitAll()
                 )
                 .rememberMe(remember -> remember // 자동 로그인
+                .rememberMeParameter("remember-me") // 체크박스 파라미터
                 .key("my-remember-key-123") // 아무 문자열 (중요)
                 .tokenValiditySeconds(60 * 60 * 24 * 7) // 7일
                 .userDetailsService(customUserDetailsService)
