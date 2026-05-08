@@ -96,6 +96,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     font-weight: 600;
 }
 
+.mypage-menu a,
+.mypage-menu a:visited {
+    color: #222;
+    text-decoration: none;
+}
+
 /* ===== 우측 영역 ===== */
 .mypage-right {
     flex: 1;
@@ -472,7 +478,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 .form-error {
     color: #dc3545;
-    margin: 5px;
+    margin: 0 5px;
     font-size: 14px;
     font-weight: 400;
     min-height: 1.5em;

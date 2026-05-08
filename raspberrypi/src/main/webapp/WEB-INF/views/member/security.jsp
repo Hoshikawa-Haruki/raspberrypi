@@ -63,8 +63,6 @@
                                 </ul>
                             </div>
 
-
-
                             <form action="/member/change-password" method="post" class="security-form">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
@@ -102,30 +100,39 @@
     </body>
 
     <script>
-        document.querySelector(".security-form").addEventListener("submit", function (e) {
+        const newPw = document.getElementById("newPassword");
+        const confirmPw = document.getElementById("confirmPassword");
+        const confirmMsg = document.getElementById("confirmPasswordMsg");
+        const form = document.querySelector(".security-form");
 
-            const newPw = document.getElementById("newPassword");
-            const confirmPw = document.getElementById("confirmPassword");
+        function checkPasswordMatch() {
+            confirmMsg.textContent = "";
 
-            const confirmMsg = document.getElementById("confirmPasswordMsg");
+            if (!confirmPw.value) {
+                return true;
+            }
 
-            // 서버 에러 초기화
+            if (newPw.value !== confirmPw.value) {
+                confirmMsg.textContent = "새 비밀번호가 일치하지 않습니다.";
+                confirmMsg.style.color = "red";
+                return false;
+            }
+
+            confirmMsg.textContent = "새 비밀번호가 일치합니다.";
+            confirmMsg.style.color = "green";
+            return true;
+        }
+
+        newPw.addEventListener("input", checkPasswordMatch);
+        confirmPw.addEventListener("input", checkPasswordMatch);
+
+        form.addEventListener("submit", function (e) {
             const globalError = document.querySelector(".form-error");
             if (globalError) {
                 globalError.remove();
             }
 
-            // 프론트 에러 초기화
-            confirmMsg.textContent = "";
-
-            let valid = true;
-
-            if (newPw.value !== confirmPw.value) {
-                confirmMsg.textContent = "새 비밀번호가 일치하지 않습니다.";
-                valid = false;
-            }
-
-            if (!valid) {
+            if (!checkPasswordMatch()) {
                 e.preventDefault();
             }
         });

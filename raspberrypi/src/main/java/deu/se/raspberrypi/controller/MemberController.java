@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
@@ -88,14 +89,16 @@ public class MemberController {
             @RequestParam String password,
             @AuthenticationPrincipal CustomUserDetails user,
             Model model,
-            HttpServletRequest request
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes
     ) throws ServletException {
 
         try {
             memberService.withdraw(user.getMemberId(), password);
 
             request.logout();
-            return "redirect:/member/withdraw-success"; // 탈퇴완료 페이지로 이동
+            redirectAttributes.addFlashAttribute("withdrawSuccess", true); // 탈퇴 완료 플래그 심기 (리다이렉트 1회만 살아있음)
+            return "redirect:/member/withdraw-success";
 
         } catch (IllegalArgumentException | IllegalStateException e) {
             model.addAttribute("error", e.getMessage());
@@ -105,7 +108,10 @@ public class MemberController {
 
     // 회원탈퇴 완료 페이지
     @GetMapping("/member/withdraw-success")
-    public String withdrawSuccess() {
+    public String withdrawSuccess(Model model) {
+        if (!model.containsAttribute("withdrawSuccess")) {
+            return "redirect:/"; // 플래그 없으면 URL 직접 접근이니까 홈으로 튕겨냄
+        }
         return "member/withdraw_success";
     }
 

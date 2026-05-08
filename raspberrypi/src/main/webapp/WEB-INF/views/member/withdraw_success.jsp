@@ -15,7 +15,7 @@
         <style>
             .withdraw-complete {
                 text-align: center;
-                padding: 60px 20px;
+                padding: 40px 20px;
             }
 
             .withdraw-complete h2 {
@@ -66,7 +66,9 @@
                     </div>
 
                     <ul class="mypage-menu">
-                        <li class="danger active">회원탈퇴 완료</li>
+                        <li class="danger">
+                            <a href="/">회원탈퇴 완료</a>
+                        </li>
                     </ul>
                 </aside>
 
