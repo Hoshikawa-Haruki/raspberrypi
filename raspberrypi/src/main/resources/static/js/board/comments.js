@@ -2,9 +2,20 @@ let currentCommentPage = 0;
 const COMMENT_SIZE = 10;
 const COMMENT_PAGE_BLOCK = 10;
 
+history.scrollRestoration = "manual";
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadComments();
+window.addEventListener("beforeunload", () => {
+    sessionStorage.setItem("scrollPos", window.scrollY);
+});
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await loadComments();
+
+    const savedScroll = sessionStorage.getItem("scrollPos");
+    if (savedScroll !== null) {
+        window.scrollTo(0, parseInt(savedScroll));
+        sessionStorage.removeItem("scrollPos");
+    }
 
     // 본문 보기 버튼
     document.getElementById("go-title").addEventListener("click", e => {
@@ -242,7 +253,12 @@ function createPageButton(label, page, currentPage) {
         return btn;
     }
 
-    btn.onclick = () => loadComments(page);
+    btn.onclick = async () => {
+        const container = document.querySelector(".comment-container");
+        const top = container.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top, behavior: "smooth" });
+        await loadComments(page);
+    };
     return btn;
 }
 
