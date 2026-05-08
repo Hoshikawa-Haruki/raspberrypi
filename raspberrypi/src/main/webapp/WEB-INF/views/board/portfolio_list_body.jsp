@@ -19,6 +19,10 @@
     </div>
 </div>
 
+<c:if test="${empty portfolioList}">
+    <p class="empty">등록된 게시글이 없습니다.</p>
+</c:if>
+
 <div class="post-grid">
 
     <c:forEach var="p" items="${portfolioList}">
@@ -86,7 +90,6 @@
             </div>
         </a>
     </c:forEach>
-
     <!--    <a class="post-card" href="#">
             <div class="card-thumb">
                 <img src="https://picsum.photos/500/400?random=2">
@@ -120,5 +123,38 @@
 
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
 
+        var keyword = '<c:out value="${keyword}" />'.trim();
+        var searchType = '<c:out value="${searchType}" />'.trim();
+        if (!keyword || !searchType)
+            return;
+
+        function escapeRegExp(str) {
+            return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        }
+
+        var regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        var selectors = [];
+        if (searchType === 'writer') {
+            selectors = ['.author-name'];
+        } else if (searchType === 'title') {
+            selectors = ['.card-title'];
+        } else {
+            // title_content, content → 카드에서 보이는 제목 + 요약 하이라이트
+            selectors = ['.card-title', '.card-summary'];
+        }
+
+        selectors.forEach(function (selector) {
+            document.querySelectorAll(selector).forEach(function (el) {
+                el.innerHTML = el.textContent.replace(
+                    regex,
+                    '<span class="highlight">$1</span>'
+                );
+            });
+        });
+    });
+</script>
 

@@ -80,13 +80,34 @@ public class PortfolioService {
         portfolioRepository.save(portfolio);
     }
 
-    // 2. 리스트 호출
+    // 2. 리스트 호출 (검색 없음)
     @Transactional(readOnly = true)
     public Page<PortfolioListDto> getPortfolioList(Pageable pageable) {
+        Page<Portfolio> page = portfolioRepository.findAllByOrderByCreatedAtDesc(pageable);
+        return toListDto(page);
+    }
+
+    // 2-1. 리스트 호출 (검색 포함)
+    @Transactional(readOnly = true)
+    public Page<PortfolioListDto> getPortfolioList(String searchType, String keyword, Pageable pageable) {
+
+        if (keyword == null || keyword.isBlank()) {
+            return getPortfolioList(pageable);
+        }
+
+        Page<Portfolio> page = switch (searchType) {
+            case "title"   -> portfolioRepository.findByTitleContaining(keyword, pageable);
+            case "content" -> portfolioRepository.findByContentContaining(keyword, pageable);
+            case "writer"  -> portfolioRepository.findByAuthorNameSnapshotContaining(keyword, pageable);
+            default        -> portfolioRepository.findByTitleOrContentOrSummaryContaining(keyword, pageable);
+        };
+
+        return toListDto(page);
+    }
 
         // 1. 포트폴리오 엔티티 조회
-        Page<Portfolio> page
-                = portfolioRepository.findAllByOrderByCreatedAtDesc(pageable);
+    // 공통 매핑 로직 (댓글수 + 썸네일 → DTO)
+    private Page<PortfolioListDto> toListDto(Page<Portfolio> page) {
 
         // 2. 게시글 id 목록 추출
         List<Long> ids = page.getContent()
@@ -96,47 +117,26 @@ public class PortfolioService {
 
         // 3. 댓글수 집계
         Map<Long, Long> commentCountMap = new HashMap<>();
-
         if (!ids.isEmpty()) {
-            List<Object[]> counts
-                    = portfolioRepository.countComments(ids);
-
-            for (Object[] row : counts) {
-                Long id = (Long) row[0];
-                Long count = (Long) row[1];
-                commentCountMap.put(id, count);
+            for (Object[] row : portfolioRepository.countComments(ids)) {
+                commentCountMap.put((Long) row[0], (Long) row[1]);
             }
         }
 
         // 4. 썸네일 로드
         Map<Long, String> thumbnailMap = new HashMap<>();
-
         if (!ids.isEmpty()) {
-            List<Attachment> thumbnails
-                    = attachmentRepository.findPortfolioListThumbnails(ids, AttachmentType.THUMBNAIL);
-
-            for (Attachment att : thumbnails) {
+            for (Attachment att : attachmentRepository.findPortfolioListThumbnails(ids, AttachmentType.THUMBNAIL)) {
                 thumbnailMap.put(att.getPortfolio().getId(), att.getUrl());
             }
         }
 
         // 5. DTO 매핑
-        return page.map(p -> { // p로 특정작업 수행 (FOR문)
-            // page 내부 Portfolio들을 하나씩 p로 꺼내서
-            // Portfolio → PortfolioListDto로 변환
-
-            long commentCount
-                    = commentCountMap.getOrDefault(p.getId(), 0L); // 댓글 갯수 하나씩 꺼내옴?
-
-            String thumbnail
-                    = thumbnailMap.getOrDefault(p.getId(), DEFAULT_THUMBNAIL); // 각 포폴에 썸네일 매핑
-
-            return PortfolioListDto.createDto(
-                    p,
-                    commentCount,
-                    thumbnail
-            );
-        });
+        return page.map(p -> PortfolioListDto.createDto(
+                p,
+                commentCountMap.getOrDefault(p.getId(), 0L),
+                thumbnailMap.getOrDefault(p.getId(), DEFAULT_THUMBNAIL)
+        ));
     }
 
     // 3. 조회

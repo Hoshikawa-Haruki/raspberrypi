@@ -119,6 +119,7 @@ public class PostController {
         // 검색 상태 유지용 (중요)
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("searchAction", "/board/list");
 
         return "board/list";
     }
@@ -159,6 +160,7 @@ public class PostController {
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
         model.addAttribute("currentPostId", id);
+        model.addAttribute("searchAction", "/board/list");
 
         Long loginMemberId = (user != null) ? user.getMemberId() : null;
         model.addAttribute("loginMemberId", loginMemberId);

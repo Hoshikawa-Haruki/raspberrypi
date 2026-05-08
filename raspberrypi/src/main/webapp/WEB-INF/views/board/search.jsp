@@ -11,7 +11,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <form method="get"
-      action="${pageContext.request.contextPath}/board/list"
+      action="${pageContext.request.contextPath}${searchAction}"
       class="search-form">
 
     <!-- 서버로 넘어가는 검색 타입 -->

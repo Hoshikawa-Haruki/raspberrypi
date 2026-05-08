@@ -23,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -37,17 +38,25 @@ public class PortfolioController {
     // 0. 포트폴리오 리스트 조회
     @GetMapping("/portfolio")
     public String portfolioListPage(
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String keyword,
             @PageableDefault(size = 6, sort = "createdAt",
                     direction = Sort.Direction.DESC) Pageable pageable,
             Model model) {
 
-        Page<PortfolioListDto> page = portfolioService.getPortfolioList(pageable);
+        if (searchType == null || searchType.isBlank()) searchType = "title_content";
+        if (keyword != null) keyword = keyword.trim();
+        if (keyword != null && keyword.isEmpty()) keyword = null;
 
-        PaginationInfoDto pageInfo
-                = PaginationUtils.of(page, 10);
+        Page<PortfolioListDto> page = portfolioService.getPortfolioList(searchType, keyword, pageable);
+
+        PaginationInfoDto pageInfo = PaginationUtils.of(page, 10);
 
         model.addAttribute("pageInfo", pageInfo);
         model.addAttribute("portfolioList", page.getContent());
+        model.addAttribute("searchType", searchType);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("searchAction", "/portfolio");
 
         return "board/portfolio_list";
     }
@@ -71,9 +80,15 @@ public class PortfolioController {
     public String viewPortfolio(
             @PathVariable Long id,
             @AuthenticationPrincipal CustomUserDetails user,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String keyword,
             @PageableDefault(size = 6, sort = "createdAt",
                     direction = Sort.Direction.DESC) Pageable pageable,
             Model model) {
+
+        if (searchType == null || searchType.isBlank()) searchType = "title_content";
+        if (keyword != null) keyword = keyword.trim();
+        if (keyword != null && keyword.isEmpty()) keyword = null;
 
         // 상세 조회
         PortfolioViewDto portfolio = portfolioService.getPortfolioById(id);
@@ -83,13 +98,15 @@ public class PortfolioController {
         Long loginMemberId = (user != null) ? user.getMemberId() : null;
         model.addAttribute("loginMemberId", loginMemberId);
 
-        // 리스트
-        Page<PortfolioListDto> page = portfolioService.getPortfolioList(pageable);
-        PaginationInfoDto pageInfo
-                = PaginationUtils.of(page, 10);
+        // 리스트 (검색 상태 유지)
+        Page<PortfolioListDto> page = portfolioService.getPortfolioList(searchType, keyword, pageable);
+        PaginationInfoDto pageInfo = PaginationUtils.of(page, 10);
 
         model.addAttribute("pageInfo", pageInfo);
-        model.addAttribute("portfolioList", page.getContent()); // 실제 데이터 리스트
+        model.addAttribute("portfolioList", page.getContent());
+        model.addAttribute("searchType", searchType);
+        model.addAttribute("keyword", keyword);
+
         return "portfolio/view_portfolio";
     }
 

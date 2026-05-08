@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -18,6 +19,15 @@ import org.springframework.data.jpa.repository.Query;
 public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
 
     Page<Portfolio> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    Page<Portfolio> findByTitleContaining(String keyword, Pageable pageable);
+
+    Page<Portfolio> findByContentContaining(String keyword, Pageable pageable);
+
+    Page<Portfolio> findByAuthorNameSnapshotContaining(String keyword, Pageable pageable);
+
+    @Query("SELECT p FROM Portfolio p WHERE p.title LIKE %:keyword% OR p.content LIKE %:keyword% OR p.summary LIKE %:keyword%")
+    Page<Portfolio> findByTitleOrContentOrSummaryContaining(@Param("keyword") String keyword, Pageable pageable);
 
     @Query("""
     SELECT p.id, COUNT(c)

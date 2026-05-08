@@ -88,7 +88,7 @@
 
         // 검색기준 분기 (하이라이트 처리용)
         var selector = '';
-        if (searchType === 'author') {
+        if (searchType === 'writer') {
             selector = '.author';
         } else {
             selector = '.row-title-text';
