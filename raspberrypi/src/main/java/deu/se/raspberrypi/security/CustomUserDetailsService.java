@@ -29,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<Member> opt = memberRepository.findByEmail(email);
+        Optional<Member> opt = memberRepository.findByEmail(email.toLowerCase());
         Member member = opt.orElseThrow(() -> new UsernameNotFoundException("No Such user: " + email));
 
         // 상태 체크 추가

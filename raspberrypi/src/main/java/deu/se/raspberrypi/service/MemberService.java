@@ -31,13 +31,15 @@ public class MemberService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
+        String email = dto.getEmail().toLowerCase();
+
         // 이메일 중복 체크
-        if (memberRepository.existsByEmail(dto.getEmail())) {
+        if (memberRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
 
         Member member = Member.builder()
-                .email(dto.getEmail())
+                .email(email)
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .nickname(dto.getNickname())
                 .build();

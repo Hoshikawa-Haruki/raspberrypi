@@ -24,6 +24,6 @@ public class MemberApiController {
 
     @GetMapping("/check-email")
     public boolean checkEmail(@RequestParam String email) {
-        return memberService.existsEmail(email);
+        return memberService.existsEmail(email.toLowerCase());
     }
 }
