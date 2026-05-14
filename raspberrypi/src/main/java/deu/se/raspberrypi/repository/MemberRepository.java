@@ -5,7 +5,10 @@
 package deu.se.raspberrypi.repository;
 
 import deu.se.raspberrypi.entity.Member;
+import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -15,7 +18,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-
     Optional<Member> findByEmail(String email); // 로그인
     boolean existsByEmail(String email); // 중복가입 체크
+
+    long countByStatus(String status);
+
+    Page<Member> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    Page<Member> findByStatusInOrderByUpdatedAtDesc(List<String> statuses, Pageable pageable);
+
+    Page<Member> findByStatusOrderByCreatedAtDesc(String status, Pageable pageable);
 }

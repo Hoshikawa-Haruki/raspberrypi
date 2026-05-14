@@ -56,6 +56,9 @@
                 <sec:authorize access="isAuthenticated()">
                 <li><a href="/member/mypage">마이페이지</a></li>
                 </sec:authorize>
+                <sec:authorize access="hasRole('ADMIN')">
+                <li><a href="/admin/members">관리자</a></li>
+                </sec:authorize>
         </ul>
     </div>
 </nav>      

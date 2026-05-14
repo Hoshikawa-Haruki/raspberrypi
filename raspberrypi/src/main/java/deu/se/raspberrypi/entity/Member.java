@@ -58,6 +58,14 @@ public class Member extends BaseEntity {
         this.deletedAt = LocalDateTime.now();
     }
 
+    public void ban() {
+        this.status = "BANNED";
+    }
+
+    public void unban() {
+        this.status = "ACTIVE";
+    }
+
     public void changePassword(String encodedPassword) {
         this.password = encodedPassword;
         this.updatedAt = LocalDateTime.now();

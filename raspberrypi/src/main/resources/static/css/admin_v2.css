@@ -1,0 +1,255 @@
+/* admin_v2.css — 관리자 페이지 v2 전용 독립 스타일 */
+
+.admin-wrapper {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* ===== 상단 현황판 ===== */
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: #fff;
+    border: 1px solid #ebebeb;
+    border-radius: 16px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s;
+}
+.stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
+
+.stat-label {
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 36px;
+    font-weight: 600;
+    color: #111;
+    letter-spacing: -1px;
+}
+
+.stat-card.stat-active  .stat-value { color: #00b96b; }
+.stat-card.stat-banned  .stat-value { color: #f59e0b; }
+.stat-card.stat-deleted .stat-value { color: #f43f5e; }
+
+/* ===== 카드 ===== */
+.admin-card {
+    background: #fff;
+    border: 1px solid #ebebeb;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.admin-card-header {
+    background: #18181b;
+    color: #fff;
+    padding: 14px 20px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.03em;
+}
+
+.admin-card-body {
+    padding: 16px 20px;
+}
+
+/* ===== 탭 바 ===== */
+.tab-bar {
+    display: flex;
+    border-bottom: 2px solid #ebebeb;
+    padding: 0 20px;
+    background: #fff;
+    gap: 4px;
+}
+
+.tab-btn {
+    padding: 14px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #bbb;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    letter-spacing: 0.01em;
+    transition: color 0.15s;
+}
+
+.tab-btn:hover { color: #555; }
+
+.tab-all.active    { color: #2563eb; border-bottom-color: #2563eb; font-weight: 700; }
+.tab-banned.active  { color: #d97706; border-bottom-color: #f59e0b; font-weight: 700; }
+.tab-deleted.active { color: #e11d48; border-bottom-color: #f43f5e; font-weight: 700; }
+
+/* ===== 테이블 ===== */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    table-layout: fixed;
+}
+
+.admin-table thead {
+    background: transparent;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.admin-table th {
+    padding: 12px 12px 10px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #c82333;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 행 높이 고정 — 버튼↔텍스트 전환 시 높이 안 바뀜 */
+.admin-table tbody tr { height: 48px; }
+
+.admin-table td {
+    padding: 0 10px;
+    border-bottom: 1px solid #f4f4f5;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #333;
+}
+
+.admin-table tbody tr:hover td { background: #fafafa; }
+
+/* 컬럼 너비 — th/td 공통 */
+.admin-table th:nth-child(1), .admin-table td:nth-child(1) { width: 40px; }
+.admin-table th:nth-child(2), .admin-table td:nth-child(2) { width: 100px; }
+.admin-table th:nth-child(3), .admin-table td:nth-child(3) { width: auto; }
+.admin-table th:nth-child(4), .admin-table td:nth-child(4) { width: 90px; }
+.admin-table th:nth-child(5), .admin-table td:nth-child(5) { width: 90px; }
+.admin-table th:nth-child(6), .admin-table td:nth-child(6) { width: 90px; }
+.admin-table th:nth-child(7), .admin-table td:nth-child(7) { width: 140px; }
+
+/* 컬럼별 데이터 색상 — td만 */
+.admin-table td:nth-child(1) { color: #555; }
+.admin-table td:nth-child(2) { font-weight: 600; color: #111; }
+.admin-table td:nth-child(3) { color: #555; }
+.admin-table td:nth-child(4) { color: #888; }
+.admin-table td:nth-child(5) { color: #888; }
+
+/* ===== 상태 뱃지 ===== */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+}
+
+.status-badge::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.status-ACTIVE  { background: #ecfdf5; color: #059669; }
+.status-ACTIVE::before  { background: #10b981; }
+
+.status-BANNED  { background: #fffbeb; color: #d97706; }
+.status-BANNED::before  { background: #f59e0b; }
+
+.status-DELETED { background: #fff1f2; color: #e11d48; }
+.status-DELETED::before { background: #f43f5e; }
+
+/* ===== 액션 버튼 ===== */
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 0 2px;
+    letter-spacing: 0.02em;
+    transition: all 0.15s;
+}
+
+.btn-ban     { background: #fff; border: 1.5px solid #f59e0b; color: #d97706; }
+.btn-ban:hover { background: #fffbeb; }
+
+.btn-unban   { background: #fff; border: 1.5px solid #10b981; color: #059669; }
+.btn-unban:hover { background: #ecfdf5; }
+
+.btn-withdraw { background: #fff; border: 1.5px solid #f43f5e; color: #e11d48; }
+.btn-withdraw:hover { background: #fff1f2; }
+
+.deleted-label {
+    font-size: 13px;
+    color: #555;
+    font-weight: 500;
+}
+
+/* ===== 페이지네이션 ===== */
+.admin-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 16px;
+}
+
+.admin-pagination a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.admin-pagination a:hover {
+    border-color: #111;
+    color: #111;
+}
+
+.admin-pagination a.active {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+    font-weight: 700;
+}
+
+.empty {
+    text-align: center;
+    color: #aaa;
+    padding: 20px 0;
+    font-size: 13px;
+}
