@@ -38,7 +38,7 @@
             <li data-type="title">제목</li>
             <li data-type="content">내용</li>
             <li data-type="writer">글쓴이</li>
-            <li data-type="comment">댓글</li>
+<%--            <li data-type="comment">댓글</li>--%>
         </ul>
     </div>
 
