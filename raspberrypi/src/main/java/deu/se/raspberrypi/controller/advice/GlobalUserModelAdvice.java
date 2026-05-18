@@ -4,6 +4,7 @@
  */
 package deu.se.raspberrypi.controller.advice;
 
+import deu.se.raspberrypi.config.FileProperties;
 import deu.se.raspberrypi.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,20 +20,20 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @RequiredArgsConstructor
 public class GlobalUserModelAdvice {
 
+    private final FileProperties fileProperties;
+
     @ModelAttribute
     public void addLoginUserInfo(
             Model model,
             @AuthenticationPrincipal CustomUserDetails principal
     ) {
         if (principal != null) {
-            model.addAttribute("loginUserNickname",
-                    principal.getNickName());
-            
-            model.addAttribute("loginMemberId",
-                    principal.getMemberId());
-
-            model.addAttribute("loginUserRole",
-                    principal.getRole());
+            model.addAttribute("loginUserNickname", principal.getNickName());
+            model.addAttribute("loginMemberId", principal.getMemberId());
+            model.addAttribute("loginUserRole", principal.getRole());
         }
+
+        model.addAttribute("maxInlineImageSize", fileProperties.getMaxInlineImageSize().toBytes());
+        model.addAttribute("maxAttachmentSize", fileProperties.getMaxAttachmentSize().toBytes());
     }
 }

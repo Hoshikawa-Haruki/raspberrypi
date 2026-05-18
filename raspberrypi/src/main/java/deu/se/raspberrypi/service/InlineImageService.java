@@ -4,6 +4,7 @@
  */
 package deu.se.raspberrypi.service;
 
+import deu.se.raspberrypi.config.FileProperties;
 import deu.se.raspberrypi.entity.Attachment;
 import deu.se.raspberrypi.entity.AttachmentType;
 import deu.se.raspberrypi.entity.ContentEntity;
@@ -32,6 +33,7 @@ public class InlineImageService {
 
     private final TempAttachmentRepository tempAttachmentRepository;
     private final FileService fileService;
+    private final FileProperties fileProperties;
     private static final Pattern IMAGE_PATTERN
             = Pattern.compile("/upload(?:_temp)?/([a-zA-Z0-9\\-]+)\\.(png|jpg|jpeg|gif|webp)",
                     Pattern.CASE_INSENSITIVE); // 대소문자 대응
@@ -65,6 +67,20 @@ public class InlineImageService {
         List<TempAttachment> tempImageList
                 = tempAttachmentRepository.findByUploaderId(uploaderId);
 
+        // 승격 대상 이미지 총 용량 합산
+        // application.properties의 file.max-inline-image-size 값과 비교
+        long totalSize = tempImageList.stream()
+                .filter(temp -> inlineUuidSet.contains(temp.getUuid()))
+                .mapToLong(TempAttachment::getFileSize)
+                .sum();
+
+        long limit = fileProperties.getMaxInlineImageSize().toBytes();
+        if (totalSize > limit) {
+            throw new IllegalArgumentException(
+                "인라인 이미지 총 용량은 " + fileProperties.getMaxInlineImageSize().toMegabytes() + "MB를 초과할 수 없습니다."
+            );
+        }
+
         for (TempAttachment temp : tempImageList) {
             if (inlineUuidSet.contains(temp.getUuid())) { // tempImage가 본문에 있으면
                 // 승격 처리
@@ -73,6 +89,7 @@ public class InlineImageService {
                 att.setExt(temp.getExt());
                 att.setOriginalName(temp.getOriginalName());
                 att.setType(AttachmentType.INLINE);
+                att.setFileSize(temp.getFileSize());
                 contentEntity.addAttachment(att); // FK 설정 + 양방향 동기화
                 // 실제 파일 temp → upload 이동 (승격)
                 fileService.moveTempToUpload(temp.getUuid(), temp.getExt());

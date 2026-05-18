@@ -31,7 +31,10 @@ public class TempAttachment extends BaseEntity {
     @Column(nullable = false, length = 10)
     private String ext;
 
-    // 어떤 사용자의 임시파일인지 구분 (필수)
+    // 어떤 사용자의 임시파일인지 구분 (필수) (uploadController에서 저장됨)
     @Column(nullable = false)
     private Long uploaderId;
+
+    @Column(nullable = false)
+    private long fileSize;
 }

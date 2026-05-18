@@ -91,6 +91,7 @@ public class UploadController {
         temp.setExt(dto.getExt());
         temp.setOriginalName(file.getOriginalFilename());
         temp.setUploaderId(uploaderId);
+        temp.setFileSize(file.getSize());
 
         tempAttachmentRepository.save(temp); // 임시 저장
 

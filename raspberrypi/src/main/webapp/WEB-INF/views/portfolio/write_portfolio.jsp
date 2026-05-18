@@ -132,9 +132,17 @@
             </form>
         </div>
 
-        <!-- JS로 경로 전달 -->
+        <%--
+            JS로 서버 설정값 전달용 div (화면에 보이지 않음)
+            - data-upload-url       : 인라인 이미지 임시 업로드 엔드포인트
+            - data-max-inline-size  : 인라인 이미지 총 용량 제한 (바이트, application.properties: file.max-inline-image-size)
+            - data-max-attachment-size : 첨부파일 총 용량 제한 (바이트, application.properties: file.max-attachment-size)
+            값은 GlobalUserModelAdvice → FileProperties → application.properties 순으로 주입됨
+        --%>
         <div id="editor-config"
-             data-upload-url="${pageContext.request.contextPath}/upload/temp">
+             data-upload-url="${pageContext.request.contextPath}/upload/temp"
+             data-max-inline-size="${maxInlineImageSize}"
+             data-max-attachment-size="${maxAttachmentSize}">
         </div>
 
         <!-- write 전용 JS -->

@@ -4,6 +4,7 @@
  */
 package deu.se.raspberrypi.service;
 
+import deu.se.raspberrypi.config.FileProperties;
 import deu.se.raspberrypi.dto.StoredFileDto;
 import deu.se.raspberrypi.entity.Attachment;
 import deu.se.raspberrypi.repository.AttachmentRepository;
@@ -21,7 +22,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,21 +37,17 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class FileService {
 
-    @Value("${file.upload-dir}")
-    private String uploadDir;
-
-    @Value("${file.temp-dir}")
-    private String tempUploadDir;
+    // FileProperties를 통해 application.properties의 file.* 값을 주입받음
+    private final FileProperties fileProperties;
+    private final AttachmentRepository attachmentRepository;
 
     private Path uploadPath;
     private Path tempUploadPath;
 
-    private final AttachmentRepository attachmentRepository;
-
     @PostConstruct
     public void init() {
-        uploadPath = Paths.get(uploadDir);
-        tempUploadPath = Paths.get(tempUploadDir);
+        uploadPath = Paths.get(fileProperties.getUploadDir());
+        tempUploadPath = Paths.get(fileProperties.getTempDir());
     }
 
     public StoredFileDto handleUpload(MultipartFile file) {

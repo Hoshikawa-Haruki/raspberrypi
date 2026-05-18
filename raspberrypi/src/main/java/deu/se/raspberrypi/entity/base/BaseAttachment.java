@@ -35,6 +35,9 @@ public abstract class BaseAttachment extends BaseEntity {
     @Column(nullable = false)
     protected AttachmentType type = AttachmentType.INLINE; // 기본: 인라인 이미지)
 
+    @Column(nullable = false)
+    protected long fileSize;
+
     public String getUrl() {
         return "/upload/" + uuid + "." + ext;
     }
