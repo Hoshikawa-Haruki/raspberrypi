@@ -35,6 +35,13 @@ public class FileProperties {
      * application.properties: file.max-inline-image-size=10MB
      * 단위 미지정 시 기본값 BYTES로 처리되므로 @DataSizeUnit으로 기본 단위 지정
      */
+    /**
+     * 인라인 이미지 1장 최대 크기
+     * application.properties: file.max-single-image-size=10MB
+     */
+    @DataSizeUnit(DataUnit.MEGABYTES)
+    private DataSize maxSingleImageSize = DataSize.ofMegabytes(10);
+
     @DataSizeUnit(DataUnit.MEGABYTES)
     private DataSize maxInlineImageSize = DataSize.ofMegabytes(10);
 

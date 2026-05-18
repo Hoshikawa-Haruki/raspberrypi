@@ -57,6 +57,9 @@
 
                 <!-- 에디터 -->
                 <div id="editor"></div>
+                <div id="inline-image-usage" style="font-size:0.85rem; color:#888; text-align:right; margin-top:4px;">
+                    이미지 용량: 0MB / -MB
+                </div>
                 <!-- 기존 본문 HTML -->
                 <textarea id="originContent" style="display:none;">${post.content}</textarea>
                 <!-- 최종 전송용 -->
@@ -177,8 +180,10 @@
         --%>
         <div id="editor-config"
              data-upload-url="${pageContext.request.contextPath}/upload/temp"
+             data-max-single-image-size="${maxSingleImageSize}"
              data-max-inline-size="${maxInlineImageSize}"
-             data-max-attachment-size="${maxAttachmentSize}">
+             data-max-attachment-size="${maxAttachmentSize}"
+             data-existing-inline-size="${existingInlineImageSize}">
         </div>
 
         <!-- update 전용 JS -->

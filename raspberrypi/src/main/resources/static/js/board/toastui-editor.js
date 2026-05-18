@@ -11,9 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 제한값을 서버(application.properties)에서 data attribute로 전달받음
     // 하드코딩 금지 - 수치 변경 시 application.properties만 수정하면 됨
-    const MAX_SIZE        = 10 * 1024 * 1024;                                  // 이미지 1장 최대 크기 (10MB 고정)
-    const MAX_TOTAL_SIZE  = parseInt(configEl.dataset.maxInlineSize);           // 인라인 이미지 총 용량 제한
-    const MAX_ATTACH_SIZE = parseInt(configEl.dataset.maxAttachmentSize);       // 첨부파일 총 용량 제한
+    const MAX_SIZE             = parseInt(configEl.dataset.maxSingleImageSize);      // 이미지 1장 최대 크기
+    const MAX_TOTAL_SIZE       = parseInt(configEl.dataset.maxInlineSize);           // 인라인 이미지 총 용량 제한
+    const MAX_ATTACH_SIZE      = parseInt(configEl.dataset.maxAttachmentSize);       // 첨부파일 총 용량 제한
+    const EXISTING_INLINE_SIZE = parseInt(configEl.dataset.existingInlineSize) || 0; // 수정 시 기존 인라인 이미지 총 용량 (신규 작성 시 0)
 
     /**
      * 현재 에디터에 존재하는 인라인 이미지를 uuid → fileSize(bytes) 형태로 관리하는 Map
@@ -95,11 +96,25 @@ document.addEventListener("DOMContentLoaded", () => {
      * @returns {number} 총 용량 (bytes)
      */
     function calcTotalSize() {
-        return [...uploadedImages.values()].reduce((sum, size) => sum + size, 0);
+        return EXISTING_INLINE_SIZE + [...uploadedImages.values()].reduce((sum, size) => sum + size, 0);
+    }
+
+    function updateUsageDisplay() {
+        const el = document.getElementById('inline-image-usage');
+        if (!el) return;
+        const usedMB = (calcTotalSize() / (1024 * 1024)).toFixed(1);
+        const limitMB = (MAX_TOTAL_SIZE / (1024 * 1024)).toFixed(0);
+        el.textContent = `이미지 용량: ${usedMB}MB / ${limitMB}MB`;
     }
 
     // 에디터 내용 변경 시마다 Map 동기화 (이미지 삭제 감지)
-    window.editor.on('change', syncUploadedImages);
+    window.editor.on('change', () => {
+        syncUploadedImages();
+        updateUsageDisplay();
+    });
+
+    // 페이지 로드 시 초기 용량 표시 (수정 페이지에서 기존 이미지 용량 반영)
+    updateUsageDisplay();
 
     const editorRoot = document.querySelector('#editor');
 
@@ -183,6 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // URL에서 uuid 추출 후 Map에 등록 (/upload_temp/{uuid}.{ext} 형식)
             const uuid = data.url.split('/').pop().split('.')[0];
             uploadedImages.set(uuid, file.size);
+            updateUsageDisplay();
 
             editor.exec('addImage', {
                 imageUrl: data.url,

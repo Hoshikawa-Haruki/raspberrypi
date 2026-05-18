@@ -9,6 +9,7 @@ import deu.se.raspberrypi.dto.PortfolioListDto;
 import deu.se.raspberrypi.dto.PortfolioViewDto;
 import deu.se.raspberrypi.dto.PortfolioSaveRequestDto;
 import deu.se.raspberrypi.dto.PortfolioUpdateDto;
+import deu.se.raspberrypi.entity.AttachmentType;
 import deu.se.raspberrypi.security.CustomUserDetails;
 import deu.se.raspberrypi.service.PortfolioService;
 import deu.se.raspberrypi.util.PaginationUtils;
@@ -115,6 +116,14 @@ public class PortfolioController {
     public String updateForm(@PathVariable Long id, Model model) {
         PortfolioViewDto dto = portfolioService.getPortfolioById(id);
         model.addAttribute("post", dto);
+
+        long existingInlineSize = dto.getAttachments() == null ? 0 :
+                dto.getAttachments().stream()
+                .filter(att -> att.getType() == AttachmentType.INLINE)
+                .mapToLong(att -> att.getFileSize())
+                .sum();
+        model.addAttribute("existingInlineImageSize", existingInlineSize);
+
         return "portfolio/update_portfolio";
     }
 

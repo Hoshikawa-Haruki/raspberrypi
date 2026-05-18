@@ -30,10 +30,12 @@ public class StoredFileDto {
     private String uuid; // uuid
     private String ext; // 확장자
     private AttachmentType type; // 첨부파일 타입
+    private long fileSize;
 
-    public StoredFileDto(String uuid, String ext, String originalName) {
+    public StoredFileDto(String uuid, String ext, String originalName, long fileSize) {
         this.uuid = uuid;
         this.ext = ext;
         this.originalName = originalName;
+        this.fileSize = fileSize;
     }
 }

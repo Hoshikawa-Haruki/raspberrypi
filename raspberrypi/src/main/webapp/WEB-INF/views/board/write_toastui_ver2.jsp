@@ -36,6 +36,9 @@
 
                 <!-- 에디터 -->
                 <div id="editor"></div>
+                <div id="inline-image-usage" style="font-size:0.85rem; color:#888; text-align:right; margin-top:4px;">
+                    이미지 용량: 0MB / -MB
+                </div>
                 <!-- 서버로 전송될 HTML -->
                 <textarea id="content" name="content" style="display:none;"></textarea>
                 <!-- 첨부파일 --> 
@@ -65,6 +68,7 @@
         --%>
         <div id="editor-config"
              data-upload-url="${pageContext.request.contextPath}/upload/temp"
+             data-max-single-image-size="${maxSingleImageSize}"
              data-max-inline-size="${maxInlineImageSize}"
              data-max-attachment-size="${maxAttachmentSize}">
         </div>

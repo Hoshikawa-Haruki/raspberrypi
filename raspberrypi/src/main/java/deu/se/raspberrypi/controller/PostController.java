@@ -6,6 +6,7 @@ package deu.se.raspberrypi.controller;
 
 import deu.se.raspberrypi.dto.PaginationInfoDto;
 import deu.se.raspberrypi.dto.PostDto;
+import deu.se.raspberrypi.entity.AttachmentType;
 import deu.se.raspberrypi.dto.PostListDto;
 import deu.se.raspberrypi.dto.PostUpdateDto;
 import deu.se.raspberrypi.security.CustomUserDetails;
@@ -173,6 +174,14 @@ public class PostController {
     public String updateForm(@PathVariable Long id, Model model) {
         PostDto post = postService.findById(id);
         model.addAttribute("post", post);
+
+        long existingInlineSize = post.getAttachments() == null ? 0 :
+            post.getAttachments().stream()
+                .filter(att -> att.getType() == AttachmentType.INLINE)
+                .mapToLong(att -> att.getFileSize())
+                .sum();
+        model.addAttribute("existingInlineImageSize", existingInlineSize);
+
         return "board/update_toastui_ver2";
     }
 

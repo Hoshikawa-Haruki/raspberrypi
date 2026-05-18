@@ -74,6 +74,7 @@ public class PostMapper {
         file.setExt(attachment.getExt());
         file.setOriginalName(attachment.getOriginalName());
         file.setType(attachment.getType());
+        file.setFileSize(attachment.getFileSize());
         return file;
     }
 }

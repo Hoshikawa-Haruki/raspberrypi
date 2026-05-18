@@ -67,9 +67,13 @@ public class InlineImageService {
         List<TempAttachment> tempImageList
                 = tempAttachmentRepository.findByUploaderId(uploaderId);
 
-        // 승격 대상 이미지 총 용량 합산
-        // application.properties의 file.max-inline-image-size 값과 비교
-        long totalSize = tempImageList.stream()
+        // 기존 저장된 INLINE 이미지 총 용량 + 새로 승격될 이미지 총 용량 합산
+        long existingSize = contentEntity.getAttachments().stream()
+                .filter(att -> att.getType() == AttachmentType.INLINE)
+                .mapToLong(Attachment::getFileSize)
+                .sum();
+
+        long totalSize = existingSize + tempImageList.stream()
                 .filter(temp -> inlineUuidSet.contains(temp.getUuid()))
                 .mapToLong(TempAttachment::getFileSize)
                 .sum();

@@ -187,7 +187,7 @@ public class FileService {
         try {
             upfile.transferTo(dest);
             log.info("파일 저장 완료: {}", dest.toAbsolutePath());
-            return new StoredFileDto(uuid, ext, originalName);
+            return new StoredFileDto(uuid, ext, originalName, upfile.getSize());
         } catch (IOException e) {
             log.error("파일 저장 실패: {}", e.getMessage());
             throw new RuntimeException("파일 저장 실패", e);

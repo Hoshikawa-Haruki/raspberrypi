@@ -33,6 +33,7 @@ public class GlobalUserModelAdvice {
             model.addAttribute("loginUserRole", principal.getRole());
         }
 
+        model.addAttribute("maxSingleImageSize", fileProperties.getMaxSingleImageSize().toBytes());
         model.addAttribute("maxInlineImageSize", fileProperties.getMaxInlineImageSize().toBytes());
         model.addAttribute("maxAttachmentSize", fileProperties.getMaxAttachmentSize().toBytes());
     }

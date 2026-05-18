@@ -33,6 +33,9 @@
 
                 <!-- 에디터 -->
                 <div id="editor"></div>
+                <div id="inline-image-usage" style="font-size:0.85rem; color:#888; text-align:right; margin-top:4px;">
+                    이미지 용량: 0MB / -MB
+                </div>
                 <!-- 기존 본문 HTML -->
                 <textarea id="originContent" style="display:none;">${post.content}</textarea>
                 <!-- 최종 전송용 -->
@@ -91,15 +94,18 @@
 
         <%--
             JS로 서버 설정값 전달용 div (화면에 보이지 않음)
-            - data-upload-url       : 인라인 이미지 임시 업로드 엔드포인트
-            - data-max-inline-size  : 인라인 이미지 총 용량 제한 (바이트, application.properties: file.max-inline-image-size)
-            - data-max-attachment-size : 첨부파일 총 용량 제한 (바이트, application.properties: file.max-attachment-size)
+            - data-upload-url           : 인라인 이미지 임시 업로드 엔드포인트
+            - data-max-inline-size      : 인라인 이미지 총 용량 제한 (바이트, application.properties: file.max-inline-image-size)
+            - data-max-attachment-size  : 첨부파일 총 용량 제한 (바이트, application.properties: file.max-attachment-size)
+            - data-existing-inline-size : 기존 인라인 이미지 총 용량 (바이트, 수정 시 초기값으로 사용)
             값은 GlobalUserModelAdvice → FileProperties → application.properties 순으로 주입됨
         --%>
         <div id="editor-config"
              data-upload-url="${pageContext.request.contextPath}/upload/temp"
+             data-max-single-image-size="${maxSingleImageSize}"
              data-max-inline-size="${maxInlineImageSize}"
-             data-max-attachment-size="${maxAttachmentSize}">
+             data-max-attachment-size="${maxAttachmentSize}"
+             data-existing-inline-size="${existingInlineImageSize}">
         </div>
 
         <!-- update 전용 JS -->

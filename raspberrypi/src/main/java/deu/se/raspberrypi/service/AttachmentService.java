@@ -50,8 +50,8 @@ public class AttachmentService {
             attachment.setUuid(fileDto.getUuid());
             attachment.setExt(fileDto.getExt());
             attachment.setOriginalName(file.getOriginalFilename());
-            attachment.setType(AttachmentType.FILE); // 첨부파일 enum 타입 설정
-            attachment.setFileSize(file.getSize());
+            attachment.setType(AttachmentType.FILE);
+            attachment.setFileSize(fileDto.getFileSize());
             contentEntity.addAttachment(attachment); // 양방향 동기화 (cascade로 attachment 테이블에 자동 저장됨)
         }
     }
@@ -99,7 +99,7 @@ public class AttachmentService {
         attachment.setExt(fileDto.getExt());
         attachment.setOriginalName(thumbnailFile.getOriginalFilename());
         attachment.setType(AttachmentType.THUMBNAIL);
-        attachment.setFileSize(thumbnailFile.getSize());
+        attachment.setFileSize(fileDto.getFileSize());
 
         contentEntity.addAttachment(attachment);
     }
@@ -132,7 +132,7 @@ public class AttachmentService {
         attachment.setExt(fileDto.getExt());
         attachment.setOriginalName(thumbnailFile.getOriginalFilename());
         attachment.setType(AttachmentType.THUMBNAIL);
-        attachment.setFileSize(thumbnailFile.getSize());
+        attachment.setFileSize(fileDto.getFileSize());
 
         contentEntity.addAttachment(attachment);
     }
