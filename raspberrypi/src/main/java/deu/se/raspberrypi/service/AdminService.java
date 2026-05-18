@@ -10,11 +10,10 @@ package deu.se.raspberrypi.service;
  */
 
 import deu.se.raspberrypi.dto.MemberManageDto;
+import deu.se.raspberrypi.dto.MemberStatsDto;
 import deu.se.raspberrypi.entity.Member;
 import deu.se.raspberrypi.repository.MemberRepository;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,13 +28,13 @@ public class AdminService {
     private final MemberRepository memberRepository;
 
     // 상단 현황판용 상태별 회원 수 집계
-    public Map<String, Long> getMemberStats() {
-        Map<String, Long> stats = new LinkedHashMap<>();
-        stats.put("total",   memberRepository.count());
-        stats.put("active",  memberRepository.countByStatus("ACTIVE"));
-        stats.put("banned",  memberRepository.countByStatus("BANNED"));
-        stats.put("deleted", memberRepository.countByStatus("DELETED"));
-        return stats;
+    public MemberStatsDto getMemberStats() {
+        return new MemberStatsDto(
+                memberRepository.count(),
+                memberRepository.countByStatus("ACTIVE"),
+                memberRepository.countByStatus("BANNED"),
+                memberRepository.countByStatus("DELETED")
+        );
     }
 
     // 전체 회원 목록 (가입일 최신순)
